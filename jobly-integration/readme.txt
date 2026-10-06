@@ -24,6 +24,7 @@ Primeri:
 * `[jobly job="slug-oglasa" show="full"]` — z vsebino oglasa
 * `[jobly filter="title,meta,benefits"]` — samo izbrani deli (logo, title, meta, salary, description, responsibilities, requirements, benefits)
 * `[jobly accent="#2563eb" height="900"]`
+* `[jobly demo="1"]` — izmišljen primer (Primer d.o.o.), brez klica na Jobly. Privzeto vklopljeno, dokler ne povežete podjetja.
 
 == External services ==
 

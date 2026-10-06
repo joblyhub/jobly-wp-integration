@@ -1,42 +1,71 @@
 === Jobly.si HRM ===
 Contributors: joblyhub
-Tags: jobs, careers, job board, application form, zaposlitev
+Tags: jobs, careers, job board, recruitment, application form
 Requires at least: 6.0
-Tested up to: 6.8
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Prijavni obrazec in karierna stran podjetja z Jobly.si na vaši WordPress strani.
+Show your company's Jobly.si jobs on your WordPress site, publish new ones and read applications from wp-admin.
 
 == Description ==
 
-Kratka koda `[jobly]` prikaže odprta mesta vašega podjetja z Jobly.si in obrazec za prijavo. Kandidat se prijavi brez računa; prijava pride v vaš Jobly postopek kot vsaka druga.
+Jobly.si HRM connects a WordPress site to a company account on Jobly.si (a Slovenian job portal).
 
-Obrazec, privolitve in zaščito pred neželeno pošto upravlja Jobly. Vaša WordPress stran podatkov kandidatov ne obdeluje in ne shranjuje.
+* **Connection.** Paste an API key (Jobly, Integrations, API tokens) in Jobly HRM, Settings, Connection, and verify it.
+* **Jobs.** List the company's jobs, view details, copy a shortcode, open the job on Jobly.
+* **Add new.** Publish a job on Jobly from wp-admin. The form mirrors the Jobly API.
+* **Applications.** Read-only list and detail of applications. Applicant data is read live from Jobly and is never stored in WordPress.
+* **Careers pages.** Every open job gets its own page on your site, `/kariera/` (list) and `/kariera/{job-slug}/`; the base is configurable.
+* **Demo mode.** Until a company is connected the plugin shows an invented company ("Primer d.o.o.") and makes no request to Jobly.
 
-Primeri:
+The application form, consent and spam protection stay on Jobly (iframe embed). WordPress never handles applicant submissions.
 
-* `[jobly]` — vsa odprta mesta podjetja iz nastavitev
-* `[jobly company="drugo-podjetje"]` — karierna stran drugega podjetja
-* `[jobly job="slug-oglasa"]` — obrazec za en oglas
-* `[jobly job="slug-oglasa" show="full"]` — z vsebino oglasa
-* `[jobly filter="title,meta,benefits"]` — samo izbrani deli (logo, title, meta, salary, description, responsibilities, requirements, benefits)
+Shortcodes:
+
+* `[jobly]` - the company's careers embed
+* `[jobly job="job-slug"]` - application form for one job
+* `[jobly job="job-slug" show="full"]` - job content and form
+* `[jobly filter="title,meta,benefits"]` - selected parts only
 * `[jobly accent="#2563eb" height="900"]`
-* `[jobly demo="1"]` — izmišljen primer (Primer d.o.o.), brez klica na Jobly. Privzeto vklopljeno, dokler ne povežete podjetja.
+* `[jobly_jobs]` - server-rendered list of open jobs, linking to their pages
+* `[jobly demo="1"]` - invented example, no request to Jobly
+
+The admin interface is in Slovenian.
 
 == External services ==
 
-Vtičnik naloži vsebino s storitve Jobly.si (https://jobly.si) v okvirju (iframe) na straneh, kjer je kratka koda. Brskalnik obiskovalca pri tem pošlje zahtevo na jobly.si. Pogoji: https://jobly.si/terms · Zasebnost: https://jobly.si/privacy
+This plugin talks to Jobly.si (https://jobly.si), the service it integrates. Terms: https://jobly.si/terms - Privacy: https://jobly.si/privacy
+
+**Server-side API calls** (from your WordPress server, with your API key as a Bearer token, only when demo mode is off and a key is saved):
+
+* `GET /api/v1/jobs` - when you save or verify the key; when a Jobs, Overview or add-job screen needs the job list; when a visitor opens `/kariera/`, a job page or a page with `[jobly_jobs]`. The job list is cached for 5 minutes; "Osvezi" clears it.
+* `GET /api/v1/applications` - when you open Overview, Applications or a job's detail screen in wp-admin. Not cached.
+* `POST /api/v1/jobs` - when you submit the "Add new" form. Sends the job data you entered.
+
+No visitor data is sent by these calls.
+
+**Browser requests.** Pages with `[jobly]` or a job page load the Jobly embed (`/embed/jobs/{slug}`, `/embed/companies/{slug}`) in an iframe, so the visitor's browser connects to jobly.si.
+
+Demo mode makes none of these requests.
+
+The Jobly address can be changed in settings (testing); the server-side base can be overridden with the `JOBLY_API_BASE` constant in wp-config.php.
 
 == Installation ==
 
-1. Naloži mapo `jobly-integration` v `/wp-content/plugins/` in vtičnik vklopi.
-2. Jobly HRM (stranski meni): vpiši slug podjetja (zadnji del naslova jobly.si/companies/…).
-3. Na stran dodaj kratko kodo `[jobly]`.
+1. Upload the `jobly-integration` folder to `/wp-content/plugins/` and activate it.
+2. Open Jobly HRM, Settings, Connection; paste the API key and save.
+3. Visit Settings, Permalinks once if `/kariera/` shows a 404 (a permalink structure other than "Plain" is required).
 
 == Changelog ==
 
+= 0.2.0 =
+* Admin: Overview, Jobs (list + detail), Add new, Applications (list + detail), Settings (Connection, Display, Demo).
+* API key connection with verification; demo turns off when a key is verified.
+* Careers pages: `/kariera/` and `/kariera/{slug}/`, `[jobly_jobs]` shortcode.
+* `JOBLY_API_BASE` constant, translations template, coding-standards tooling and CI.
+
 = 0.1.0 =
-* Kratka koda `[jobly]` in stran z nastavitvami (meni Jobly HRM).
+* `[jobly]` shortcode and settings page.

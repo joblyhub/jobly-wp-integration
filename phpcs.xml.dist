@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<ruleset name="Jobly.si HRM">
+	<description>WordPress coding standards for the Jobly.si HRM plugin.</description>
+	<file>jobly-integration</file>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="ps"/>
+
+	<config name="testVersion" value="7.4-"/>
+	<config name="minimum_wp_version" value="6.0"/>
+
+	<rule ref="WordPress"/>
+	<rule ref="PHPCompatibilityWP"/>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array"><element value="jobly-integration"/></property>
+		</properties>
+	</rule>
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="jobly_integration"/>
+				<element value="JOBLY_INTEGRATION"/>
+				<element value="Jobly_Integration"/>
+			</property>
+		</properties>
+	</rule>
+	<!-- Plugin folder is jobly-integration, main file jobly-integration.php. -->
+	<rule ref="WordPress.Files.FileName">
+		<exclude-pattern>*/includes/admin/class-*.php</exclude-pattern>
+	</rule>
+</ruleset>

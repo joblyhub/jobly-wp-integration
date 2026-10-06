@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jobly/jobs-list",
+	"title": "Jobly – seznam delovnih mest",
+	"category": "widgets",
+	"icon": "groups",
+	"description": "Seznam odprtih delovnih mest iz Jobly.si.",
+	"keywords": [ "jobly", "kariera", "delovna mesta", "jobs" ],
+	"textdomain": "jobly-integration",
+	"attributes": {
+		"number": { "type": "number", "default": 6 },
+		"filters": { "type": "boolean", "default": false },
+		"layout": { "type": "string", "default": "list", "enum": [ "list", "grid" ] }
+	},
+	"supports": { "html": false, "align": [ "wide", "full" ] },
+	"editorScript": "jobly-integration-blocks",
+	"style": "jobly-integration",
+	"render": "file:./render.php"
+}

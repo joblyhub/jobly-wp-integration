@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the tag matches the plugin version
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          grep -q "^ \* Version: *${v}$" jobly-integration/jobly-integration.php || { echo "Version header does not match tag ${GITHUB_REF_NAME}"; exit 1; }
+      - name: Build jobly-integration.zip
+        run: zip -r jobly-integration.zip jobly-integration -x '*.DS_Store' '*/.git*' '*/node_modules/*' '*/vendor/*' '*.map'
+      - name: Attach to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: jobly-integration.zip
+          generate_release_notes: true

@@ -61,6 +61,42 @@ function jobly_integration_demo_description( $slug ) {
 }
 
 /**
+ * Invented company profile, in the shape of GET /api/v1/company.
+ *
+ * @return array
+ */
+function jobly_integration_demo_company() {
+	return array(
+		'id'              => 'demo-company',
+		'name'            => 'Primer d.o.o.',
+		'slug'            => 'primer',
+		'logoUrl'         => '',
+		'website'         => 'https://primer.example',
+		'industry'        => 'Trgovina',
+		'location'        => 'Ljubljana',
+		'description'     => '',
+		'profileUrl'      => '',
+		'careersEmbedUrl' => '',
+		'openJobsCount'   => 3,
+	);
+}
+
+/**
+ * Invented job content, in the shape of GET /api/v1/jobs/{slug} (extra fields only).
+ *
+ * @param string $slug Demo job slug.
+ * @return array
+ */
+function jobly_integration_demo_detail( $slug ) {
+	return array(
+		'description'      => jobly_integration_demo_description( $slug ),
+		'responsibilities' => array( __( 'Prevzem in izdaja blaga', 'jobly-integration' ), __( 'Delo z ročnim čitalcem', 'jobly-integration' ) ),
+		'requirements'     => array( __( 'Natančnost in zanesljivost', 'jobly-integration' ), __( 'Osnovno računalniško znanje', 'jobly-integration' ) ),
+		'benefits'         => array( __( 'Topli obrok', 'jobly-integration' ), __( 'Izobraževalni budget', 'jobly-integration' ) ),
+	);
+}
+
+/**
  * Invented applications, in the shape of GET /api/v1/applications.
  *
  * @return array[]

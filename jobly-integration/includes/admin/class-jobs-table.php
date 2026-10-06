@@ -25,6 +25,13 @@ class Jobly_Integration_Jobs_Table extends WP_List_Table {
 	public $api_code = 200;
 
 	/**
+	 * Number of jobs before filtering.
+	 *
+	 * @var int
+	 */
+	public $total_all = 0;
+
+	/**
 	 * Status counts for the views.
 	 *
 	 * @var int[]
@@ -62,9 +69,10 @@ class Jobly_Integration_Jobs_Table extends WP_List_Table {
 	 * Load, filter and paginate the rows.
 	 */
 	public function prepare_items() {
-		$res            = jobly_integration_all_jobs();
-		$this->api_code = $res['code'];
-		$items          = $res['items'];
+		$res             = jobly_integration_all_jobs();
+		$this->api_code  = $res['code'];
+		$items           = $res['items'];
+		$this->total_all = count( $items );
 
 		foreach ( $items as $job ) {
 			$st                  = (string) ( $job['status'] ?? '' );
@@ -132,7 +140,7 @@ class Jobly_Integration_Jobs_Table extends WP_List_Table {
 		if ( ! jobly_integration_is_demo() ) {
 			$actions['edit'] = '<a href="' . esc_url( jobly_integration_edit_url( $slug ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'Uredi na Jobly', 'jobly-integration' ) . '</a>';
 		}
-		$actions['copy'] = '<button type="button" class="jobly-copy" data-jobly-copy="' . esc_attr( '[jobly job="' . $slug . '"]' ) . '">' . esc_html__( 'Kopiraj kratko kodo', 'jobly-integration' ) . '</button>';
+		$actions['copy'] = '<button type="button" class="jobly-copy" data-jobly-copy="' . esc_attr( '[jobly job="' . $slug . '"]' ) . '" data-copied="' . esc_attr__( 'Kopirano', 'jobly-integration' ) . '">' . esc_html__( 'Kopiraj kratko kodo', 'jobly-integration' ) . '</button>';
 
 		return '<strong><a class="row-title" href="' . esc_url( $show ) . '">' . esc_html( (string) $item['title'] ) . '</a></strong>' . $this->row_actions( $actions );
 	}
@@ -143,7 +151,7 @@ class Jobly_Integration_Jobs_Table extends WP_List_Table {
 	 * @param array $item Row from the API.
 	 */
 	protected function column_status( $item ) {
-		return esc_html( jobly_integration_status_label( (string) ( $item['status'] ?? '' ) ) );
+		return jobly_integration_status_badge( (string) ( $item['status'] ?? '' ) );
 	}
 
 	/**
@@ -152,7 +160,8 @@ class Jobly_Integration_Jobs_Table extends WP_List_Table {
 	 * @param array $item Row from the API.
 	 */
 	protected function column_location( $item ) {
-		return esc_html( (string) ( $item['location'] ?? '' ) );
+		$loc = (string) ( $item['location'] ?? '' );
+		return '' === $loc ? '—' : esc_html( $loc );
 	}
 
 	/**
@@ -170,7 +179,8 @@ class Jobly_Integration_Jobs_Table extends WP_List_Table {
 	 * @param array $item Row from the API.
 	 */
 	protected function column_apps( $item ) {
-		return esc_html( (string) ( $item['applicationsCount'] ?? 0 ) );
+		$n = (int) ( $item['applicationsCount'] ?? 0 );
+		return '<span class="jobly-count-chip' . ( $n > 0 ? ' has' : '' ) . '">' . esc_html( (string) $n ) . '</span>';
 	}
 
 	/**
@@ -196,6 +206,6 @@ class Jobly_Integration_Jobs_Table extends WP_List_Table {
 	 * Empty-state text.
 	 */
 	public function no_items() {
-		esc_html_e( 'Ni delovnih mest.', 'jobly-integration' );
+		esc_html_e( 'Ni zadetkov za izbrane filtre.', 'jobly-integration' );
 	}
 }

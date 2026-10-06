@@ -30,8 +30,8 @@ function jobly_integration_api_base() {
  * @return array{code: int, data: array, error: string} code 0 = no connection.
  */
 function jobly_integration_api_request( $method, $path, $body = null, $key = '' ) {
-	$key  = '' !== $key ? $key : jobly_integration_settings()['api_key'];
-	$args = array(
+	$key       = '' !== $key ? $key : jobly_integration_settings()['api_key'];
+	$args      = array(
 		'method'  => $method,
 		'timeout' => 10,
 		'headers' => array(
@@ -39,6 +39,10 @@ function jobly_integration_api_request( $method, $path, $body = null, $key = '' 
 			'Accept'        => 'application/json',
 		),
 	);
+	$app_token = jobly_integration_app_token();
+	if ( '' !== $app_token ) {
+		$args['headers']['App-Token'] = $app_token;
+	}
 	if ( null !== $body ) {
 		$args['headers']['Content-Type'] = 'application/json';
 		$args['body']                    = wp_json_encode( $body );
@@ -76,7 +80,15 @@ function jobly_integration_verify_key( $key ) {
 	if ( 200 === $res['code'] ) {
 		return 'ok';
 	}
-	return 401 === $res['code'] ? 'unauthorized' : 'error';
+	if ( 401 === $res['code'] ) {
+		// Jobly says which credential it rejects.
+		$msg = (string) ( $res['data']['message'] ?? '' );
+		if ( false !== stripos( $msg, 'App-Token' ) ) {
+			return false !== stripos( $msg, 'Manjka' ) ? 'app_token_missing' : 'app_token_invalid';
+		}
+		return 'unauthorized';
+	}
+	return 'error';
 }
 
 /**
@@ -178,10 +190,110 @@ function jobly_integration_all_applications() {
 }
 
 /**
- * Forget the cached job list.
+ * Forget the cached job list, company profile and categories.
  */
 function jobly_integration_flush_cache() {
 	delete_transient( JOBLY_INTEGRATION_CACHE );
+	delete_transient( 'jobly_integration_company' );
+	delete_transient( 'jobly_integration_categories' );
+}
+
+/**
+ * Make URLs returned by the API browser-usable. With JOBLY_API_BASE defined (local testing,
+ * server-to-server address) its origin is swapped for the browser-facing "Naslov Jobly";
+ * in production URLs are used as returned.
+ *
+ * @param array $data Company or job from the API.
+ * @return array
+ */
+function jobly_integration_public_urls( array $data ) {
+	if ( ! defined( 'JOBLY_API_BASE' ) || ! JOBLY_API_BASE ) {
+		return $data;
+	}
+	$from = untrailingslashit( (string) JOBLY_API_BASE );
+	$to   = untrailingslashit( (string) jobly_integration_settings()['base_url'] );
+	foreach ( array( 'logoUrl', 'profileUrl', 'careersEmbedUrl', 'url', 'embedUrl' ) as $key ) {
+		if ( isset( $data[ $key ] ) && is_string( $data[ $key ] ) && 0 === strpos( $data[ $key ], $from ) ) {
+			$data[ $key ] = $to . substr( $data[ $key ], strlen( $from ) );
+		}
+	}
+	return $data;
+}
+
+/**
+ * Company profile behind the API key (GET /api/v1/company), cached for an hour.
+ * Demo mode returns an invented company. Empty array on older Jobly (404) or no connection.
+ *
+ * @param string $key Override key (verify step); skips the cache.
+ * @return array{name?: string, slug?: string, logoUrl?: string, website?: string, profileUrl?: string, careersEmbedUrl?: string, openJobsCount?: int}
+ */
+function jobly_integration_company( $key = '' ) {
+	if ( jobly_integration_is_demo() && '' === $key ) {
+		return jobly_integration_demo_company();
+	}
+	if ( '' === $key ) {
+		if ( '' === jobly_integration_settings()['api_key'] ) {
+			return array();
+		}
+		$cache = get_transient( 'jobly_integration_company' );
+		if ( is_array( $cache ) ) {
+			return $cache;
+		}
+	}
+	$res     = jobly_integration_api_request( 'GET', '/api/v1/company', null, $key );
+	$company = ( 200 === $res['code'] && is_array( $res['data']['data'] ?? null ) ) ? jobly_integration_public_urls( $res['data']['data'] ) : array();
+	if ( 200 === $res['code'] || 404 === $res['code'] ) {
+		set_transient( 'jobly_integration_company', $company, HOUR_IN_SECONDS );
+	}
+	return $company;
+}
+
+/**
+ * One job with its content (GET /api/v1/jobs/{slug}), merged over the list row.
+ * Falls back to the list row when the endpoint is missing (older Jobly).
+ *
+ * @param array $row Job row from the list.
+ * @return array
+ */
+function jobly_integration_job_detail( array $row ) {
+	$slug = (string) ( $row['slug'] ?? '' );
+	if ( '' === $slug ) {
+		return $row;
+	}
+	if ( jobly_integration_is_demo() ) {
+		return array_merge( $row, jobly_integration_demo_detail( $slug ) );
+	}
+	$ckey   = 'jobly_integration_job_' . md5( $slug );
+	$detail = get_transient( $ckey );
+	if ( ! is_array( $detail ) ) {
+		$res    = jobly_integration_api_request( 'GET', '/api/v1/jobs/' . rawurlencode( $slug ) );
+		$detail = ( 200 === $res['code'] && is_array( $res['data']['data'] ?? null ) ) ? jobly_integration_public_urls( $res['data']['data'] ) : array();
+		if ( 200 === $res['code'] || 404 === $res['code'] ) {
+			set_transient( $ckey, $detail, 5 * MINUTE_IN_SECONDS );
+		}
+	}
+	return array_merge( $row, $detail );
+}
+
+/**
+ * Job categories (GET /api/v1/categories), cached for a day. Empty on older Jobly.
+ *
+ * @return array<int,array{slug: string, name: string, group?: string}>
+ */
+function jobly_integration_categories() {
+	if ( jobly_integration_is_demo() || '' === jobly_integration_settings()['api_key'] ) {
+		return array();
+	}
+	$cache = get_transient( 'jobly_integration_categories' );
+	if ( is_array( $cache ) ) {
+		return $cache;
+	}
+	$res  = jobly_integration_api_request( 'GET', '/api/v1/categories' );
+	$list = ( 200 === $res['code'] && is_array( $res['data']['data'] ?? null ) ) ? array_values( $res['data']['data'] ) : array();
+	if ( 200 === $res['code'] || 404 === $res['code'] ) {
+		set_transient( 'jobly_integration_categories', $list, DAY_IN_SECONDS );
+	}
+	return $list;
 }
 
 /**
@@ -192,11 +304,11 @@ function jobly_integration_flush_cache() {
  */
 function jobly_integration_status_label( $status ) {
 	$labels = array(
-		'active'            => __( 'Objavljen', 'jobly-integration' ),
+		'active'            => __( 'Odprto', 'jobly-integration' ),
 		'draft'             => __( 'Osnutek', 'jobly-integration' ),
 		'private'           => __( 'Zasebno', 'jobly-integration' ),
 		'ready_for_publish' => __( 'Pripravljen', 'jobly-integration' ),
-		'closed'            => __( 'Zaprt', 'jobly-integration' ),
+		'closed'            => __( 'Zaprto', 'jobly-integration' ),
 	);
 	return $labels[ $status ] ?? $status;
 }

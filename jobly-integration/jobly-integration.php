@@ -3,8 +3,8 @@
  * Plugin Name:       Jobly.si HRM
  * Plugin URI:        https://github.com/joblyhub/jobly-wp-integration
  * Description:       Delovna mesta podjetja iz Jobly.si v WordPressu: seznam, podstrani oglasov, objava novih mest in vgradnja prijavnega obrazca s kratko kodo [jobly].
- * Version:           0.2.0
- * Requires at least: 6.0
+ * Version:           0.3.0
+ * Requires at least: 6.1
  * Requires PHP:      7.4
  * Author:            Jobly.si
  * Author URI:        https://jobly.si
@@ -19,16 +19,20 @@
 defined( 'ABSPATH' ) || exit;
 
 const JOBLY_INTEGRATION_FILE    = __FILE__;
-const JOBLY_INTEGRATION_VERSION = '0.2.0';
+const JOBLY_INTEGRATION_VERSION = '0.3.0';
 const JOBLY_INTEGRATION_OPTION  = 'jobly_integration';
 
 require_once __DIR__ . '/includes/settings.php';
 require_once __DIR__ . '/includes/api-client.php';
 require_once __DIR__ . '/includes/demo.php';
+require_once __DIR__ . '/includes/icons.php';
+require_once __DIR__ . '/includes/templates.php';
 require_once __DIR__ . '/includes/frontend.php';
+require_once __DIR__ . '/includes/seo.php';
+require_once __DIR__ . '/includes/blocks.php';
 
 if ( is_admin() ) {
-	foreach ( array( 'menu', 'overview', 'jobs', 'job-new', 'applications', 'settings' ) as $jobly_integration_screen ) {
+	foreach ( array( 'ui', 'menu', 'wizard', 'overview', 'jobs', 'job-new', 'applications', 'settings' ) as $jobly_integration_screen ) {
 		require_once __DIR__ . '/includes/admin/' . $jobly_integration_screen . '.php';
 	}
 }
@@ -49,6 +53,9 @@ add_action( 'init', 'jobly_integration_load_textdomain' );
 function jobly_integration_activate() {
 	jobly_integration_register_rewrites();
 	flush_rewrite_rules();
+	if ( ! jobly_integration_settings()['wizard_done'] ) {
+		set_transient( 'jobly_integration_wizard', 1, 5 * MINUTE_IN_SECONDS );
+	}
 }
 register_activation_hook( __FILE__, 'jobly_integration_activate' );
 

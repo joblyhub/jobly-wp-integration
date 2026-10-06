@@ -25,12 +25,17 @@ function jobly_integration_embed_html( $job = '', $company = '', array $opts = a
 			'accent' => $s['accent'],
 			'height' => $s['height'],
 			'title'  => __( 'Prijava na delo', 'jobly-integration' ),
+			'url'    => '',
 		)
 	);
 	$base = untrailingslashit( esc_url_raw( $s['base_url'] ) );
 	$url  = '' !== $job
 		? $base . '/embed/jobs/' . rawurlencode( $job )
 		: $base . '/embed/companies/' . rawurlencode( $company );
+	// Prefer the embed address Jobly gives us over the one built here.
+	if ( is_string( $opts['url'] ) && preg_match( '#^https?://#i', $opts['url'] ) ) {
+		$url = esc_url_raw( $opts['url'] );
+	}
 
 	$query = array();
 	if ( in_array( $opts['show'], array( 'basic', 'full' ), true ) ) {
@@ -102,9 +107,38 @@ function jobly_integration_shortcode( $atts ) {
 			: '';
 	}
 
+	if ( '' === $job && $company === $settings['company'] && $settings['careers_embed'] ) {
+		$atts['url'] = $settings['careers_embed'];
+	}
 	return jobly_integration_embed_html( $job, $company, $atts );
 }
 add_shortcode( 'jobly', 'jobly_integration_shortcode' );
+
+/**
+ * A real WordPress page chosen as the careers page (setup wizard / Prikaz), or 0.
+ *
+ * @return int
+ */
+function jobly_integration_careers_page_id() {
+	$id = (int) jobly_integration_settings()['careers_page'];
+	return ( $id > 0 && 'publish' === get_post_status( $id ) ) ? $id : 0;
+}
+
+/**
+ * Path the job pages live under: the chosen page's path, else the base setting.
+ *
+ * @return string
+ */
+function jobly_integration_base_path() {
+	$id = jobly_integration_careers_page_id();
+	if ( $id ) {
+		$uri = get_page_uri( $id );
+		if ( $uri ) {
+			return $uri;
+		}
+	}
+	return jobly_integration_settings()['base_path'];
+}
 
 /**
  * Public URL of the careers index.
@@ -112,7 +146,8 @@ add_shortcode( 'jobly', 'jobly_integration_shortcode' );
  * @return string
  */
 function jobly_integration_careers_url() {
-	return home_url( '/' . jobly_integration_settings()['base_path'] . '/' );
+	$id = jobly_integration_careers_page_id();
+	return $id ? (string) get_permalink( $id ) : home_url( '/' . jobly_integration_settings()['base_path'] . '/' );
 }
 
 /**
@@ -122,57 +157,53 @@ function jobly_integration_careers_url() {
  * @return string
  */
 function jobly_integration_job_url( $slug ) {
-	return home_url( '/' . jobly_integration_settings()['base_path'] . '/' . rawurlencode( $slug ) . '/' );
+	return home_url( '/' . jobly_integration_base_path() . '/' . rawurlencode( $slug ) . '/' );
 }
 
 /**
- * Server-rendered list of open jobs. Shared by [jobly_jobs] and /kariera/.
+ * [jobly_jobs]                         seznam odprtih mest (strani, če ni število)
+ * [jobly_jobs number="6"]              prvih 6, brez strani
+ * [jobly_jobs filters="1" layout="grid"] z iskanjem in filtri, kartice v mreži
  *
+ * @param array|string $atts Shortcode attributes.
  * @return string Escaped HTML.
  */
-function jobly_integration_render_jobs_list() {
-	$jobs  = jobly_integration_open_jobs();
-	$types = jobly_integration_employment_types();
-	$css   = '.jobly-jobs{list-style:none;margin:0;padding:0;display:grid;gap:.75rem}'
-		. '.jobly-jobs li{border:1px solid #e2e8f0;border-radius:10px;padding:.9rem 1.1rem}'
-		. '.jobly-jobs a{font-weight:600;text-decoration:none}'
-		. '.jobly-jobs__meta{display:block;color:#64748b;font-size:.875rem;margin-top:.15rem}'
-		. '.jobly-jobs__demo{font-size:.75rem;color:#92400e;background:#fef3c7;border-radius:999px;padding:.1rem .6rem;display:inline-block;margin-bottom:.6rem}';
-
-	ob_start();
-	echo '<div class="jobly-jobs-wrap"><style>' . esc_html( $css ) . '</style>';
-	if ( jobly_integration_is_demo() ) {
-		echo '<span class="jobly-jobs__demo">' . esc_html__( 'Demo · izmišljeni podatki', 'jobly-integration' ) . '</span>';
+function jobly_integration_shortcode_jobs( $atts ) {
+	$atts   = shortcode_atts(
+		array(
+			'number'  => '0',
+			'filters' => '0',
+			'layout'  => '',
+		),
+		$atts,
+		'jobly_jobs'
+	);
+	$number = absint( $atts['number'] );
+	$args   = array(
+		'number'   => $number,
+		'filters'  => in_array( strtolower( (string) $atts['filters'] ), array( '1', 'true', 'yes', 'da' ), true ),
+		'paginate' => 0 === $number,
+	);
+	if ( in_array( $atts['layout'], array( 'list', 'grid' ), true ) ) {
+		$args['layout'] = $atts['layout'];
 	}
-	if ( ! $jobs ) {
-		echo '<p>' . esc_html__( 'Trenutno ni odprtih delovnih mest.', 'jobly-integration' ) . '</p></div>';
-		return (string) ob_get_clean();
+	// On the chosen careers page the filters post back to the page itself.
+	$id = jobly_integration_careers_page_id();
+	if ( $id && is_page( $id ) ) {
+		$args['action'] = (string) get_permalink( $id );
 	}
-	echo '<ul class="jobly-jobs">';
-	foreach ( $jobs as $job ) {
-		$meta = array_filter(
-			array(
-				$job['location'] ?? '',
-				$types[ $job['employmentType'] ?? '' ] ?? '',
-				jobly_integration_format_date( $job['publishedAt'] ?? null ),
-			),
-			static function ( $v ) {
-				return '' !== $v && '—' !== $v;
-			}
-		);
-		echo '<li><a href="' . esc_url( jobly_integration_job_url( (string) $job['slug'] ) ) . '">' . esc_html( (string) $job['title'] ) . '</a><span class="jobly-jobs__meta">' . esc_html( implode( ' · ', $meta ) ) . '</span></li>';
-	}
-	echo '</ul></div>';
-	return (string) ob_get_clean();
+	return jobly_integration_render_list( $args );
 }
-add_shortcode( 'jobly_jobs', 'jobly_integration_render_jobs_list' );
+add_shortcode( 'jobly_jobs', 'jobly_integration_shortcode_jobs' );
 
 /**
  * Rewrite rules for {base}/ and {base}/{slug}/.
  */
 function jobly_integration_register_rewrites() {
-	$base = preg_quote( jobly_integration_settings()['base_path'], '#' );
-	add_rewrite_rule( '^' . $base . '/?$', 'index.php?jobly_index=1', 'top' );
+	$base = preg_quote( jobly_integration_base_path(), '#' );
+	if ( ! jobly_integration_careers_page_id() ) {
+		add_rewrite_rule( '^' . $base . '/?$', 'index.php?jobly_index=1', 'top' );
+	}
 	add_rewrite_rule( '^' . $base . '/([^/]+)/?$', 'index.php?jobly_job=$matches[1]', 'top' );
 }
 add_action( 'init', 'jobly_integration_register_rewrites' );
@@ -216,7 +247,7 @@ function jobly_integration_current_job() {
 		$cache[ $slug ] = null;
 		foreach ( jobly_integration_open_jobs() as $job ) {
 			if ( ( $job['slug'] ?? '' ) === $slug ) {
-				$cache[ $slug ] = $job;
+				$cache[ $slug ] = jobly_integration_job_detail( $job );
 			}
 		}
 	}
@@ -248,20 +279,30 @@ function jobly_integration_virtual_page( $posts, $query ) {
 			nocache_headers();
 			return array();
 		}
-		$title   = (string) $job['title'];
-		$content = jobly_integration_is_demo()
-			? jobly_integration_demo( jobly_integration_settings()['accent'], (string) $job['slug'] )
-			: jobly_integration_embed_html( (string) $job['slug'], '', array( 'show' => 'full' ) );
+		$title = (string) $job['title'];
+		jobly_integration_enqueue_frontend();
+		$content = jobly_integration_render_template(
+			'single-job.php',
+			array(
+				'job'  => $job,
+				'demo' => jobly_integration_is_demo(),
+			)
+		);
 	} else {
 		$title   = __( 'Kariera', 'jobly-integration' );
-		$content = jobly_integration_render_jobs_list();
+		$content = jobly_integration_render_list(
+			array(
+				'filters'  => true,
+				'paginate' => true,
+			)
+		);
 	}
 
 	$post = new WP_Post(
 		(object) array(
 			'ID'             => 0,
 			'post_title'     => $title,
-			'post_name'      => $is_job ? (string) $job['slug'] : jobly_integration_settings()['base_path'],
+			'post_name'      => $is_job ? (string) $job['slug'] : jobly_integration_base_path(),
 			'post_content'   => $content,
 			'post_status'    => 'publish',
 			'post_type'      => 'page',
@@ -284,11 +325,23 @@ function jobly_integration_virtual_page( $posts, $query ) {
 add_filter( 'the_posts', 'jobly_integration_virtual_page', 10, 2 );
 
 /**
- * Keep wpautop from mangling the iframe/list markup of the virtual page.
+ * The request is one of our virtual pages (list or job).
+ *
+ * @return bool
  */
 function jobly_integration_is_virtual() {
 	return (bool) get_query_var( 'jobly_index' ) || '' !== (string) get_query_var( 'jobly_job' );
 }
+
+/**
+ * Keep wpautop from mangling the markup of the virtual pages.
+ */
+function jobly_integration_no_autop() {
+	if ( jobly_integration_is_virtual() ) {
+		remove_filter( 'the_content', 'wpautop' );
+	}
+}
+add_action( 'wp', 'jobly_integration_no_autop' );
 
 /**
  * <title> of the virtual pages.
@@ -316,7 +369,7 @@ function jobly_integration_canonical() {
 	remove_action( 'wp_head', 'rel_canonical' );
 	$job = jobly_integration_current_job();
 	if ( $job && ! jobly_integration_is_demo() ) {
-		$url = untrailingslashit( jobly_integration_settings()['base_url'] ) . '/jobs/' . rawurlencode( (string) $job['slug'] );
+		$url = ! empty( $job['url'] ) ? (string) $job['url'] : untrailingslashit( jobly_integration_settings()['base_url'] ) . '/jobs/' . rawurlencode( (string) $job['slug'] );
 	} else {
 		$url = $job ? jobly_integration_job_url( (string) $job['slug'] ) : jobly_integration_careers_url();
 	}

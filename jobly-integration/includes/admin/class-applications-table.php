@@ -24,6 +24,13 @@ class Jobly_Integration_Applications_Table extends WP_List_Table {
 	public $api_code = 200;
 
 	/**
+	 * Number of applications before filtering.
+	 *
+	 * @var int
+	 */
+	public $total_all = 0;
+
+	/**
 	 * Set up the table.
 	 */
 	public function __construct() {
@@ -52,8 +59,9 @@ class Jobly_Integration_Applications_Table extends WP_List_Table {
 	 * Load, filter and paginate the rows.
 	 */
 	public function prepare_items() {
-		$res            = jobly_integration_all_applications();
-		$this->api_code = $res['code'];
+		$res             = jobly_integration_all_applications();
+		$this->api_code  = $res['code'];
+		$this->total_all = count( $res['items'] );
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only search.
 		$search = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
 		$items  = array_filter(
@@ -80,14 +88,15 @@ class Jobly_Integration_Applications_Table extends WP_List_Table {
 	 * @param array $item Row from the API.
 	 */
 	protected function column_candidate( $item ) {
-		$url = jobly_integration_admin_url(
+		$url  = jobly_integration_admin_url(
 			'jobly-applications',
 			array(
 				'action'      => 'show',
 				'application' => $item['id'],
 			)
 		);
-		return '<strong><a class="row-title" href="' . esc_url( $url ) . '">' . esc_html( (string) ( $item['applicant']['name'] ?? '' ) ) . '</a></strong>'
+		$name = (string) ( $item['applicant']['name'] ?? '' );
+		return '<span class="jobly-avatar">' . esc_html( jobly_integration_initials( $name ) ) . '</span><strong><a class="row-title" href="' . esc_url( $url ) . '">' . esc_html( (string) ( $item['applicant']['name'] ?? '' ) ) . '</a></strong>'
 			. $this->row_actions( array( 'show' => '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Poglej', 'jobly-integration' ) . '</a>' ) );
 	}
 
@@ -106,7 +115,7 @@ class Jobly_Integration_Applications_Table extends WP_List_Table {
 	 * @param array $item Row from the API.
 	 */
 	protected function column_stage( $item ) {
-		return esc_html( jobly_integration_stage_label( (string) ( $item['stage'] ?? '' ) ) );
+		return jobly_integration_stage_badge( (string) ( $item['stage'] ?? '' ) );
 	}
 
 	/**

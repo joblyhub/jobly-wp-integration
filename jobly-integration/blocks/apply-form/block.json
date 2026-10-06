@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jobly/apply-form",
+	"title": "Jobly – prijavni obrazec",
+	"category": "widgets",
+	"icon": "id",
+	"description": "Prijavni obrazec za izbrano delovno mesto ali karierna stran podjetja.",
+	"keywords": [ "jobly", "prijava", "obrazec", "apply" ],
+	"textdomain": "jobly-integration",
+	"attributes": {
+		"job": { "type": "string", "default": "" },
+		"showAd": { "type": "boolean", "default": false },
+		"height": { "type": "number", "default": 0 }
+	},
+	"supports": { "html": false, "align": [ "wide", "full" ] },
+	"editorScript": "jobly-integration-blocks",
+	"style": "jobly-integration",
+	"render": "file:./render.php"
+}

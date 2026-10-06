@@ -87,23 +87,26 @@ function jobly_integration_page_job_new() {
 		return;
 	}
 	if ( $demo ) {
-		echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'Povežite podjetje v Nastavitvah.', 'jobly-integration' ) . ' <a href="' . esc_url( jobly_integration_admin_url( 'jobly-settings' ) ) . '">' . esc_html__( 'Odpri Nastavitve', 'jobly-integration' ) . '</a> ' . esc_html__( '(Demo način: obrazec je onemogočen.)', 'jobly-integration' ) . '</p></div>';
+		echo '<div class="jobly-banner">';
+		jobly_integration_icon( 'sparkles', '', 22 );
+		echo '<div><strong>' . esc_html__( 'Demo način: obrazec je onemogočen', 'jobly-integration' ) . '</strong><span>' . esc_html__( 'Za objavo oglasa povežite podjetje.', 'jobly-integration' ) . '</span></div><a class="button button-primary" href="' . esc_url( jobly_integration_admin_url( 'jobly-setup' ) ) . '">' . esc_html__( 'Poveži podjetje', 'jobly-integration' ) . '</a></div>';
 	}
 
 	$state  = $demo ? false : get_transient( 'jobly_integration_form_' . get_current_user_id() );
 	$old    = is_array( $state ) ? $state['old'] : array();
 	$errors = is_array( $state ) ? $state['errors'] : array();
 	delete_transient( 'jobly_integration_form_' . get_current_user_id() );
-	$val  = static function ( $k ) use ( $old ) {
+	$val           = static function ( $k ) use ( $old ) {
 		$v = $old[ $k ] ?? '';
 		return is_array( $v ) ? implode( "\n", $v ) : (string) $v;
 	};
-	$cats = array( 'Administracija', 'Backend razvoj', 'Frontend razvoj', 'Računovodstvo', 'Prodaja', 'Skladiščenje', 'Marketing', 'Proizvodnja', 'Gostinstvo in turizem', 'Logistika in transport' );
+	$category_list = $demo ? array() : jobly_integration_categories();
+	$cats          = array( 'Administracija', 'Backend razvoj', 'Frontend razvoj', 'Računovodstvo', 'Prodaja', 'Skladiščenje', 'Marketing', 'Proizvodnja', 'Gostinstvo in turizem', 'Logistika in transport' );
 	?>
-	<p><?php esc_html_e( 'Oglas se objavi neposredno na Jobly. Plačni razpon je obvezen (v EUR).', 'jobly-integration' ); ?></p>
-	<form class="jobly-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+	<form class="jobly-form jobly-panel" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 		<input type="hidden" name="action" value="jobly_integration_create">
 		<?php wp_nonce_field( 'jobly_integration_create' ); ?>
+		<p class="description"><?php esc_html_e( 'Oglas se objavi neposredno na Jobly. Plačni razpon je obvezen (v EUR).', 'jobly-integration' ); ?></p>
 		<table class="form-table" role="presentation">
 			<tr>
 				<th scope="row"><label for="jf-title"><?php esc_html_e( 'Naziv', 'jobly-integration' ); ?> *</label></th>
@@ -140,13 +143,37 @@ function jobly_integration_page_job_new() {
 			<tr>
 				<th scope="row"><label for="jf-category"><?php esc_html_e( 'Kategorija', 'jobly-integration' ); ?> *</label></th>
 				<td>
-					<input id="jf-category" name="category" class="regular-text" list="jf-categories" value="<?php echo esc_attr( $val( 'category' ) ); ?>"<?php disabled( $demo ); ?>>
-					<datalist id="jf-categories">
-					<?php
-					foreach ( $cats as $c ) :
-						?>
-						<option value="<?php echo esc_attr( $c ); ?>"><?php endforeach; ?></datalist>
-					<p class="description"><?php esc_html_e( 'Točno ime kategorije na Jobly (npr. Računovodstvo). Neznana kategorija se zavrne.', 'jobly-integration' ); ?></p>
+					<?php if ( $category_list ) : ?>
+						<select id="jf-category" name="category"<?php disabled( $demo ); ?>>
+							<option value=""><?php esc_html_e( '— izberi —', 'jobly-integration' ); ?></option>
+							<?php
+							$by_group = array();
+							foreach ( $category_list as $cat ) {
+								if ( empty( $cat['group'] ) ) {
+									continue; // Root node.
+								}
+								$by_group[ (string) ( $cat['group'] ?? '' ) ][] = $cat;
+							}
+							foreach ( $by_group as $group => $group_cats ) :
+								echo '' !== $group ? '<optgroup label="' . esc_attr( $group ) . '">' : '';
+								foreach ( $group_cats as $cat ) :
+									?>
+									<option value="<?php echo esc_attr( (string) $cat['name'] ); ?>" <?php selected( $val( 'category' ), (string) $cat['name'] ); ?>><?php echo esc_html( (string) $cat['name'] ); ?></option>
+									<?php
+								endforeach;
+								echo '' !== $group ? '</optgroup>' : '';
+							endforeach;
+							?>
+						</select>
+					<?php else : ?>
+						<input id="jf-category" name="category" class="regular-text" list="jf-categories" value="<?php echo esc_attr( $val( 'category' ) ); ?>"<?php disabled( $demo ); ?>>
+						<datalist id="jf-categories">
+						<?php foreach ( $cats as $c ) : ?>
+							<option value="<?php echo esc_attr( $c ); ?>">
+						<?php endforeach; ?>
+						</datalist>
+						<p class="description"><?php esc_html_e( 'Točno ime kategorije na Jobly (npr. Računovodstvo). Neznana kategorija se zavrne.', 'jobly-integration' ); ?></p>
+					<?php endif; ?>
 					<?php jobly_integration_field_errors( $errors, 'category' ); ?>
 				</td>
 			</tr>

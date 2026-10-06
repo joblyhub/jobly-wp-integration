@@ -12,18 +12,33 @@ defined( 'ABSPATH' ) || exit;
  */
 function jobly_integration_admin_menu() {
 	$cap = 'manage_options';
-	add_menu_page( 'Jobly.si HRM', 'Jobly HRM', $cap, 'jobly-integration', 'jobly_integration_page_overview', 'dashicons-groups', 58 );
+	$top = add_menu_page( 'Jobly.si HRM', 'Jobly HRM', $cap, 'jobly-integration', 'jobly_integration_page_overview', jobly_integration_menu_icon(), 58 );
 	add_submenu_page( 'jobly-integration', __( 'Pregled', 'jobly-integration' ), __( 'Pregled', 'jobly-integration' ), $cap, 'jobly-integration', 'jobly_integration_page_overview' );
 	$jobs = add_submenu_page( 'jobly-integration', __( 'Delovna mesta', 'jobly-integration' ), __( 'Delovna mesta', 'jobly-integration' ), $cap, 'jobly-jobs', 'jobly_integration_page_jobs' );
-	add_submenu_page( 'jobly-integration', __( 'Dodaj novo', 'jobly-integration' ), __( 'Dodaj novo', 'jobly-integration' ), $cap, 'jobly-job-new', 'jobly_integration_page_job_new' );
+	$new  = add_submenu_page( 'jobly-integration', __( 'Dodaj novo', 'jobly-integration' ), __( 'Dodaj novo', 'jobly-integration' ), $cap, 'jobly-job-new', 'jobly_integration_page_job_new' );
 	$apps = add_submenu_page( 'jobly-integration', __( 'Prijave', 'jobly-integration' ), __( 'Prijave', 'jobly-integration' ), $cap, 'jobly-applications', 'jobly_integration_page_applications' );
-	add_submenu_page( 'jobly-integration', __( 'Nastavitve', 'jobly-integration' ), __( 'Nastavitve', 'jobly-integration' ), $cap, 'jobly-settings', 'jobly_integration_page_settings' );
+	$set  = add_submenu_page( 'jobly-integration', __( 'Nastavitve', 'jobly-integration' ), __( 'Nastavitve', 'jobly-integration' ), $cap, 'jobly-settings', 'jobly_integration_page_settings' );
+	// Empty parent: reachable by URL (redirect, links), not listed in the menu.
+	$wiz = add_submenu_page( '', __( 'Čarovnik za nastavitev', 'jobly-integration' ), __( 'Čarovnik za nastavitev', 'jobly-integration' ), $cap, 'jobly-setup', 'jobly_integration_page_wizard' );
+
+	add_action( 'load-' . $wiz, 'jobly_integration_wizard_title' );
+	foreach ( array( $top, $jobs, $apps, $set, $new, $wiz ) as $hook ) {
+		add_action( 'load-' . $hook, 'jobly_integration_help_tabs' );
+	}
 
 	// Screen options (per page) on the two list screens.
 	add_action( 'load-' . $jobs, 'jobly_integration_screen_options' );
 	add_action( 'load-' . $apps, 'jobly_integration_screen_options' );
 }
 add_action( 'admin_menu', 'jobly_integration_admin_menu' );
+
+/**
+ * Page title of the hidden wizard screen (core would pass null to strip_tags()).
+ */
+function jobly_integration_wizard_title() {
+	global $title;
+	$title = __( 'Čarovnik za nastavitev', 'jobly-integration' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- core reads $title for the admin header.
+}
 
 /**
  * "Zaslonske možnosti": number of rows per page, only on index screens.
@@ -120,19 +135,22 @@ function jobly_integration_require_cap() {
  */
 function jobly_integration_notice_texts() {
 	return array(
-		'saved'        => array( 'success', __( 'Nastavitve so shranjene.', 'jobly-integration' ) ),
-		'verified'     => array( 'success', __( 'Povezava deluje. Demo je izklopljen.', 'jobly-integration' ) ),
-		'ok'           => array( 'success', __( 'Povezava deluje.', 'jobly-integration' ) ),
-		'unauthorized' => array( 'error', __( 'Napačen ključ: Jobly ga ne sprejme.', 'jobly-integration' ) ),
-		'network'      => array( 'error', __( 'Ni povezave z Jobly. Preveri naslov in internetno povezavo strežnika.', 'jobly-integration' ) ),
-		'error'        => array( 'error', __( 'Jobly je vrnil nepričakovan odgovor. Poskusi znova čez nekaj minut.', 'jobly-integration' ) ),
-		'no_key'       => array( 'error', __( 'Najprej vpiši API ključ.', 'jobly-integration' ) ),
-		'bad_key'      => array( 'error', __( 'Ključ ni v obliki jbl_…', 'jobly-integration' ) ),
-		'key_removed'  => array( 'success', __( 'Ključ je odstranjen.', 'jobly-integration' ) ),
-		'created'      => array( 'success', __( 'Delovno mesto je objavljeno na Jobly.', 'jobly-integration' ) ),
-		'refreshed'    => array( 'success', __( 'Seznam je osvežen.', 'jobly-integration' ) ),
-		'forbidden'    => array( 'error', __( 'Jobly objave ne dovoli (npr. pogodba za delodajalce še ni podpisana).', 'jobly-integration' ) ),
-		'not_found'    => array( 'error', __( 'Zapisa ni mogoče najti.', 'jobly-integration' ) ),
+		'saved'             => array( 'success', __( 'Nastavitve so shranjene.', 'jobly-integration' ) ),
+		'verified'          => array( 'success', __( 'Povezava deluje. Demo je izklopljen.', 'jobly-integration' ) ),
+		'ok'                => array( 'success', __( 'Povezava deluje.', 'jobly-integration' ) ),
+		'unauthorized'      => array( 'error', __( 'Napačen ključ: Jobly ga ne sprejme.', 'jobly-integration' ) ),
+		'network'           => array( 'error', __( 'Ni povezave z Jobly. Preveri naslov in internetno povezavo strežnika.', 'jobly-integration' ) ),
+		'error'             => array( 'error', __( 'Jobly je vrnil nepričakovan odgovor. Poskusi znova čez nekaj minut.', 'jobly-integration' ) ),
+		'app_token_missing' => array( 'error', __( 'Jobly zahteva App-Token (žeton aplikacije). Vpišite ga v Povezavi ali ga določite s konstanto JOBLY_APP_TOKEN.', 'jobly-integration' ) ),
+		'app_token_invalid' => array( 'error', __( 'App-Token ni veljaven: Jobly ga ne sprejme. Preverite žeton aplikacije (jba_…).', 'jobly-integration' ) ),
+		'no_key'            => array( 'error', __( 'Najprej vpiši API ključ.', 'jobly-integration' ) ),
+		'bad_key'           => array( 'error', __( 'Ključ ni v obliki jbl_…', 'jobly-integration' ) ),
+		'key_removed'       => array( 'success', __( 'Ključ je odstranjen.', 'jobly-integration' ) ),
+		'wizard_skip'       => array( 'info', __( 'Nastavitev lahko kadar koli dokončate v Nastavitvah.', 'jobly-integration' ) ),
+		'created'           => array( 'success', __( 'Delovno mesto je objavljeno na Jobly.', 'jobly-integration' ) ),
+		'refreshed'         => array( 'success', __( 'Seznam je osvežen.', 'jobly-integration' ) ),
+		'forbidden'         => array( 'error', __( 'Jobly objave ne dovoli (npr. pogodba za delodajalce še ni podpisana).', 'jobly-integration' ) ),
+		'not_found'         => array( 'error', __( 'Zapisa ni mogoče najti.', 'jobly-integration' ) ),
 	);
 }
 
@@ -149,38 +167,6 @@ function jobly_integration_notices() {
 }
 
 /**
- * Page header: title, optional "Dodaj novo" button, connection status.
- *
- * @param string $title      Screen title.
- * @param string $action_url URL of the page-title-action button, or ''.
- * @param string $action_txt Its label.
- */
-function jobly_integration_header( $title, $action_url = '', $action_txt = '' ) {
-	$s = jobly_integration_settings();
-	echo '<div class="wrap jobly-wrap"><h1 class="wp-heading-inline">' . esc_html( $title ) . '</h1>';
-	if ( '' !== $action_url ) {
-		echo ' <a href="' . esc_url( $action_url ) . '" class="page-title-action">' . esc_html( $action_txt ) . '</a>';
-	}
-	echo '<span class="jobly-status">';
-	if ( $s['demo'] ) {
-		echo '<span class="jobly-badge jobly-badge--demo">' . esc_html__( 'Demo · izmišljeni podatki', 'jobly-integration' ) . '</span>';
-	} elseif ( $s['connected'] ) {
-		echo '<span class="jobly-badge jobly-badge--ok">✓ ' . esc_html__( 'Povezano z Jobly', 'jobly-integration' ) . ' · ' . esc_html( jobly_integration_masked_key() ) . '</span>';
-	} else {
-		echo '<span class="jobly-badge jobly-badge--off">' . esc_html__( 'Ni povezano', 'jobly-integration' ) . '</span>';
-	}
-	echo '</span><hr class="wp-header-end">';
-	jobly_integration_notices();
-}
-
-/**
- * Close the wrap opened by jobly_integration_header().
- */
-function jobly_integration_footer() {
-	echo '</div>';
-}
-
-/**
  * Whether data screens can show anything (demo or a key). Otherwise prints the
  * "connect first" notice.
  *
@@ -191,7 +177,7 @@ function jobly_integration_require_connection() {
 	if ( $s['demo'] || ( $s['api_key'] && $s['connected'] ) ) {
 		return true;
 	}
-	echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'Povežite podjetje v Nastavitvah.', 'jobly-integration' ) . ' <a href="' . esc_url( jobly_integration_admin_url( 'jobly-settings' ) ) . '">' . esc_html__( 'Odpri Nastavitve', 'jobly-integration' ) . '</a></p></div>';
+	jobly_integration_empty_state( 'connect', __( 'Podjetje še ni povezano', 'jobly-integration' ), __( 'Vpišite API ključ iz Jobly ali poskusite z demo podatki.', 'jobly-integration' ), jobly_integration_admin_url( 'jobly-setup' ), __( 'Zaženi čarovnika', 'jobly-integration' ) );
 	return false;
 }
 
@@ -203,7 +189,7 @@ function jobly_integration_require_connection() {
 function jobly_integration_api_error_notice( $code ) {
 	$msg = 0 === $code ? 'network' : ( 401 === $code ? 'unauthorized' : 'error' );
 	$txt = jobly_integration_notice_texts()[ $msg ][1];
-	echo '<div class="notice notice-error inline"><p>' . esc_html( $txt ) . '</p></div>';
+	echo '<div class="notice notice-error inline"><p>' . esc_html( $txt ) . ' <a href="' . esc_url( jobly_integration_admin_url( 'jobly-settings' ) ) . '">' . esc_html__( 'Preveri povezavo', 'jobly-integration' ) . '</a></p></div>';
 }
 
 /**

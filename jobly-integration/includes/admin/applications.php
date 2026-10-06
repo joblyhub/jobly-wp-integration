@@ -34,10 +34,15 @@ function jobly_integration_page_applications() {
 		jobly_integration_footer();
 		return;
 	}
-	echo '<form method="get"><input type="hidden" name="page" value="jobly-applications">';
+	if ( 0 === $table->total_all ) {
+		jobly_integration_empty_state( 'applications', __( 'Še ni prijav', 'jobly-integration' ), __( 'Ko kandidat odda prijavo prek vašega spletnega mesta ali Jobly, se prikaže tukaj. Podatki se berejo sproti in se v WordPressu ne shranjujejo.', 'jobly-integration' ) );
+		jobly_integration_footer();
+		return;
+	}
+	echo '<div class="jobly-panel jobly-panel--table"><form method="get"><input type="hidden" name="page" value="jobly-applications">';
 	$table->search_box( __( 'Išči prijave', 'jobly-integration' ), 'jobly-app' );
 	$table->display();
-	echo '</form>';
+	echo '</form></div>';
 	jobly_integration_footer();
 }
 
@@ -48,7 +53,9 @@ function jobly_integration_page_applications() {
  */
 function jobly_integration_application_show( $id ) {
 	jobly_integration_header( __( 'Prijava', 'jobly-integration' ) );
-	echo '<p><a href="' . esc_url( jobly_integration_admin_url( 'jobly-applications' ) ) . '">← ' . esc_html__( 'Vse prijave', 'jobly-integration' ) . '</a></p>';
+	echo '<p class="jobly-back"><a href="' . esc_url( jobly_integration_admin_url( 'jobly-applications' ) ) . '">';
+	jobly_integration_icon( 'arrow-left', '', 16 );
+	echo ' ' . esc_html__( 'Vse prijave', 'jobly-integration' ) . '</a></p>';
 	if ( ! jobly_integration_require_connection() ) {
 		jobly_integration_footer();
 		return;
@@ -71,26 +78,24 @@ function jobly_integration_application_show( $id ) {
 			$job_slug = $job['slug'];
 		}
 	}
-	echo '<h2>' . esc_html( (string) ( $app['applicant']['name'] ?? '' ) ) . '</h2><table class="widefat striped" style="max-width:700px"><tbody>';
+	$name = (string) ( $app['applicant']['name'] ?? '' );
+	echo '<div class="jobly-detail"><div class="jobly-detail__main"><section class="jobly-panel"><header class="jobly-panel__head"><div class="jobly-person"><span class="jobly-avatar jobly-avatar--lg">' . esc_html( jobly_integration_initials( $name ) ) . '</span><h2>' . esc_html( $name ) . '</h2></div>' . wp_kses_post( jobly_integration_stage_badge( (string) ( $app['stage'] ?? '' ) ) ) . '</header><dl class="jobly-dl">';
 	$rows = array(
 		__( 'E-naslov', 'jobly-integration' )      => $app['applicant']['email'] ?? '',
 		__( 'Delovno mesto', 'jobly-integration' ) => $app['job']['title'] ?? '',
-		__( 'Stanje', 'jobly-integration' )        => jobly_integration_stage_label( (string) ( $app['stage'] ?? '' ) ),
 		__( 'Prijavljen', 'jobly-integration' )    => jobly_integration_format_date( $app['appliedAt'] ?? null ),
 	);
-	foreach ( $rows as $label => $value ) {
-		echo '<tr><th scope="row" style="width:200px">' . esc_html( $label ) . '</th><td>' . esc_html( (string) $value ) . '</td></tr>';
-	}
 	// Any other field the API returns (e.g. answers to custom questions, once Jobly has them).
 	$known = array( 'id', 'stage', 'coverLetter', 'appliedAt', 'job', 'applicant' );
 	foreach ( $app as $key => $value ) {
-		if ( in_array( $key, $known, true ) ) {
-			continue;
+		if ( ! in_array( $key, $known, true ) ) {
+			$rows[ (string) $key ] = is_scalar( $value ) ? (string) $value : wp_json_encode( $value, JSON_UNESCAPED_UNICODE );
 		}
-		$text = is_scalar( $value ) ? (string) $value : wp_json_encode( $value, JSON_UNESCAPED_UNICODE );
-		echo '<tr><th scope="row">' . esc_html( (string) $key ) . '</th><td>' . esc_html( (string) $text ) . '</td></tr>';
 	}
-	echo '<tr><th scope="row">' . esc_html__( 'Motivacijsko pismo', 'jobly-integration' ) . '</th><td>' . nl2br( esc_html( (string) ( $app['coverLetter'] ?? '' ) ) ) . '</td></tr></tbody></table>';
+	foreach ( $rows as $label => $value ) {
+		echo '<div><dt>' . esc_html( $label ) . '</dt><dd>' . esc_html( (string) $value ) . '</dd></div>';
+	}
+	echo '</dl><h3>' . esc_html__( 'Motivacijsko pismo', 'jobly-integration' ) . '</h3><div class="jobly-letter">' . nl2br( esc_html( (string) ( $app['coverLetter'] ?? '' ) ) ) . '</div></section></div><aside class="jobly-detail__side">';
 	if ( '' !== $job_slug ) {
 		$url = jobly_integration_admin_url(
 			'jobly-jobs',
@@ -99,8 +104,9 @@ function jobly_integration_application_show( $id ) {
 				'job'    => $job_slug,
 			)
 		);
-		echo '<p><a href="' . esc_url( $url ) . '">' . esc_html__( 'Odpri delovno mesto', 'jobly-integration' ) . '</a></p>';
+		echo '<section class="jobly-panel"><header class="jobly-panel__head"><h2>' . esc_html__( 'Delovno mesto', 'jobly-integration' ) . '</h2></header><p>' . esc_html( (string) ( $app['job']['title'] ?? '' ) ) . '</p><a class="button" href="' . esc_url( $url ) . '">' . esc_html__( 'Odpri delovno mesto', 'jobly-integration' ) . '</a></section>';
 	}
+	echo '</aside></div>';
 	echo '<p class="description">' . esc_html__( 'Postopek z kandidatom (stanje, razgovori, ponudba) vodiš na Jobly. Podatki se berejo sproti in se v WordPressu ne shranjujejo.', 'jobly-integration' ) . '</p>';
 	jobly_integration_footer();
 }

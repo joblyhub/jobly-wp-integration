@@ -4,15 +4,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jobly.si HRM 0.3.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/jobly-integration\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Last-Translator: Jobly.si\n"
+"Language-Team: English\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-10-06T14:59:49+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2026-10-06 12:00+0000\n"
 "X-Generator: WP-CLI 2.12.0\n"
+"Language: en_US\n"
 "X-Domain: jobly-integration\n"
+
 
 #. Plugin Name of the plugin
 #: jobly-integration.php
@@ -27,7 +29,7 @@ msgstr ""
 #. Description of the plugin
 #: jobly-integration.php
 msgid "Delovna mesta podjetja iz Jobly.si v WordPressu: seznam, podstrani oglasov, objava novih mest in vgradnja prijavnega obrazca s kratko kodo [jobly]."
-msgstr ""
+msgstr "Your company's Jobly.si jobs in WordPress: list, job pages, publishing new jobs and the application form via the [jobly] shortcode."
 
 #. Author of the plugin
 #: jobly-integration.php
@@ -41,48 +43,48 @@ msgstr ""
 
 #: blocks/apply-form/render.php:30
 msgid "Jobly: izberi delovno mesto ali v nastavitvah vpiši podjetje."
-msgstr ""
+msgstr "Jobly: choose a job or enter the company in the settings."
 
 #: includes/admin/applications.php:25
 #: includes/admin/jobs.php:144
 #: includes/admin/menu.php:19
 #: includes/admin/ui.php:206
 msgid "Prijave"
-msgstr ""
+msgstr "Applications"
 
 #: includes/admin/applications.php:38
 #: includes/admin/overview.php:130
 msgid "Še ni prijav"
-msgstr ""
+msgstr "No applications yet"
 
 #: includes/admin/applications.php:38
 msgid "Ko kandidat odda prijavo prek vašega spletnega mesta ali Jobly, se prikaže tukaj. Podatki se berejo sproti in se v WordPressu ne shranjujejo."
-msgstr ""
+msgstr "When a candidate applies through your site or Jobly, it shows up here. Data is read live and is not stored in WordPress."
 
 #: includes/admin/applications.php:43
 msgid "Išči prijave"
-msgstr ""
+msgstr "Search applications"
 
 #: includes/admin/applications.php:55
 msgid "Prijava"
-msgstr ""
+msgstr "Application"
 
 #: includes/admin/applications.php:58
 #: includes/admin/overview.php:123
 msgid "Vse prijave"
-msgstr ""
+msgstr "All applications"
 
 #: includes/admin/applications.php:71
 #: includes/admin/jobs.php:84
 #: includes/admin/menu.php:153
 msgid "Zapisa ni mogoče najti."
-msgstr ""
+msgstr "Record not found."
 
 #: includes/admin/applications.php:84
 #: includes/admin/jobs.php:206
 #: includes/demo.php:187
 msgid "E-naslov"
-msgstr ""
+msgstr "Email"
 
 #: includes/admin/applications.php:85
 #: includes/admin/applications.php:107
@@ -90,54 +92,54 @@ msgstr ""
 #: includes/admin/jobs.php:68
 #: assets/blocks.js:80
 msgid "Delovno mesto"
-msgstr ""
+msgstr "Job"
 
 #: includes/admin/applications.php:86
 msgid "Prijavljen"
-msgstr ""
+msgstr "Applied"
 
 #: includes/admin/applications.php:98
 msgid "Motivacijsko pismo"
-msgstr ""
+msgstr "Cover letter"
 
 #: includes/admin/applications.php:107
 msgid "Odpri delovno mesto"
-msgstr ""
+msgstr "Open job"
 
 #: includes/admin/applications.php:110
 msgid "Postopek z kandidatom (stanje, razgovori, ponudba) vodiš na Jobly. Podatki se berejo sproti in se v WordPressu ne shranjujejo."
-msgstr ""
+msgstr "You manage the candidate process (stage, interviews, offer) on Jobly. Data is read live and is not stored in WordPress."
 
 #: includes/admin/class-applications-table.php:51
 #: includes/admin/jobs.php:159
 msgid "Kandidat"
-msgstr ""
+msgstr "Candidate"
 
 #: includes/admin/class-applications-table.php:53
 #: includes/admin/class-jobs-table.php:60
 #: includes/admin/jobs.php:159
 msgid "Stanje"
-msgstr ""
+msgstr "Status"
 
 #: includes/admin/class-applications-table.php:54
 #: includes/admin/jobs.php:159
 msgid "Datum"
-msgstr ""
+msgstr "Date"
 
 #: includes/admin/class-applications-table.php:100
 #: includes/admin/class-jobs-table.php:136
 msgid "Poglej"
-msgstr ""
+msgstr "View"
 
 #: includes/admin/class-applications-table.php:144
 msgid "Ni prijav."
-msgstr ""
+msgstr "No applications."
 
 #: includes/admin/class-jobs-table.php:59
 #: includes/admin/job-new.php:112
 #: includes/admin/jobs.php:92
 msgid "Naziv"
-msgstr ""
+msgstr "Title"
 
 #: includes/admin/class-jobs-table.php:61
 #: includes/admin/job-new.php:140
@@ -145,275 +147,275 @@ msgstr ""
 #: templates/parts/filters.php:27
 #: templates/parts/job-sidebar.php:21
 msgid "Kraj"
-msgstr ""
+msgstr "Location"
 
 #: includes/admin/class-jobs-table.php:62
 #: includes/admin/jobs.php:97
 #: templates/parts/job-sidebar.php:25
 msgid "Objavljeno"
-msgstr ""
+msgstr "Published"
 
 #: includes/admin/class-jobs-table.php:63
 #: includes/admin/jobs.php:98
 msgid "Prijav"
-msgstr ""
+msgstr "Applications"
 
 #: includes/admin/class-jobs-table.php:64
 #: includes/admin/jobs.php:194
 msgid "Kratka koda"
-msgstr ""
+msgstr "Shortcode"
 
 #: includes/admin/class-jobs-table.php:115
 msgid "Vsa"
-msgstr ""
+msgstr "All"
 
 #: includes/admin/class-jobs-table.php:138
 #: includes/admin/jobs.php:182
 msgid "Poglej na strani"
-msgstr ""
+msgstr "View on site"
 
 #: includes/admin/class-jobs-table.php:141
 #: includes/admin/jobs.php:186
 msgid "Uredi na Jobly"
-msgstr ""
+msgstr "Edit on Jobly"
 
 #: includes/admin/class-jobs-table.php:143
 #: includes/admin/ui.php:187
 msgid "Kopirano"
-msgstr ""
+msgstr "Copied"
 
 #: includes/admin/class-jobs-table.php:143
 msgid "Kopiraj kratko kodo"
-msgstr ""
+msgstr "Copy shortcode"
 
 #: includes/admin/class-jobs-table.php:209
 msgid "Ni zadetkov za izbrane filtre."
-msgstr ""
+msgstr "No results for the selected filters."
 
 #: includes/admin/job-new.php:82
 #: includes/admin/jobs.php:45
 #: includes/admin/overview.php:58
 #: includes/admin/overview.php:178
 msgid "Dodaj delovno mesto"
-msgstr ""
+msgstr "Add job"
 
 #: includes/admin/job-new.php:92
 msgid "Demo način: obrazec je onemogočen"
-msgstr ""
+msgstr "Demo mode: the form is disabled"
 
 #: includes/admin/job-new.php:92
 msgid "Za objavo oglasa povežite podjetje."
-msgstr ""
+msgstr "Connect your company to publish a job."
 
 #: includes/admin/job-new.php:92
 #: includes/admin/overview.php:22
 #: includes/admin/overview.php:65
 #: includes/admin/wizard.php:160
 msgid "Poveži podjetje"
-msgstr ""
+msgstr "Connect company"
 
 #: includes/admin/job-new.php:109
 msgid "Oglas se objavi neposredno na Jobly. Plačni razpon je obvezen (v EUR)."
-msgstr ""
+msgstr "The job is published directly on Jobly. A salary range is required (EUR)."
 
 #: includes/admin/job-new.php:116
 #: includes/admin/jobs.php:119
 msgid "Opis"
-msgstr ""
+msgstr "Description"
 
 #: includes/admin/job-new.php:120
 #: includes/admin/jobs.php:95
 #: templates/parts/filters.php:38
 #: templates/parts/job-sidebar.php:22
 msgid "Vrsta zaposlitve"
-msgstr ""
+msgstr "Employment type"
 
 #: includes/admin/job-new.php:130
 #: templates/parts/job-sidebar.php:23
 msgid "Način dela"
-msgstr ""
+msgstr "Work arrangement"
 
 #: includes/admin/job-new.php:144
 msgid "Kategorija"
-msgstr ""
+msgstr "Category"
 
 #: includes/admin/job-new.php:148
 msgid "— izberi —"
-msgstr ""
+msgstr "— choose —"
 
 #: includes/admin/job-new.php:175
 msgid "Točno ime kategorije na Jobly (npr. Računovodstvo). Neznana kategorija se zavrne."
-msgstr ""
+msgstr "Exact category name on Jobly (e.g. Računovodstvo). An unknown category is rejected."
 
 #: includes/admin/job-new.php:181
 #: includes/admin/jobs.php:96
 msgid "Plačni razpon (EUR)"
-msgstr ""
+msgstr "Salary range (EUR)"
 
 #: includes/admin/job-new.php:183
 msgid "Najnižja plača"
-msgstr ""
+msgstr "Minimum salary"
 
 #: includes/admin/job-new.php:185
 msgid "Najvišja plača"
-msgstr ""
+msgstr "Maximum salary"
 
 #: includes/admin/job-new.php:192
 #: includes/admin/jobs.php:126
 #: templates/single-job.php:48
 msgid "Naloge"
-msgstr ""
+msgstr "Responsibilities"
 
 #: includes/admin/job-new.php:193
 #: includes/admin/jobs.php:127
 #: templates/single-job.php:49
 msgid "Zahteve"
-msgstr ""
+msgstr "Requirements"
 
 #: includes/admin/job-new.php:194
 #: includes/admin/jobs.php:128
 #: templates/single-job.php:50
 msgid "Ugodnosti"
-msgstr ""
+msgstr "Benefits"
 
 #: includes/admin/job-new.php:195
 msgid "Tehnologije"
-msgstr ""
+msgstr "Technologies"
 
 #: includes/admin/job-new.php:203
 msgid "Ena postavka na vrstico."
-msgstr ""
+msgstr "One item per line."
 
 #: includes/admin/job-new.php:209
 msgid "Objavi na Jobly"
-msgstr ""
+msgstr "Publish on Jobly"
 
 #: includes/admin/jobs.php:32
 #: includes/admin/menu.php:17
 #: includes/admin/overview.php:172
 #: includes/admin/ui.php:205
 msgid "Delovna mesta"
-msgstr ""
+msgstr "Jobs"
 
 #: includes/admin/jobs.php:32
 #: includes/admin/menu.php:18
 #: includes/admin/ui.php:207
 msgid "Dodaj novo"
-msgstr ""
+msgstr "Add new"
 
 #: includes/admin/jobs.php:45
 #: includes/admin/overview.php:178
 msgid "Še ni delovnih mest"
-msgstr ""
+msgstr "No jobs yet"
 
 #: includes/admin/jobs.php:45
 msgid "Objavite prvi oglas in prikazal se bo na karierni strani vašega spletnega mesta."
-msgstr ""
+msgstr "Publish your first job and it will appear on your site's careers page."
 
 #: includes/admin/jobs.php:52
 msgid "Osveži"
-msgstr ""
+msgstr "Refresh"
 
 #: includes/admin/jobs.php:52
 msgid "Seznam se predpomni za 5 minut."
-msgstr ""
+msgstr "The list is cached for 5 minutes."
 
 #: includes/admin/jobs.php:56
 msgid "Išči delovna mesta"
-msgstr ""
+msgstr "Search jobs"
 
 #: includes/admin/jobs.php:71
 #: includes/admin/overview.php:173
 #: templates/archive-jobs.php:50
 #: templates/single-job.php:28
 msgid "Vsa delovna mesta"
-msgstr ""
+msgstr "All jobs"
 
 #: includes/admin/jobs.php:93
 msgid "Slug"
-msgstr ""
+msgstr "Slug"
 
 #: includes/admin/jobs.php:99
 msgid "Zaposlenih"
-msgstr ""
+msgstr "Hired"
 
 #: includes/admin/jobs.php:100
 msgid "Izpostavljen"
-msgstr ""
+msgstr "Featured"
 
 #: includes/admin/jobs.php:100
 msgid "Da"
-msgstr ""
+msgstr "Yes"
 
 #: includes/admin/jobs.php:100
 msgid "Ne"
-msgstr ""
+msgstr "No"
 
 #: includes/admin/jobs.php:122
 msgid "Opis, naloge in zahteve ta različica Jobly API-ja ne vrne; urejaš jih na Jobly."
-msgstr ""
+msgstr "This version of the Jobly API does not return the description, responsibilities and requirements; edit them on Jobly."
 
 #: includes/admin/jobs.php:157
 msgid "Za to mesto še ni prijav"
-msgstr ""
+msgstr "No applications for this job yet"
 
 #: includes/admin/jobs.php:157
 #: includes/admin/overview.php:130
 msgid "Ko kandidat odda prijavo, se prikaže tukaj."
-msgstr ""
+msgstr "When a candidate applies, it shows up here."
 
 #: includes/admin/jobs.php:179
 msgid "Povezave"
-msgstr ""
+msgstr "Links"
 
 #: includes/admin/jobs.php:185
 msgid "Na Jobly"
-msgstr ""
+msgstr "On Jobly"
 
 #: includes/admin/jobs.php:192
 msgid "Vgradnja"
-msgstr ""
+msgstr "Embed"
 
 #: includes/admin/jobs.php:195
 msgid "Vgradna koda (iframe)"
-msgstr ""
+msgstr "Embed code (iframe)"
 
 #: includes/admin/jobs.php:197
 msgid "V urejevalniku blokov pa uporabite blok »Jobly – prijavni obrazec«."
-msgstr ""
+msgstr "In the block editor, use the “Jobly – application form” block."
 
 #: includes/admin/jobs.php:201
 #: assets/blocks.js:78
 msgid "Obrazec"
-msgstr ""
+msgstr "Form"
 
 #: includes/admin/jobs.php:205
 #: includes/demo.php:186
 msgid "Ime in priimek"
-msgstr ""
+msgstr "Full name"
 
 #: includes/admin/jobs.php:207
 msgid "Telefon (neobvezno)"
-msgstr ""
+msgstr "Phone (optional)"
 
 #: includes/admin/jobs.php:208
 #: includes/demo.php:188
 msgid "Nekaj vrstic o sebi"
-msgstr ""
+msgstr "A few lines about yourself"
 
 #: includes/admin/jobs.php:209
 msgid "Privolitev za obdelavo podatkov"
-msgstr ""
+msgstr "Consent to data processing"
 
 #: includes/admin/jobs.php:217
 msgid "Vprašanja po meri: kmalu, urejanje na Jobly."
-msgstr ""
+msgstr "Custom questions: coming soon, edit on Jobly."
 
 #: includes/admin/menu.php:16
 #: includes/admin/overview.php:58
 #: includes/admin/ui.php:204
 msgid "Pregled"
-msgstr ""
+msgstr "Overview"
 
 #: includes/admin/menu.php:20
 #: includes/admin/menu.php:95
@@ -421,410 +423,410 @@ msgstr ""
 #: includes/admin/settings.php:258
 #: includes/admin/ui.php:208
 msgid "Nastavitve"
-msgstr ""
+msgstr "Settings"
 
 #: includes/admin/menu.php:22
 #: includes/admin/menu.php:40
 msgid "Čarovnik za nastavitev"
-msgstr ""
+msgstr "Setup wizard"
 
 #: includes/admin/menu.php:54
 msgid "Vrstic na stran"
-msgstr ""
+msgstr "Rows per page"
 
 #: includes/admin/menu.php:127
 msgid "Nimate dovoljenja za to dejanje."
-msgstr ""
+msgstr "You are not allowed to do this."
 
 #: includes/admin/menu.php:138
 msgid "Nastavitve so shranjene."
-msgstr ""
+msgstr "Settings saved."
 
 #: includes/admin/menu.php:139
 msgid "Povezava deluje. Demo je izklopljen."
-msgstr ""
+msgstr "The connection works. Demo is off."
 
 #: includes/admin/menu.php:140
 msgid "Povezava deluje."
-msgstr ""
+msgstr "The connection works."
 
 #: includes/admin/menu.php:141
 msgid "Napačen ključ: Jobly ga ne sprejme."
-msgstr ""
+msgstr "Wrong key: Jobly does not accept it."
 
 #: includes/admin/menu.php:142
 msgid "Ni povezave z Jobly. Preveri naslov in internetno povezavo strežnika."
-msgstr ""
+msgstr "Cannot reach Jobly. Check the address and the server's internet connection."
 
 #: includes/admin/menu.php:143
 msgid "Jobly je vrnil nepričakovan odgovor. Poskusi znova čez nekaj minut."
-msgstr ""
+msgstr "Jobly returned an unexpected response. Try again in a few minutes."
 
 #: includes/admin/menu.php:144
 msgid "Jobly zahteva App-Token (žeton aplikacije). Vpišite ga v Povezavi ali ga določite s konstanto JOBLY_APP_TOKEN."
-msgstr ""
+msgstr "Jobly requires an App-Token (app token). Enter it under Connection or set the JOBLY_APP_TOKEN constant."
 
 #: includes/admin/menu.php:145
 msgid "App-Token ni veljaven: Jobly ga ne sprejme. Preverite žeton aplikacije (jba_…)."
-msgstr ""
+msgstr "The App-Token is not valid: Jobly does not accept it. Check the app token (jba_…)."
 
 #: includes/admin/menu.php:146
 msgid "Najprej vpiši API ključ."
-msgstr ""
+msgstr "Enter the API key first."
 
 #: includes/admin/menu.php:147
 msgid "Ključ ni v obliki jbl_…"
-msgstr ""
+msgstr "The key is not in the form jbl_…"
 
 #: includes/admin/menu.php:148
 msgid "Ključ je odstranjen."
-msgstr ""
+msgstr "Key removed."
 
 #: includes/admin/menu.php:149
 msgid "Nastavitev lahko kadar koli dokončate v Nastavitvah."
-msgstr ""
+msgstr "You can finish setup any time in Settings."
 
 #: includes/admin/menu.php:150
 msgid "Delovno mesto je objavljeno na Jobly."
-msgstr ""
+msgstr "The job is published on Jobly."
 
 #: includes/admin/menu.php:151
 msgid "Seznam je osvežen."
-msgstr ""
+msgstr "List refreshed."
 
 #: includes/admin/menu.php:152
 msgid "Jobly objave ne dovoli (npr. pogodba za delodajalce še ni podpisana)."
-msgstr ""
+msgstr "Jobly does not allow publishing (e.g. the employer agreement is not signed yet)."
 
 #: includes/admin/menu.php:180
 msgid "Podjetje še ni povezano"
-msgstr ""
+msgstr "Company not connected yet"
 
 #: includes/admin/menu.php:180
 msgid "Vpišite API ključ iz Jobly ali poskusite z demo podatki."
-msgstr ""
+msgstr "Enter the API key from Jobly or try demo data."
 
 #: includes/admin/menu.php:180
 msgid "Zaženi čarovnika"
-msgstr ""
+msgstr "Run the wizard"
 
 #: includes/admin/menu.php:192
 #: includes/admin/settings.php:314
 msgid "Preveri povezavo"
-msgstr ""
+msgstr "Check connection"
 
 #: includes/admin/overview.php:23
 msgid "API ključ iz Jobly, preverjen in shranjen."
-msgstr ""
+msgstr "API key from Jobly, verified and saved."
 
 #: includes/admin/overview.php:25
 msgid "Poveži"
-msgstr ""
+msgstr "Connect"
 
 #: includes/admin/overview.php:29
 msgid "Nastavi karierno stran"
-msgstr ""
+msgstr "Set up the careers page"
 
 #: includes/admin/overview.php:30
 msgid "Naslov seznama in videz."
-msgstr ""
+msgstr "List address and appearance."
 
 #: includes/admin/overview.php:32
 msgid "Nastavi"
-msgstr ""
+msgstr "Set up"
 
 #: includes/admin/overview.php:36
 msgid "Objavi prvi oglas"
-msgstr ""
+msgstr "Publish your first job"
 
 #: includes/admin/overview.php:37
 msgid "Vsaj eno odprto delovno mesto."
-msgstr ""
+msgstr "At least one open job."
 
 #: includes/admin/overview.php:39
 msgid "Dodaj oglas"
-msgstr ""
+msgstr "Add job"
 
 #: includes/admin/overview.php:43
 #: includes/admin/settings.php:251
 #: includes/admin/settings.php:369
 msgid "Google for Jobs"
-msgstr ""
+msgstr "Google for Jobs"
 
 #: includes/admin/overview.php:44
 msgid "Strukturirani zapis na straneh oglasov."
-msgstr ""
+msgstr "Structured data on job pages."
 
 #: includes/admin/overview.php:46
 msgid "Odpri"
-msgstr ""
+msgstr "Open"
 
 #: includes/admin/overview.php:64
 #: includes/admin/settings.php:405
 msgid "Demo način"
-msgstr ""
+msgstr "Demo mode"
 
 #: includes/admin/overview.php:64
 msgid "Vidiš izmišljene podatke podjetja Primer d.o.o.; Jobly se ne kliče."
-msgstr ""
+msgstr "You see invented data for Primer d.o.o.; Jobly is not called."
 
 #: includes/admin/overview.php:86
 msgid "Povezano podjetje"
-msgstr ""
+msgstr "Connected company"
 
 #: includes/admin/overview.php:88
 msgid "Profil na Jobly"
-msgstr ""
+msgstr "Profile on Jobly"
 
 #: includes/admin/overview.php:102
 msgid "Odprta mesta"
-msgstr ""
+msgstr "Open jobs"
 
 #: includes/admin/overview.php:103
 msgid "Nove prijave (7 dni)"
-msgstr ""
+msgstr "New applications (7 days)"
 
 #: includes/admin/overview.php:104
 msgid "Prijave skupaj"
-msgstr ""
+msgstr "Total applications"
 
 #: includes/admin/overview.php:122
 msgid "Zadnje prijave"
-msgstr ""
+msgstr "Latest applications"
 
 #: includes/admin/overview.php:153
 msgid "Začetek dela"
-msgstr ""
+msgstr "Getting started"
 
 #. translators: 1: done steps, 2: all steps.
 #: includes/admin/overview.php:154
 #, php-format
 msgid "%1$d od %2$d"
-msgstr ""
+msgstr "%1$d of %2$d"
 
 #: includes/admin/overview.php:178
 msgid "Objavite prvi oglas in prikazal se bo na karierni strani."
-msgstr ""
+msgstr "Publish your first job and it will appear on the careers page."
 
 #. translators: %d: number of applications.
 #: includes/admin/overview.php:195
 #, php-format
 msgid "Prijav: %d"
-msgstr ""
+msgstr "Applications: %d"
 
 #: includes/admin/settings.php:65
 msgid "App-Token je določen s konstanto JOBLY_APP_TOKEN v wp-config.php."
-msgstr ""
+msgstr "The App-Token is set by the JOBLY_APP_TOKEN constant in wp-config.php."
 
 #: includes/admin/settings.php:71
 msgid "Odstrani shranjeni App-Token"
-msgstr ""
+msgstr "Remove the saved App-Token"
 
 #: includes/admin/settings.php:227
 #: assets/blocks.js:29
 #: assets/blocks.js:43
 msgid "Seznam"
-msgstr ""
+msgstr "List"
 
 #: includes/admin/settings.php:228
 #: assets/blocks.js:44
 msgid "Mreža"
-msgstr ""
+msgstr "Grid"
 
 #: includes/admin/settings.php:249
 msgid "Povezava"
-msgstr ""
+msgstr "Connection"
 
 #: includes/admin/settings.php:250
 msgid "Prikaz"
-msgstr ""
+msgstr "Display"
 
 #: includes/admin/settings.php:252
 msgid "Demo"
-msgstr ""
+msgstr "Demo"
 
 #: includes/admin/settings.php:267
 msgid "Povezava z Jobly"
-msgstr ""
+msgstr "Connection to Jobly"
 
 #: includes/admin/settings.php:270
 #: includes/admin/wizard.php:207
 msgid "API ključ"
-msgstr ""
+msgstr "API key"
 
 #: includes/admin/settings.php:273
 msgid "Ključ ustvarite v Jobly → Integracije → API žetoni."
-msgstr ""
+msgstr "Create the key in Jobly → Integrations → API tokens."
 
 #: includes/admin/settings.php:273
 #: includes/admin/wizard.php:202
 msgid "Pridobi ključ"
-msgstr ""
+msgstr "Get a key"
 
 #: includes/admin/settings.php:273
 msgid "Shranjen ključ se nikoli ne prikaže; za zamenjavo vpiši novega."
-msgstr ""
+msgstr "A saved key is never shown; enter a new one to replace it."
 
 #: includes/admin/settings.php:275
 msgid "Odstrani shranjeni ključ"
-msgstr ""
+msgstr "Remove the saved key"
 
 #: includes/admin/settings.php:280
 #: includes/admin/wizard.php:211
 msgid "App-Token"
-msgstr ""
+msgstr "App-Token"
 
 #: includes/admin/settings.php:283
 msgid "Žeton aplikacije (jba_…), ki ga izda Jobly. Skupaj s ključem podjetja ga Jobly zahteva pri vsaki zahtevi. Nikoli se ne prikaže."
-msgstr ""
+msgstr "App token (jba_…) issued by Jobly. Jobly requires it together with the company key on every request. It is never shown."
 
 #: includes/admin/settings.php:288
 #: templates/parts/job-sidebar.php:20
 msgid "Podjetje"
-msgstr ""
+msgstr "Company"
 
 #: includes/admin/settings.php:289
 msgid "Podjetje se prebere iz API ključa."
-msgstr ""
+msgstr "The company is read from the API key."
 
 #: includes/admin/settings.php:293
 msgid "Podjetje (slug)"
-msgstr ""
+msgstr "Company (slug)"
 
 #: includes/admin/settings.php:296
 msgid "Ta različica Jobly ne vrača podjetja prek API-ja, zato ga vpiši ročno (zadnji del naslova profila na jobly.si/companies/…)."
-msgstr ""
+msgstr "This version of Jobly does not return the company via the API, so enter it manually (the last part of the profile address on jobly.si/companies/…)."
 
 #: includes/admin/settings.php:301
 msgid "Naslov Jobly"
-msgstr ""
+msgstr "Jobly address"
 
 #: includes/admin/settings.php:304
 msgid "Pusti https://jobly.si. Drugo samo za testiranje."
-msgstr ""
+msgstr "Leave https://jobly.si. Anything else is for testing only."
 
 #: includes/admin/settings.php:309
 msgid "Shrani in preveri"
-msgstr ""
+msgstr "Save and verify"
 
 #: includes/admin/settings.php:319
 msgid "Karierna stran in videz"
-msgstr ""
+msgstr "Careers page and appearance"
 
 #: includes/admin/settings.php:322
 msgid "Stran s seznamom"
-msgstr ""
+msgstr "List page"
 
 #: includes/admin/settings.php:330
 msgid "Samodejna stran (spodnji naslov)"
-msgstr ""
+msgstr "Automatic page (address below)"
 
 #: includes/admin/settings.php:335
 msgid "Izberi svojo WordPress stran z blokom ali kodo [jobly_jobs]; oglasi dobijo naslove pod njo. Brez izbire plugin sam ustvari stran na naslovu spodaj."
-msgstr ""
+msgstr "Pick your own WordPress page with the block or the [jobly_jobs] shortcode; jobs get addresses below it. Without a choice the plugin serves a page at the address below."
 
 #: includes/admin/settings.php:339
 #: includes/admin/wizard.php:233
 msgid "Osnova povezav"
-msgstr ""
+msgstr "Link base"
 
 #: includes/admin/settings.php:342
 msgid "Seznam odprtih mest in podstrani oglasov so pod tem naslovom."
-msgstr ""
+msgstr "The list of open jobs and the job pages live under this address."
 
 #: includes/admin/settings.php:346
 #: includes/admin/wizard.php:267
 msgid "Barva poudarka"
-msgstr ""
+msgstr "Accent colour"
 
 #: includes/admin/settings.php:350
 #: includes/admin/wizard.php:270
 msgid "Videz seznama"
-msgstr ""
+msgstr "List layout"
 
 #: includes/admin/settings.php:354
 msgid "Oglasov na stran"
-msgstr ""
+msgstr "Jobs per page"
 
 #: includes/admin/settings.php:358
 msgid "Višina okvirja (px)"
-msgstr ""
+msgstr "Frame height (px)"
 
 #: includes/admin/settings.php:363
 #: includes/admin/settings.php:397
 #: includes/admin/settings.php:413
 msgid "Shrani spremembe"
-msgstr ""
+msgstr "Save changes"
 
 #: includes/admin/settings.php:370
 msgid "Na vsaki podstrani oglasa se doda strukturirani zapis JobPosting. Vsebuje samo podatke, ki jih vrne Jobly (naziv, datum objave, vrsta zaposlitve, kraj, plača, če je navedena)."
-msgstr ""
+msgstr "A JobPosting structured data block is added to every job page. It contains only data returned by Jobly (title, date posted, employment type, location, salary if present)."
 
 #: includes/admin/settings.php:373
 msgid "Strukturirani zapis"
-msgstr ""
+msgstr "Structured data"
 
 #: includes/admin/settings.php:374
 msgid "Dodaj JobPosting (JSON-LD) na strani oglasov"
-msgstr ""
+msgstr "Add JobPosting (JSON-LD) to job pages"
 
 #: includes/admin/settings.php:377
 msgid "Zemljevid strani"
-msgstr ""
+msgstr "Sitemap"
 
 #: includes/admin/settings.php:379
 msgid "Dodaj oglase v WordPress zemljevid strani"
-msgstr ""
+msgstr "Add the jobs to the WordPress sitemap"
 
 #: includes/admin/settings.php:386
 msgid "Ime podjetja"
-msgstr ""
+msgstr "Company name"
 
 #: includes/admin/settings.php:389
 msgid "Prikazano na karticah oglasov in v zapisu (hiringOrganization). Prazno = ime spletnega mesta."
-msgstr ""
+msgstr "Shown on job cards and in the structured data (hiringOrganization). Empty = site name."
 
 #: includes/admin/settings.php:394
 msgid "V demo načinu se zapis in zemljevid ne izpišeta (strani so noindex)."
-msgstr ""
+msgstr "In demo mode the structured data and sitemap are not output (pages are noindex)."
 
 #: includes/admin/settings.php:402
 msgid "Demo podatki"
-msgstr ""
+msgstr "Demo data"
 
 #: includes/admin/settings.php:407
 msgid "Prikaži izmišljen primer (Primer d.o.o.) namesto podatkov z Jobly"
-msgstr ""
+msgstr "Show an invented example (Primer d.o.o.) instead of Jobly data"
 
 #: includes/admin/settings.php:408
 msgid "Za gradnjo in predstavitev strani; vtičnik v tem načinu ne pokliče Jobly. Izklopi se samodejno, ko shraniš veljaven ključ."
-msgstr ""
+msgstr "For building and presenting the site; the plugin does not call Jobly in this mode. Turns off automatically when you save a valid key."
 
 #: includes/admin/settings.php:415
 msgid "Zaženi čarovnika za nastavitev znova"
-msgstr ""
+msgstr "Run the setup wizard again"
 
 #: includes/admin/ui.php:71
 #: includes/demo.php:170
 #: templates/archive-jobs.php:30
 msgid "Demo · izmišljeni podatki"
-msgstr ""
+msgstr "Demo · invented data"
 
 #: includes/admin/ui.php:74
 msgid "Povezano z Jobly"
-msgstr ""
+msgstr "Connected to Jobly"
 
 #: includes/admin/ui.php:76
 msgid "Ni povezano"
-msgstr ""
+msgstr "Not connected"
 
 #: includes/admin/ui.php:189
 msgid "Kopiraj"
-msgstr ""
+msgstr "Copy"
 
 #: includes/admin/ui.php:220
 msgid "Odpri Jobly"
-msgstr ""
+msgstr "Open Jobly"
 
 #: includes/admin/ui.php:224
 msgid "Jobly HRM"
@@ -833,511 +835,511 @@ msgstr ""
 #: includes/admin/ui.php:261
 #: includes/admin/ui.php:298
 msgid "Dokumentacija"
-msgstr ""
+msgstr "Documentation"
 
 #: includes/admin/ui.php:263
 #: includes/admin/ui.php:298
 msgid "Podpora"
-msgstr ""
+msgstr "Support"
 
 #: includes/admin/ui.php:279
 msgid "Začetek"
-msgstr ""
+msgstr "Getting started"
 
 #: includes/admin/ui.php:280
 msgid "1. V Jobly → Integracije → API žetoni ustvarite ključ. 2. V Nastavitvah ga prilepite in shranite. 3. Karierna stran se prikaže na naslovu, ki ga izberete v nastavitvah Prikaz."
-msgstr ""
+msgstr "1. Create a key in Jobly → Integrations → API tokens. 2. Paste and save it in Settings. 3. The careers page appears at the address you choose in the Display settings."
 
 #: includes/admin/ui.php:286
 msgid "Kratke kode in bloki"
-msgstr ""
+msgstr "Shortcodes and blocks"
 
 #: includes/admin/ui.php:287
 msgid "V urejevalniku blokov poiščite »Jobly«: seznam delovnih mest in prijavni obrazec."
-msgstr ""
+msgstr "In the block editor search for “Jobly”: job list and application form."
 
 #: includes/admin/ui.php:293
 msgid "Zasebnost"
-msgstr ""
+msgstr "Privacy"
 
 #: includes/admin/ui.php:294
 msgid "Prijave, privolitve in zaščita pred neželeno pošto ostanejo na Jobly. Podatki kandidatov se v WordPressu ne shranjujejo ne predpomnijo."
-msgstr ""
+msgstr "Applications, consents and spam protection stay on Jobly. Candidate data is neither stored nor cached in WordPress."
 
 #: includes/admin/ui.php:298
 msgid "Več"
-msgstr ""
+msgstr "More"
 
 #: includes/admin/wizard.php:52
 #: includes/admin/wizard.php:239
 #: includes/frontend.php:292
 #: includes/frontend.php:357
 msgid "Kariera"
-msgstr ""
+msgstr "Careers"
 
 #: includes/admin/wizard.php:161
 msgid "Karierna stran"
-msgstr ""
+msgstr "Careers page"
 
 #: includes/admin/wizard.php:162
 #: includes/admin/wizard.php:261
 #: assets/blocks.js:40
 msgid "Videz"
-msgstr ""
+msgstr "Appearance"
 
 #: includes/admin/wizard.php:164
 msgid "Koraki nastavitve"
-msgstr ""
+msgstr "Setup steps"
 
 #: includes/admin/wizard.php:200
 msgid "Poveži svoje podjetje"
-msgstr ""
+msgstr "Connect your company"
 
 #: includes/admin/wizard.php:201
 msgid "Ključ ustvarite v Jobly → Integracije → API žetoni. Ključ preverimo in shranimo; nikoli se ne prikaže. Podjetje se prebere iz ključa."
-msgstr ""
+msgstr "Create the key in Jobly → Integrations → API tokens. We verify and save it; it is never shown. The company is read from the key."
 
 #: includes/admin/wizard.php:216
 msgid "Poveži in nadaljuj"
-msgstr ""
+msgstr "Connect and continue"
 
 #: includes/admin/wizard.php:217
 msgid "Nadaljuj z demo podatki"
-msgstr ""
+msgstr "Continue with demo data"
 
 #: includes/admin/wizard.php:224
 msgid "Kje naj bo karierna stran?"
-msgstr ""
+msgstr "Where should the careers page live?"
 
 #: includes/admin/wizard.php:225
 msgid "Seznam odprtih mest in podstrani oglasov dobijo svoj naslov na vašem spletnem mestu."
-msgstr ""
+msgstr "The list of open jobs and the job pages get their own address on your site."
 
 #: includes/admin/wizard.php:231
 msgid "Samodejna stran (priporočeno)"
-msgstr ""
+msgstr "Automatic page (recommended)"
 
 #: includes/admin/wizard.php:232
 msgid "Plugin sam pripravi seznam na naslovu:"
-msgstr ""
+msgstr "The plugin serves the list at:"
 
 #: includes/admin/wizard.php:237
 msgid "Ustvari WordPress stran"
-msgstr ""
+msgstr "Create a WordPress page"
 
 #: includes/admin/wizard.php:238
 msgid "Nova stran s seznamom, ki jo lahko urejaš kot vsako drugo."
-msgstr ""
+msgstr "A new page with the list that you can edit like any other."
 
 #: includes/admin/wizard.php:239
 msgid "Naslov strani"
-msgstr ""
+msgstr "Page title"
 
 #: includes/admin/wizard.php:244
 msgid "Uporabi obstoječo stran"
-msgstr ""
+msgstr "Use an existing page"
 
 #: includes/admin/wizard.php:245
 msgid "Če stran še nima seznama, se na konec doda kratka koda [jobly_jobs]."
-msgstr ""
+msgstr "If the page has no list yet, the [jobly_jobs] shortcode is appended."
 
 #: includes/admin/wizard.php:246
 msgid "Stran"
-msgstr ""
+msgstr "Page"
 
 #: includes/admin/wizard.php:254
 msgid "Nadaljuj"
-msgstr ""
+msgstr "Continue"
 
 #: includes/admin/wizard.php:255
 #: includes/admin/wizard.php:279
 msgid "Nazaj"
-msgstr ""
+msgstr "Back"
 
 #: includes/admin/wizard.php:262
 msgid "Plugin podeduje pisavo in barve vaše teme. Izberite poudarek in videz seznama."
-msgstr ""
+msgstr "The plugin inherits your theme's font and colours. Choose an accent and a list layout."
 
 #: includes/admin/wizard.php:273
 msgid "Skladiščnik (m/ž)"
-msgstr ""
+msgstr "Warehouse worker (m/f)"
 
 #: includes/admin/wizard.php:274
 #: includes/api-client.php:323
 msgid "Polni delovni čas"
-msgstr ""
+msgstr "Full-time"
 
 #: includes/admin/wizard.php:275
 #: templates/parts/job-card.php:34
 msgid "Poglej oglas"
-msgstr ""
+msgstr "View job"
 
 #: includes/admin/wizard.php:278
 msgid "Dokončaj"
-msgstr ""
+msgstr "Finish"
 
 #: includes/admin/wizard.php:285
 msgid "Dodaj prvo delovno mesto"
-msgstr ""
+msgstr "Add your first job"
 
 #: includes/admin/wizard.php:285
 msgid "Objavi oglas neposredno iz WordPressa."
-msgstr ""
+msgstr "Publish a job straight from WordPress."
 
 #: includes/admin/wizard.php:286
 msgid "Poglej karierno stran"
-msgstr ""
+msgstr "View the careers page"
 
 #: includes/admin/wizard.php:286
 msgid "Tako jo vidijo kandidati."
-msgstr ""
+msgstr "This is what candidates see."
 
 #: includes/admin/wizard.php:287
 msgid "Vstavi blok ali kratko kodo"
-msgstr ""
+msgstr "Insert a block or shortcode"
 
 #: includes/admin/wizard.php:287
 msgid "Blok »Jobly – seznam delovnih mest« ali [jobly_jobs]."
-msgstr ""
+msgstr "The “Jobly – job list” block or [jobly_jobs]."
 
 #: includes/admin/wizard.php:288
 msgid "Odpri pregled"
-msgstr ""
+msgstr "Open overview"
 
 #: includes/admin/wizard.php:288
 msgid "Kontrolni seznam in zadnje prijave."
-msgstr ""
+msgstr "Checklist and latest applications."
 
 #: includes/admin/wizard.php:293
 msgid "Vse je pripravljeno"
-msgstr ""
+msgstr "All set"
 
 #: includes/admin/wizard.php:294
 msgid "Jobly.si HRM je nastavljen. Kaj bi naredili najprej?"
-msgstr ""
+msgstr "Jobly.si HRM is set up. What would you like to do first?"
 
 #: includes/admin/wizard.php:309
 msgid "Preskoči nastavitev"
-msgstr ""
+msgstr "Skip setup"
 
 #: includes/api-client.php:307
 msgid "Odprto"
-msgstr ""
+msgstr "Open"
 
 #: includes/api-client.php:308
 msgid "Osnutek"
-msgstr ""
+msgstr "Draft"
 
 #: includes/api-client.php:309
 msgid "Zasebno"
-msgstr ""
+msgstr "Private"
 
 #: includes/api-client.php:310
 msgid "Pripravljen"
-msgstr ""
+msgstr "Ready"
 
 #: includes/api-client.php:311
 msgid "Zaprto"
-msgstr ""
+msgstr "Closed"
 
 #: includes/api-client.php:324
 msgid "Krajši delovni čas"
-msgstr ""
+msgstr "Part-time"
 
 #: includes/api-client.php:325
 msgid "Pogodbeno delo"
-msgstr ""
+msgstr "Contract"
 
 #: includes/api-client.php:326
 msgid "Pripravništvo"
-msgstr ""
+msgstr "Internship"
 
 #: includes/api-client.php:327
 msgid "Študentsko delo"
-msgstr ""
+msgstr "Student work"
 
 #: includes/api-client.php:338
 msgid "Na lokaciji"
-msgstr ""
+msgstr "On site"
 
 #: includes/api-client.php:339
 msgid "Hibridno"
-msgstr ""
+msgstr "Hybrid"
 
 #: includes/api-client.php:340
 msgid "Na daljavo"
-msgstr ""
+msgstr "Remote"
 
 #: includes/api-client.php:352
 msgid "Nova"
-msgstr ""
+msgstr "New"
 
 #: includes/api-client.php:353
 msgid "Pregledana"
-msgstr ""
+msgstr "Reviewed"
 
 #: includes/api-client.php:354
 msgid "Uvodni razgovor"
-msgstr ""
+msgstr "Intro interview"
 
 #: includes/api-client.php:355
 msgid "Tehnični krog"
-msgstr ""
+msgstr "Technical round"
 
 #: includes/api-client.php:356
 msgid "Zaključni krog"
-msgstr ""
+msgstr "Final round"
 
 #: includes/api-client.php:357
 msgid "Odločitev"
-msgstr ""
+msgstr "Decision"
 
 #: includes/api-client.php:358
 msgid "Ponudba"
-msgstr ""
+msgstr "Offer"
 
 #: includes/api-client.php:359
 msgid "Zaposlen"
-msgstr ""
+msgstr "Hired"
 
 #: includes/api-client.php:360
 msgid "Preklicana"
-msgstr ""
+msgstr "Cancelled"
 
 #: includes/api-client.php:361
 msgid "Zavrnjena"
-msgstr ""
+msgstr "Rejected"
 
 #: includes/api-client.php:362
 msgid "Umaknjena"
-msgstr ""
+msgstr "Withdrawn"
 
 #: includes/blocks.php:36
 msgid "Karierna stran podjetja (vsa mesta)"
-msgstr ""
+msgstr "Company careers page (all jobs)"
 
 #: includes/demo.php:55
 msgid "Prevzem in izdaja blaga, inventura, delo z ročnim čitalcem."
-msgstr ""
+msgstr "Receiving and issuing goods, stocktaking, working with a handheld scanner."
 
 #: includes/demo.php:56
 msgid "Knjiženje prejetih in izdanih računov, obračun DDV, mesečna poročila."
-msgstr ""
+msgstr "Booking received and issued invoices, VAT returns, monthly reports."
 
 #: includes/demo.php:57
 msgid "Razvoj spletne trgovine, sodelovanje z oblikovalcem in podporo."
-msgstr ""
+msgstr "Building the web shop, working with the designer and support."
 
 #: includes/demo.php:58
 msgid "Svetovanje strankam in prodaja v trgovini."
-msgstr ""
+msgstr "Advising customers and selling in the shop."
 
 #: includes/demo.php:93
 msgid "Prevzem in izdaja blaga"
-msgstr ""
+msgstr "Receiving and issuing goods"
 
 #: includes/demo.php:93
 msgid "Delo z ročnim čitalcem"
-msgstr ""
+msgstr "Working with a handheld scanner"
 
 #: includes/demo.php:94
 msgid "Natančnost in zanesljivost"
-msgstr ""
+msgstr "Accuracy and reliability"
 
 #: includes/demo.php:94
 msgid "Osnovno računalniško znanje"
-msgstr ""
+msgstr "Basic computer skills"
 
 #: includes/demo.php:95
 msgid "Topli obrok"
-msgstr ""
+msgstr "Hot meal"
 
 #: includes/demo.php:95
 msgid "Izobraževalni budget"
-msgstr ""
+msgstr "Education budget"
 
 #: includes/demo.php:118
 msgid "To je izmišljeno motivacijsko pismo za predogled."
-msgstr ""
+msgstr "This is an invented cover letter for the preview."
 
 #: includes/demo.php:171
 msgid "Odprta delovna mesta"
-msgstr ""
+msgstr "Open jobs"
 
 #: includes/demo.php:189
 msgid "Oddaj prijavo"
-msgstr ""
+msgstr "Submit application"
 
 #: includes/demo.php:190
 msgid "Predogled. Ko v Jobly HRM povežete podjetje in izklopite demo, se tu prikažejo vaša odprta mesta."
-msgstr ""
+msgstr "Preview. Once you connect a company in Jobly HRM and turn demo off, your open jobs show up here."
 
 #: includes/frontend.php:27
 #: includes/frontend.php:89
 #: templates/single-job.php:65
 msgid "Prijava na delo"
-msgstr ""
+msgstr "Apply for this job"
 
 #: includes/frontend.php:106
 msgid "Jobly: v nastavitvah vpiši podjetje ali v kratki kodi podaj job=\"…\"."
-msgstr ""
+msgstr "Jobly: enter the company in the settings or give job=\"…\" in the shortcode."
 
 #. translators: %d: number of open positions (singular form).
 #: includes/templates.php:191
 #, php-format
 msgid "%d odprto mesto"
-msgstr ""
+msgstr "%d open position"
 
 #. translators: %d: number of open positions (dual form).
 #: includes/templates.php:194
 #, php-format
 msgid "%d odprti mesti"
-msgstr ""
+msgstr "%d open positions"
 
 #. translators: %d: number of open positions (3-4).
 #: includes/templates.php:197
 #, php-format
 msgid "%d odprta mesta"
-msgstr ""
+msgstr "%d open positions"
 
 #. translators: %d: number of open positions (5 or more).
 #: includes/templates.php:200
 #, php-format
 msgid "%d odprtih mest"
-msgstr ""
+msgstr "%d open positions"
 
 #: includes/templates.php:218
 msgid "danes"
-msgstr ""
+msgstr "today"
 
 #: includes/templates.php:221
 msgid "včeraj"
-msgstr ""
+msgstr "yesterday"
 
 #: includes/templates.php:224
 msgid "pred 2 dnevoma"
-msgstr ""
+msgstr "2 days ago"
 
 #. translators: %d: number of days (3 or more).
 #: includes/templates.php:228
 #, php-format
 msgid "pred %d dnevi"
-msgstr ""
+msgstr "%d days ago"
 
 #: templates/archive-jobs.php:34
 msgid "filtrirano"
-msgstr ""
+msgstr "filtered"
 
 #: templates/parts/empty.php:17
 msgid "Ni zadetkov"
-msgstr ""
+msgstr "No results"
 
 #: templates/parts/empty.php:18
 msgid "Poskusite z drugimi filtri ali iskalnim nizom."
-msgstr ""
+msgstr "Try other filters or a different search."
 
 #: templates/parts/empty.php:19
 msgid "Počisti filtre"
-msgstr ""
+msgstr "Clear filters"
 
 #: templates/parts/empty.php:21
 msgid "Trenutno ni odprtih delovnih mest"
-msgstr ""
+msgstr "No open positions right now"
 
 #: templates/parts/empty.php:22
 msgid "Ko bo objavljeno novo delovno mesto, se bo prikazalo tukaj. Preverite znova kmalu."
-msgstr ""
+msgstr "When a new job is published it will show up here. Check back soon."
 
 #: templates/parts/filters.php:19
 msgid "Iskanje delovnih mest"
-msgstr ""
+msgstr "Job search"
 
 #: templates/parts/filters.php:21
 #: templates/parts/filters.php:23
 msgid "Išči po nazivu ali kraju"
-msgstr ""
+msgstr "Search by title or location"
 
 #: templates/parts/filters.php:29
 msgid "Vsi kraji"
-msgstr ""
+msgstr "All locations"
 
 #: templates/parts/filters.php:40
 msgid "Vse vrste"
-msgstr ""
+msgstr "All types"
 
 #: templates/parts/filters.php:48
 msgid "Delo na daljavo"
-msgstr ""
+msgstr "Remote work"
 
 #: templates/parts/filters.php:51
 msgid "Išči"
-msgstr ""
+msgstr "Search"
 
 #: templates/parts/filters.php:53
 msgid "Počisti"
-msgstr ""
+msgstr "Clear"
 
 #: templates/parts/job-card.php:20
 msgid "Izpostavljeno"
-msgstr ""
+msgstr "Featured"
 
 #: templates/parts/job-sidebar.php:24
 msgid "Plačni razpon"
-msgstr ""
+msgstr "Salary range"
 
 #: templates/parts/job-sidebar.php:33
 msgid "Povzetek"
-msgstr ""
+msgstr "Summary"
 
 #: templates/parts/job-sidebar.php:39
 msgid "Prijavi se"
-msgstr ""
+msgstr "Apply now"
 
 #: templates/parts/pagination.php:30
 msgid "Strani seznama"
-msgstr ""
+msgstr "Job list pages"
 
 #: templates/parts/pagination.php:32
 msgid "Prejšnja"
-msgstr ""
+msgstr "Previous"
 
 #: templates/parts/pagination.php:42
 msgid "Naslednja"
-msgstr ""
+msgstr "Next"
 
 #: templates/single-job.php:27
 msgid "Drobtinice"
-msgstr ""
+msgstr "Breadcrumbs"
 
 #: templates/single-job.php:86
 msgid "Povzetek oglasa"
-msgstr ""
+msgstr "Job summary"
 
 #: assets/blocks.js:31
 msgid "Število mest"
-msgstr ""
+msgstr "Number of jobs"
 
 #: assets/blocks.js:51
 msgid "Iskanje in filtri"
-msgstr ""
+msgstr "Search and filters"
 
 #: assets/blocks.js:89
 msgid "Pokaži tudi vsebino oglasa"
-msgstr ""
+msgstr "Also show the job ad content"
 
 #: assets/blocks.js:97
 msgid "Višina okvirja (px, 0 = privzeto)"
-msgstr ""
+msgstr "Frame height (px, 0 = default)"
 
 #: blocks/apply-form/block.json
 msgctxt "block title"
 msgid "Jobly – prijavni obrazec"
-msgstr ""
+msgstr "Jobly – application form"
 
 #: blocks/apply-form/block.json
 msgctxt "block description"
 msgid "Prijavni obrazec za izbrano delovno mesto ali karierna stran podjetja."
-msgstr ""
+msgstr "Application form for the chosen job, or the company's careers page."
 
 #: blocks/apply-form/block.json
 #: blocks/jobs-list/block.json
@@ -1348,12 +1350,12 @@ msgstr ""
 #: blocks/apply-form/block.json
 msgctxt "block keyword"
 msgid "prijava"
-msgstr ""
+msgstr "apply"
 
 #: blocks/apply-form/block.json
 msgctxt "block keyword"
 msgid "obrazec"
-msgstr ""
+msgstr "form"
 
 #: blocks/apply-form/block.json
 msgctxt "block keyword"
@@ -1363,22 +1365,22 @@ msgstr ""
 #: blocks/jobs-list/block.json
 msgctxt "block title"
 msgid "Jobly – seznam delovnih mest"
-msgstr ""
+msgstr "Jobly – job list"
 
 #: blocks/jobs-list/block.json
 msgctxt "block description"
 msgid "Seznam odprtih delovnih mest iz Jobly.si."
-msgstr ""
+msgstr "List of open jobs from Jobly.si."
 
 #: blocks/jobs-list/block.json
 msgctxt "block keyword"
 msgid "kariera"
-msgstr ""
+msgstr "careers"
 
 #: blocks/jobs-list/block.json
 msgctxt "block keyword"
 msgid "delovna mesta"
-msgstr ""
+msgstr "jobs"
 
 #: blocks/jobs-list/block.json
 msgctxt "block keyword"

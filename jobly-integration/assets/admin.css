@@ -1,13 +1,1114 @@
-.jobly-status{margin-left:12px;vertical-align:middle}
-.jobly-badge{display:inline-block;font-size:12px;border-radius:999px;padding:2px 10px;background:#f0f0f1;color:#50575e}
-.jobly-badge--ok{background:#edfaef;color:#0a6b1f}
-.jobly-badge--demo{background:#fef3c7;color:#92400e}
-.jobly-badge--off{background:#fcf0f1;color:#8a2424}
-.jobly-cards{display:flex;gap:16px;flex-wrap:wrap;margin:16px 0}
-.jobly-card{background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:16px 20px;min-width:180px}
-.jobly-card strong{display:block;font-size:28px;line-height:1.2}
-.jobly-shortcode{font-family:monospace;font-size:12px;background:#f6f7f7;padding:2px 6px;border-radius:3px}
-.jobly-copy{cursor:pointer;background:none;border:0;color:#2271b1;padding:0;text-decoration:underline}
-.jobly-errors{color:#b32d2e;margin:4px 0 0}
-.jobly-form textarea{width:100%;max-width:600px}
-.jobly-form input.regular-text,.jobly-form select{max-width:400px}
+/* Jobly.si HRM admin. Everything is scoped to .jobly-admin; accent follows the Jobly blue. */
+.jobly-admin {
+	--jobly-accent: #2563eb;
+	--jobly-accent-dark: #1d4ed8;
+	--jobly-accent-soft: #eff6ff;
+	--jobly-ink: #0f172a;
+	--jobly-muted: #64748b;
+	--jobly-line: #e2e8f0;
+	--jobly-card: #fff;
+	--jobly-radius: 14px;
+	box-sizing: border-box;
+	max-width: 1180px;
+	margin: 48px 20px 0 2px;
+	color: var(--jobly-ink);
+}
+.jobly-admin *,
+.jobly-admin *::before,
+.jobly-admin *::after {
+	box-sizing: border-box;
+}
+.jobly-admin a {
+	color: var(--jobly-accent);
+}
+.jobly-admin .jobly-icon {
+	flex: none;
+	vertical-align: -0.2em;
+}
+
+/* Header */
+.jobly-hdr {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px 24px;
+	align-items: center;
+	justify-content: space-between;
+	padding: 14px 20px;
+	border: 1px solid var(--jobly-line);
+	border-radius: var(--jobly-radius);
+	background: var(--jobly-card);
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.jobly-hdr__brand {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+.jobly-hdr__name {
+	font-size: 19px;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+.jobly-hdr__name span {
+	color: var(--jobly-accent);
+}
+.jobly-ver {
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: #f1f5f9;
+	color: var(--jobly-muted);
+	font-size: 11px;
+	font-weight: 600;
+}
+.jobly-hdr__right {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+}
+.jobly-hdr__link {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+/* Pills and badges */
+.jobly-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	padding: 4px 12px;
+	border-radius: 999px;
+	font-size: 12.5px;
+	font-weight: 600;
+}
+.jobly-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: currentColor;
+}
+.jobly-pill--ok {
+	background: #ecfdf5;
+	color: #047857;
+}
+.jobly-pill--demo {
+	background: #fef3c7;
+	color: #92400e;
+}
+.jobly-pill--off {
+	background: #fef2f2;
+	color: #b91c1c;
+}
+.jobly-admin .jobly-badge {
+	display: inline-block;
+	padding: 2px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.6;
+	white-space: nowrap;
+}
+.jobly-badge--green {
+	background: #ecfdf5;
+	color: #047857;
+}
+.jobly-badge--gray {
+	background: #f1f5f9;
+	color: #475569;
+}
+.jobly-badge--amber {
+	background: #fef3c7;
+	color: #92400e;
+}
+.jobly-badge--blue {
+	background: #dbeafe;
+	color: #1d4ed8;
+}
+.jobly-badge--violet {
+	background: #ede9fe;
+	color: #6d28d9;
+}
+.jobly-badge--red {
+	background: #fee2e2;
+	color: #b91c1c;
+}
+
+/* Section tabs */
+.jobly-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin: 14px 0 6px;
+}
+.jobly-tabs__item {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	padding: 8px 14px;
+	border-radius: 10px;
+	color: #475569 !important;
+	font-weight: 600;
+	text-decoration: none;
+}
+.jobly-tabs__item:hover {
+	background: #fff;
+	color: var(--jobly-ink) !important;
+}
+.jobly-tabs__item.is-active {
+	background: var(--jobly-accent);
+	color: #fff !important;
+	box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+.jobly-tabs__item:focus-visible,
+.jobly-subtabs__item:focus-visible {
+	outline: 2px solid var(--jobly-accent);
+	outline-offset: 2px;
+}
+
+.jobly-titlebar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	align-items: center;
+	justify-content: space-between;
+	margin: 18px 0 16px;
+}
+.jobly-titlebar h1 {
+	margin: 0;
+	padding: 0;
+	font-size: 24px;
+	font-weight: 700;
+	letter-spacing: -0.015em;
+}
+.jobly-back {
+	margin: 0 0 12px;
+}
+.jobly-back a {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	text-decoration: none;
+	font-weight: 600;
+}
+
+/* Buttons: WP buttons recoloured to the accent */
+.jobly-admin .button-primary {
+	border-color: var(--jobly-accent);
+	background: var(--jobly-accent);
+	border-radius: 8px;
+}
+.jobly-admin .button-primary:hover,
+.jobly-admin .button-primary:focus {
+	border-color: var(--jobly-accent-dark);
+	background: var(--jobly-accent-dark);
+}
+.jobly-admin .button {
+	border-radius: 8px;
+}
+.jobly-admin .button-hero {
+	padding: 0 22px !important;
+	min-height: 44px !important;
+	line-height: 42px !important;
+	font-size: 15px !important;
+}
+
+/* Panels */
+.jobly-panel {
+	margin: 0 0 20px;
+	padding: 20px 22px;
+	border: 1px solid var(--jobly-line);
+	border-radius: var(--jobly-radius);
+	background: var(--jobly-card);
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.jobly-panel--table {
+	padding: 8px 4px 4px;
+}
+.jobly-panel__head {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	justify-content: space-between;
+	margin: 0 0 14px;
+}
+.jobly-panel__head h2,
+.jobly-panel > h2,
+.jobly-form > h2 {
+	margin: 0;
+	padding: 0;
+	font-size: 16px;
+	font-weight: 700;
+}
+.jobly-panel__head a {
+	font-weight: 600;
+	text-decoration: none;
+}
+.jobly-muted {
+	color: var(--jobly-muted);
+	font-size: 13px;
+}
+.jobly-panel h3 {
+	margin: 20px 0 8px;
+}
+
+/* Banner */
+.jobly-banner {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+	align-items: center;
+	margin: 0 0 20px;
+	padding: 14px 18px;
+	border: 1px solid #fde68a;
+	border-radius: var(--jobly-radius);
+	background: #fffbeb;
+	color: #92400e;
+}
+.jobly-banner div {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-width: 220px;
+}
+.jobly-banner span {
+	font-size: 13px;
+}
+
+/* Stat cards */
+.jobly-stats {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 16px;
+	margin: 0 0 20px;
+}
+.jobly-stat {
+	display: flex;
+	gap: 16px;
+	align-items: center;
+	padding: 18px 20px;
+	border: 1px solid var(--jobly-line);
+	border-radius: var(--jobly-radius);
+	background: var(--jobly-card);
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.jobly-stat strong {
+	display: block;
+	font-size: 30px;
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+}
+.jobly-stat span {
+	color: var(--jobly-muted);
+	font-size: 13px;
+}
+.jobly-stat__icon {
+	display: grid;
+	flex: none;
+	place-items: center;
+	width: 48px;
+	height: 48px;
+	border-radius: 12px;
+}
+.jobly-tone--blue {
+	background: #dbeafe;
+	color: #1d4ed8;
+}
+.jobly-tone--green {
+	background: #d1fae5;
+	color: #047857;
+}
+.jobly-tone--violet {
+	background: #ede9fe;
+	color: #6d28d9;
+}
+
+/* Dashboard grid */
+.jobly-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 20px;
+	align-items: start;
+}
+.jobly-grid .jobly-panel {
+	margin: 0;
+}
+.jobly-panel--wide {
+	grid-column: 1 / -1;
+}
+.jobly-rows {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.jobly-rows li {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	margin: 0;
+	padding: 11px 0;
+	border-top: 1px solid var(--jobly-line);
+}
+.jobly-rows li:first-child {
+	border-top: 0;
+	padding-top: 0;
+}
+.jobly-rows__main {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-width: 0;
+}
+.jobly-rows__main a {
+	overflow: hidden;
+	font-weight: 600;
+	text-decoration: none;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.jobly-rows__main span,
+.jobly-rows__side span {
+	color: var(--jobly-muted);
+	font-size: 12.5px;
+}
+.jobly-rows__side {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	align-items: flex-end;
+}
+.jobly-avatar {
+	display: inline-grid;
+	flex: none;
+	place-items: center;
+	width: 34px;
+	height: 34px;
+	margin-right: 8px;
+	border-radius: 50%;
+	background: var(--jobly-accent-soft);
+	color: var(--jobly-accent);
+	font-size: 12px;
+	font-weight: 700;
+	vertical-align: middle;
+}
+.jobly-rows .jobly-avatar {
+	margin-right: 0;
+}
+.jobly-avatar--sq {
+	border-radius: 10px;
+}
+.jobly-avatar--lg {
+	width: 44px;
+	height: 44px;
+	font-size: 15px;
+}
+.jobly-person {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+/* Checklist */
+.jobly-progress {
+	height: 6px;
+	margin: 0 0 14px;
+	border-radius: 999px;
+	background: #e2e8f0;
+	overflow: hidden;
+}
+.jobly-progress span {
+	display: block;
+	height: 100%;
+	border-radius: inherit;
+	background: var(--jobly-accent);
+	transition: width 0.3s;
+}
+.jobly-checklist {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.jobly-checklist li {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	margin: 0;
+	padding: 11px 0;
+	border-top: 1px solid var(--jobly-line);
+}
+.jobly-checklist li:first-child {
+	border-top: 0;
+}
+.jobly-checklist div {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+}
+.jobly-checklist span {
+	color: var(--jobly-muted);
+	font-size: 12.5px;
+}
+.jobly-checklist__mark {
+	color: #cbd5e1;
+}
+.jobly-checklist .is-done .jobly-checklist__mark {
+	color: #059669;
+}
+.jobly-checklist .is-done strong {
+	color: var(--jobly-muted);
+	text-decoration: line-through;
+}
+
+/* Empty state */
+.jobly-empty {
+	padding: 28px 16px;
+	text-align: center;
+}
+.jobly-panel .jobly-empty {
+	padding: 12px 16px;
+}
+.jobly-empty h2 {
+	margin: 10px 0 6px;
+	font-size: 18px;
+}
+.jobly-empty p {
+	max-width: 440px;
+	margin: 0 auto 16px;
+	color: var(--jobly-muted);
+	font-size: 14px;
+}
+.jobly-illustration {
+	display: block;
+	width: 140px;
+	height: auto;
+	margin: 0 auto;
+}
+.jobly-admin > .jobly-empty {
+	border: 1px solid var(--jobly-line);
+	border-radius: var(--jobly-radius);
+	background: var(--jobly-card);
+	padding: 44px 16px;
+}
+
+/* Two-column detail */
+.jobly-detail {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 340px;
+	gap: 20px;
+	align-items: start;
+}
+.jobly-detail .jobly-panel {
+	margin: 0 0 20px;
+}
+.jobly-dl {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px 24px;
+	margin: 0;
+}
+.jobly-dl dt {
+	color: var(--jobly-muted);
+	font-size: 11.5px;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+.jobly-dl dd {
+	margin: 2px 0 0;
+	font-weight: 500;
+	word-break: break-word;
+}
+.jobly-letter {
+	padding: 14px 16px;
+	border-radius: 10px;
+	background: #f8fafc;
+	line-height: 1.6;
+}
+.jobly-bullets {
+	margin-left: 1.3em;
+	list-style: disc;
+}
+.jobly-links,
+.jobly-checks {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.jobly-links li {
+	margin: 0;
+	padding: 8px 0;
+	border-top: 1px solid var(--jobly-line);
+}
+.jobly-links li:first-child {
+	border-top: 0;
+	padding-top: 0;
+}
+.jobly-links a {
+	display: inline-flex;
+	gap: 8px;
+	align-items: center;
+	font-weight: 600;
+	text-decoration: none;
+}
+.jobly-checks li {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	margin: 0 0 6px;
+}
+.jobly-checks .jobly-icon {
+	color: #059669;
+}
+.jobly-table {
+	border: 0;
+	box-shadow: none;
+}
+.jobly-table thead th {
+	border-bottom: 1px solid var(--jobly-line);
+	color: var(--jobly-muted);
+	font-size: 12px;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.jobly-panel .description {
+	margin-top: 14px;
+}
+.jobly-table th {
+	font-weight: 600;
+}
+
+/* Copy fields */
+.jobly-copyfield {
+	margin: 0 0 14px;
+}
+.jobly-copyfield__label {
+	display: block;
+	margin: 0 0 4px;
+	color: var(--jobly-muted);
+	font-size: 11.5px;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+.jobly-copyfield__row {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	align-items: stretch;
+}
+.jobly-copybtn {
+	justify-content: center;
+}
+.jobly-copyfield__value {
+	flex: 1;
+	min-width: 0;
+	margin: 0;
+	padding: 8px 10px;
+	border: 1px solid var(--jobly-line);
+	border-radius: 8px;
+	background: #f8fafc;
+	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+	font-size: 12px;
+	word-break: break-all;
+}
+.jobly-copyfield textarea.jobly-copyfield__value {
+	width: 100%;
+	resize: vertical;
+}
+.jobly-copybtn {
+	display: inline-flex !important;
+	gap: 5px;
+	align-items: center;
+}
+.jobly-copybtn.is-copied {
+	border-color: #059669 !important;
+	background: #ecfdf5 !important;
+	color: #047857 !important;
+}
+.jobly-copy {
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--jobly-accent);
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+/* Lists (WP_List_Table) */
+.jobly-toolbar {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	margin: 0 0 12px;
+}
+.jobly-toolbar .button {
+	display: inline-flex;
+	gap: 6px;
+	align-items: center;
+}
+.jobly-admin .wp-list-table {
+	border: 0;
+	box-shadow: none;
+}
+.jobly-admin .wp-list-table thead th {
+	border-bottom: 1px solid var(--jobly-line);
+	color: var(--jobly-muted);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.jobly-admin .wp-list-table tfoot {
+	display: none;
+}
+.jobly-admin .wp-list-table td {
+	padding-top: 14px;
+	padding-bottom: 14px;
+}
+.jobly-admin .wp-list-table td .jobly-avatar {
+	margin-top: -6px;
+	float: left;
+}
+.jobly-admin .wp-list-table .column-candidate strong {
+	display: inline-block;
+	padding-top: 7px;
+}
+.jobly-admin .wp-list-table .column-candidate .row-actions {
+	padding-left: 42px;
+}
+.jobly-admin .subsubsub {
+	margin: 10px 14px 0;
+}
+.jobly-admin .search-box {
+	margin: 10px 14px 0;
+}
+.jobly-admin .tablenav {
+	padding: 0 10px;
+}
+.jobly-count-chip {
+	display: inline-block;
+	min-width: 26px;
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: #f1f5f9;
+	color: var(--jobly-muted);
+	font-weight: 600;
+	text-align: center;
+}
+.jobly-count-chip.has {
+	background: var(--jobly-accent-soft);
+	color: var(--jobly-accent);
+}
+.jobly-shortcode {
+	background: #f8fafc;
+	font-size: 12px;
+}
+
+/* Forms */
+.jobly-admin .form-table th {
+	width: 200px;
+	padding-left: 0;
+	font-weight: 600;
+}
+.jobly-admin input:not([type]),
+.jobly-admin input[type="search"],
+.jobly-admin input[type="text"],
+.jobly-admin input[type="url"],
+.jobly-admin input[type="password"],
+.jobly-admin input[type="number"],
+.jobly-admin select,
+.jobly-admin textarea {
+	border-color: #cbd5e1;
+	border-radius: 8px;
+}
+.jobly-admin input:not([type]),
+.jobly-admin input[type="search"],
+.jobly-admin input[type="text"],
+.jobly-admin input[type="url"],
+.jobly-admin input[type="password"],
+.jobly-admin input[type="number"],
+.jobly-admin select {
+	border: 1px solid #cbd5e1;
+	box-shadow: none;
+	min-height: 40px;
+	padding: 0 12px;
+	line-height: 38px;
+}
+.jobly-admin input:focus,
+.jobly-admin select:focus,
+.jobly-admin textarea:focus {
+	border-color: var(--jobly-accent);
+	box-shadow: 0 0 0 1px var(--jobly-accent);
+	outline: 2px solid transparent;
+}
+.jobly-form textarea {
+	width: 100%;
+	max-width: 600px;
+}
+.jobly-form input.regular-text,
+.jobly-form select {
+	max-width: 400px;
+}
+.jobly-errors {
+	margin: 4px 0 0;
+	color: #b32d2e;
+}
+.jobly-inline-form {
+	margin: -4px 0 20px;
+}
+.jobly-subtabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 22px;
+	margin: 0 0 14px;
+	border-bottom: 1px solid var(--jobly-line);
+}
+.jobly-subtabs__item {
+	margin-bottom: -1px;
+	padding: 8px 2px 10px;
+	border-bottom: 2px solid transparent;
+	color: var(--jobly-muted) !important;
+	font-weight: 600;
+	text-decoration: none;
+}
+.jobly-subtabs__item.is-active {
+	border-color: var(--jobly-accent);
+	color: var(--jobly-ink) !important;
+}
+.jobly-choices {
+	display: flex;
+	gap: 12px;
+}
+.jobly-choice {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	align-items: center;
+	min-width: 110px;
+	padding: 14px 18px;
+	border: 1px solid var(--jobly-line);
+	border-radius: 12px;
+	background: #fff;
+	cursor: pointer;
+	font-weight: 600;
+}
+.jobly-field .jobly-choice {
+	display: flex;
+	margin: 0;
+	font-weight: 600;
+}
+.jobly-choice input {
+	position: absolute;
+	opacity: 0;
+}
+.jobly-choice:has(input:checked) {
+	border-color: var(--jobly-accent);
+	background: var(--jobly-accent-soft);
+	color: var(--jobly-accent);
+	box-shadow: 0 0 0 1px var(--jobly-accent);
+}
+.jobly-choice:has(input:focus-visible) {
+	outline: 2px solid var(--jobly-accent);
+	outline-offset: 2px;
+}
+
+/* Wizard */
+body.jobly-wizard-screen #adminmenumain,
+body.jobly-wizard-screen #wpfooter {
+	display: none;
+}
+body.jobly-wizard-screen #wpcontent {
+	margin-left: 0;
+	padding-left: 0;
+}
+body.jobly-wizard-screen {
+	background: #f1f5f9;
+}
+.jobly-wizard {
+	max-width: 640px;
+	margin: 36px auto;
+	padding: 0 16px;
+}
+.jobly-wizard__brand {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	justify-content: center;
+	margin: 0 0 24px;
+}
+.jobly-wizard__brand .jobly-hdr__name {
+	font-size: 24px;
+}
+.jobly-steps {
+	display: flex;
+	gap: 8px;
+	justify-content: center;
+	margin: 0 0 24px;
+	padding: 0;
+	list-style: none;
+}
+.jobly-steps__item {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	margin: 0;
+	color: var(--jobly-muted);
+	font-size: 13px;
+	font-weight: 600;
+}
+.jobly-steps__item + .jobly-steps__item::before {
+	width: 28px;
+	height: 2px;
+	margin-right: 4px;
+	border-radius: 2px;
+	background: #cbd5e1;
+	content: "";
+}
+.jobly-steps__dot {
+	display: grid;
+	place-items: center;
+	width: 26px;
+	height: 26px;
+	border-radius: 50%;
+	background: #e2e8f0;
+	color: #475569;
+	font-size: 12px;
+}
+.jobly-steps__item.is-current {
+	color: var(--jobly-ink);
+}
+.jobly-steps__item.is-current .jobly-steps__dot {
+	background: var(--jobly-accent);
+	color: #fff;
+	box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.18);
+}
+.jobly-steps__item.is-done .jobly-steps__dot {
+	background: #059669;
+	color: #fff;
+}
+.jobly-wizard__card {
+	padding: 34px 38px;
+	border: 1px solid var(--jobly-line);
+	border-radius: 18px;
+	background: #fff;
+	box-shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+}
+.jobly-wizard__card h1 {
+	margin: 0 0 6px;
+	font-size: 24px;
+	font-weight: 700;
+	letter-spacing: -0.015em;
+}
+.jobly-lead {
+	margin: 0 0 22px;
+	color: var(--jobly-muted);
+	font-size: 14.5px;
+}
+.jobly-field {
+	margin: 0 0 16px;
+}
+.jobly-field label,
+.jobly-label {
+	display: block;
+	margin: 0 0 5px;
+	font-weight: 600;
+}
+.jobly-field input:not([type="color"]) {
+	width: 100%;
+	min-height: 40px;
+}
+.jobly-field-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+}
+.jobly-wizard__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin: 26px 0 0;
+}
+.jobly-wizard__skip {
+	margin: 18px 0 0;
+	text-align: center;
+}
+.jobly-wizard__skip a {
+	color: var(--jobly-muted);
+}
+.jobly-option {
+	display: flex;
+	gap: 12px;
+	align-items: flex-start;
+	margin: 0 0 12px;
+	padding: 16px 18px;
+	border: 1px solid var(--jobly-line);
+	border-radius: 12px;
+	cursor: pointer;
+}
+.jobly-option:has(input[type="radio"]:checked) {
+	border-color: var(--jobly-accent);
+	background: var(--jobly-accent-soft);
+	box-shadow: 0 0 0 1px var(--jobly-accent);
+}
+.jobly-option input[type="radio"] {
+	margin-top: 3px;
+}
+.jobly-option__body {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+}
+.jobly-option__body > span {
+	color: var(--jobly-muted);
+	font-size: 13px;
+}
+.jobly-option__body input[type="text"],
+.jobly-option__body input:not([type]),
+.jobly-option__body select {
+	width: 100%;
+	max-width: none;
+}
+.jobly-inline {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	align-items: center;
+}
+.jobly-inline input {
+	width: 130px !important;
+}
+.jobly-preview {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	margin: 18px 0 0;
+	padding: 16px 18px;
+	border: 1px solid var(--jobly-line);
+	border-radius: 12px;
+}
+.jobly-preview:hover {
+	border-color: var(--jobly-accent);
+}
+.jobly-preview__co {
+	color: var(--jobly-muted);
+	font-size: 12.5px;
+}
+.jobly-preview__meta {
+	color: var(--jobly-muted);
+	font-size: 13px;
+}
+.jobly-preview__cta {
+	color: var(--jobly-accent);
+	font-size: 13px;
+	font-weight: 600;
+}
+.jobly-done {
+	text-align: center;
+}
+.jobly-done__mark {
+	display: inline-grid;
+	place-items: center;
+	width: 64px;
+	height: 64px;
+	margin: 0 0 14px;
+	border-radius: 50%;
+	background: #d1fae5;
+	color: #047857;
+}
+.jobly-next {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 12px;
+}
+.jobly-next__card {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 16px;
+	border: 1px solid var(--jobly-line);
+	border-radius: 12px;
+	color: var(--jobly-ink) !important;
+	text-decoration: none;
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+.jobly-next__card:hover {
+	border-color: var(--jobly-accent);
+	box-shadow: 0 6px 18px rgba(37, 99, 235, 0.12);
+}
+.jobly-next__card .jobly-icon {
+	color: var(--jobly-accent);
+}
+.jobly-next__card span {
+	color: var(--jobly-muted);
+	font-size: 13px;
+}
+
+/* Footer */
+.jobly-footer a {
+	text-decoration: none;
+}
+
+@media (max-width: 960px) {
+	.jobly-stats,
+	.jobly-grid,
+	.jobly-detail {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.jobly-dl,
+	.jobly-field-row,
+	.jobly-next {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+@media (max-width: 782px) {
+	.jobly-admin {
+		margin-right: 10px;
+	}
+	.jobly-wizard__card {
+		padding: 24px 20px;
+	}
+	.jobly-steps__label {
+		display: none;
+	}
+	.jobly-steps__item.is-current .jobly-steps__label {
+		display: inline;
+	}
+}
+
+/* Company */
+.jobly-co {
+	display: inline-flex;
+	gap: 8px;
+	align-items: center;
+	font-weight: 600;
+}
+.jobly-co__logo {
+	flex: none;
+	border-radius: 8px;
+	object-fit: contain;
+}
+.jobly-companybar {
+	display: flex;
+	gap: 14px;
+	align-items: center;
+	margin: 0 0 16px;
+	padding: 14px 18px;
+	border: 1px solid var(--jobly-line);
+	border-radius: var(--jobly-radius);
+	background: var(--jobly-card);
+}
+.jobly-companybar .jobly-co {
+	font-size: 17px;
+}
+.jobly-companybar__meta {
+	flex: 1;
+	color: var(--jobly-muted);
+}
+
+.jobly-admin select {
+	padding-right: 32px;
+}

@@ -3,7 +3,7 @@
  * Plugin Name:       Jobly.si HRM
  * Plugin URI:        https://github.com/joblyhub/jobly-wp-integration
  * Description:       Delovna mesta podjetja iz Jobly.si v WordPressu: seznam, podstrani oglasov, objava novih mest in vgradnja prijavnega obrazca s kratko kodo [jobly].
- * Version:           0.3.1
+ * Version:           0.3.2
  * Requires at least: 6.1
  * Requires PHP:      7.4
  * Author:            Jobly.si
@@ -19,7 +19,7 @@
 defined( 'ABSPATH' ) || exit;
 
 const JOBLY_INTEGRATION_FILE    = __FILE__;
-const JOBLY_INTEGRATION_VERSION = '0.3.1';
+const JOBLY_INTEGRATION_VERSION = '0.3.2';
 const JOBLY_INTEGRATION_OPTION  = 'jobly_integration';
 
 require_once __DIR__ . '/includes/settings.php';

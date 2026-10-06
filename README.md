@@ -81,6 +81,6 @@ php -l <file>
 
 Plugin Check: `wp plugin install plugin-check --activate && wp plugin check jobly-integration`. Translations template: `wp i18n make-pot jobly-integration jobly-integration/languages/jobly-integration.pot`. CI (`.github/workflows/ci.yml`) runs `php -l` and phpcs on PHP 7.4 and 8.3.
 
-Release: push a tag `v0.3.1`; `.github/workflows/release.yml` checks it against the plugin header, builds `jobly-integration.zip` (plugin folder only, no dev files) and attaches it to the GitHub release.
+Release: push a tag `v0.3.2`; `.github/workflows/release.yml` checks it against the plugin header, builds `jobly-integration.zip` (plugin folder only, no dev files) and attaches it to the GitHub release.
 
 License: GPL-2.0-or-later.

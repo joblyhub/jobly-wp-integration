@@ -4,7 +4,7 @@ Tags: jobs, careers, job board, recruitment, application form
 Requires at least: 6.1
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.3.1
+Stable tag: 0.3.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,9 @@ The Jobly address can be changed in settings (testing); the server-side base can
 9. Job list block in the editor.
 
 == Changelog ==
+
+= 0.3.2 =
+* Utrjeno predpomnjenje in usmerjanje: zadnja dobra kopija oglasov ob izpadu ali omejitvi API-ja (Retry-After), naslovi samo iz pravila preusmeritve, strožje čiščenje polj, SEO samo za obstoječe oglase.
 
 = 0.3.1 =
 * Security hardening: Utrjena varnost izpisa podatkov z API, preverjanje naslovov, odstranitev.

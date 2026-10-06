@@ -126,7 +126,11 @@ function jobly_integration_handle_seo_job_save() {
 	if ( '' === $slug ) {
 		jobly_integration_redirect( 'jobly-jobs', array( 'jobly_msg' => 'not_found' ) );
 	}
-	$all   = jobly_integration_seo_job_overrides();
+	$all = jobly_integration_seo_job_overrides();
+	// Only for jobs that exist (an existing entry can always be cleared below).
+	if ( ! isset( $all[ $slug ] ) && ! in_array( $slug, array_column( jobly_integration_all_jobs()['items'], 'slug' ), true ) ) {
+		jobly_integration_redirect( 'jobly-jobs', array( 'jobly_msg' => 'not_found' ) );
+	}
 	$entry = array(
 		'title'       => jobly_integration_posted_text( 'seo_title' ),
 		'description' => jobly_integration_posted_text( 'seo_description' ),

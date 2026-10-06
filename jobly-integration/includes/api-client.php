@@ -143,7 +143,9 @@ function jobly_integration_api_request( $method, $path, $body = null, $key = '' 
 
 	$code = (int) wp_remote_retrieve_response_code( $response );
 	if ( 429 === $code || $code >= 500 ) {
-		set_transient( JOBLY_INTEGRATION_DOWN, 1, MINUTE_IN_SECONDS );
+		// Breaker: 60 s, or Jobly's Retry-After (seconds), at most 5 minutes.
+		$wait = (int) wp_remote_retrieve_header( $response, 'retry-after' );
+		set_transient( JOBLY_INTEGRATION_DOWN, 1, min( 300, max( MINUTE_IN_SECONDS, $wait ) ) );
 	}
 	$data = json_decode( wp_remote_retrieve_body( $response ), true );
 
@@ -152,6 +154,35 @@ function jobly_integration_api_request( $method, $path, $body = null, $key = '' 
 		'data'  => is_array( $data ) ? $data : array(),
 		'error' => '',
 	);
+}
+
+/**
+ * Last good copy of a public API answer (jobs, company, categories; never applicants), kept 24 h
+ * and bound to the API host. Served when Jobly is down or rate-limiting (stale-if-error).
+ *
+ * @param string $name  Cache name.
+ * @param mixed  $value Value to store, or null to read.
+ * @return mixed|null
+ */
+function jobly_integration_last_good( $name, $value = null ) {
+	$key  = 'jobly_integration_lg_' . md5( $name );
+	$host = (string) wp_parse_url( jobly_integration_api_base(), PHP_URL_HOST );
+	if ( null !== $value ) {
+		set_transient( $key, array( $host, $value ), DAY_IN_SECONDS );
+		return $value;
+	}
+	$saved = get_transient( $key );
+	return ( is_array( $saved ) && 2 === count( $saved ) && $saved[0] === $host ) ? $saved[1] : null;
+}
+
+/**
+ * The API answer failed in a way that says "try later" (no connection, 429, 5xx).
+ *
+ * @param int $code HTTP status, 0 = no connection.
+ * @return bool
+ */
+function jobly_integration_is_failure( $code ) {
+	return 0 === $code || 429 === $code || $code >= 500;
 }
 
 /**
@@ -244,9 +275,14 @@ function jobly_integration_neutralise( $html ) {
 }
 
 /**
+ * Scalar job fields the plugin knows (templates, SEO, JSON-LD, admin tables). Anything else from the API is dropped.
+ */
+const JOBLY_INTEGRATION_JOB_FIELDS = array( 'id', 'title', 'status', 'location', 'country', 'employmentType', 'arrangement', 'arrangementLabel', 'featuredUntil', 'publishedAt', 'validThrough', 'expiresAt', 'closesAt' );
+
+/**
  * The one door every job from the API passes through (list rows and detail): text is plain,
  * slugs are slugs, numbers are numbers, addresses are on the Jobly host, descriptions are
- * narrow HTML. Unknown keys survive only as scalars. Not an array = dropped.
+ * narrow HTML. Unknown keys are dropped (allowlist). Not an array = dropped.
  *
  * @param mixed $row Row from the API.
  * @return array|null
@@ -273,10 +309,12 @@ function jobly_integration_clean_job( $row ) {
 			$out[ $k ] = absint( is_scalar( $v ) ? $v : 0 );
 		} elseif ( 'featured' === $k ) {
 			$out[ $k ] = ! empty( $v );
-		} elseif ( is_int( $v ) || is_float( $v ) || is_bool( $v ) || null === $v ) {
-			$out[ $k ] = $v;
-		} elseif ( is_string( $v ) ) {
-			$out[ $k ] = sanitize_text_field( $v );
+		} elseif ( in_array( $k, JOBLY_INTEGRATION_JOB_FIELDS, true ) ) { // Known scalar fields only; anything else is dropped.
+			if ( is_int( $v ) || is_float( $v ) || is_bool( $v ) || null === $v ) {
+				$out[ $k ] = $v;
+			} elseif ( is_string( $v ) ) {
+				$out[ $k ] = sanitize_text_field( $v );
+			}
 		}
 	}
 	return $out;
@@ -384,6 +422,10 @@ function jobly_integration_all_jobs( $fresh = false ) {
 		$res = jobly_integration_fetch_all( '/api/v1/jobs' );
 		if ( 200 === $res['code'] ) {
 			set_transient( JOBLY_INTEGRATION_CACHE, $res, 5 * MINUTE_IN_SECONDS );
+			jobly_integration_last_good( 'jobs', $res );
+			jobly_integration_prune_seo_overrides( $res['items'] );
+		} elseif ( jobly_integration_is_failure( $res['code'] ) ) {
+			$res = jobly_integration_last_good( 'jobs' ) ?? $res;
 		}
 	}
 	$items = array_values( array_filter( array_map( 'jobly_integration_clean_job', (array) $res['items'] ), 'jobly_integration_job_has_slug' ) );
@@ -391,6 +433,23 @@ function jobly_integration_all_jobs( $fresh = false ) {
 		'code'  => (int) $res['code'],
 		'items' => $items,
 	);
+}
+
+/**
+ * Drop SEO overrides of jobs the API no longer returns (max 500 kept).
+ *
+ * @param array[] $rows Fresh, complete list rows.
+ */
+function jobly_integration_prune_seo_overrides( array $rows ) {
+	$saved = jobly_integration_seo_job_overrides();
+	$slugs = array();
+	foreach ( $rows as $row ) {
+		$slugs[ sanitize_title( is_scalar( $row['slug'] ?? null ) ? (string) $row['slug'] : '' ) ] = true;
+	}
+	$kept = array_slice( array_intersect_key( $saved, $slugs ), 0, 500, true );
+	if ( count( $kept ) !== count( $saved ) ) {
+		update_option( JOBLY_INTEGRATION_SEO_JOBS_OPTION, $kept, false );
+	}
 }
 
 /**
@@ -412,8 +471,7 @@ function jobly_integration_is_unavailable() {
 	if ( jobly_integration_is_demo() ) {
 		return false;
 	}
-	$code = jobly_integration_all_jobs()['code'];
-	return 0 === $code || 429 === $code || $code >= 500;
+	return jobly_integration_is_failure( jobly_integration_all_jobs()['code'] );
 }
 
 /**
@@ -511,6 +569,11 @@ function jobly_integration_company( $key = '' ) {
 	$company = ( 200 === $res['code'] && is_array( $res['data']['data'] ?? null ) ) ? jobly_integration_clean_company( $res['data']['data'] ) : array();
 	if ( '' === $key && ( 200 === $res['code'] || 404 === $res['code'] ) ) {
 		set_transient( 'jobly_integration_company', $company, HOUR_IN_SECONDS );
+		if ( 200 === $res['code'] ) {
+			jobly_integration_last_good( 'company', $company );
+		}
+	} elseif ( '' === $key && jobly_integration_is_failure( $res['code'] ) ) {
+		return (array) ( jobly_integration_last_good( 'company' ) ?? array() );
 	}
 	return $company;
 }
@@ -537,6 +600,11 @@ function jobly_integration_job_detail( array $row ) {
 		$detail = ( 200 === $res['code'] && is_array( $res['data']['data'] ?? null ) ) ? $res['data']['data'] : array();
 		if ( 200 === $res['code'] || 404 === $res['code'] ) {
 			set_transient( $ckey, $detail, 5 * MINUTE_IN_SECONDS );
+			if ( 200 === $res['code'] ) {
+				jobly_integration_last_good( $ckey, $detail );
+			}
+		} elseif ( jobly_integration_is_failure( $res['code'] ) ) {
+			$detail = (array) ( jobly_integration_last_good( $ckey ) ?? array() );
 		}
 	}
 	// Only the content keys of the detail are merged: it can never change a row's identity or status.
@@ -572,6 +640,11 @@ function jobly_integration_categories() {
 	}
 	if ( 200 === $res['code'] || 404 === $res['code'] ) {
 		set_transient( 'jobly_integration_categories', $list, DAY_IN_SECONDS );
+		if ( 200 === $res['code'] ) {
+			jobly_integration_last_good( 'categories', $list );
+		}
+	} elseif ( jobly_integration_is_failure( $res['code'] ) ) {
+		return (array) ( jobly_integration_last_good( 'categories' ) ?? array() );
 	}
 	return $list;
 }
@@ -694,6 +767,11 @@ function jobly_integration_stats( $from, $to ) {
 	);
 	if ( 200 === $res['code'] || 404 === $res['code'] ) {
 		set_transient( $ckey, $result, 5 * MINUTE_IN_SECONDS );
+		if ( 200 === $res['code'] ) {
+			jobly_integration_last_good( $ckey, $result );
+		}
+	} elseif ( jobly_integration_is_failure( $res['code'] ) ) {
+		return jobly_integration_last_good( $ckey ) ?? $result;
 	}
 	return $result;
 }

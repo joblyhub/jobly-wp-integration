@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Jobly.si — prijavni obrazec
+ * Plugin Name:       Jobly.si HRM
  * Plugin URI:        https://github.com/joblyhub/jobly-wp-integration
  * Description:       Vgradi Jobly.si prijavni obrazec ali celotno karierno stran podjetja v WordPress s kratko kodo [jobly].
  * Version:           0.1.0
@@ -110,12 +110,25 @@ function jobly_integration_shortcode( $atts ) {
 add_shortcode( 'jobly', 'jobly_integration_shortcode' );
 
 /**
- * Settings → Jobly.si
+ * Own entry in the admin sidebar: Jobly HRM.
  */
 function jobly_integration_admin_menu() {
-	add_options_page( 'Jobly.si', 'Jobly.si', 'manage_options', 'jobly-integration', 'jobly_integration_settings_page' );
+	add_menu_page( 'Jobly.si HRM', 'Jobly HRM', 'manage_options', 'jobly-integration', 'jobly_integration_settings_page', 'dashicons-groups', 58 );
+	add_submenu_page( 'jobly-integration', 'Jobly.si HRM', __( 'Nastavitve', 'jobly-integration' ), 'manage_options', 'jobly-integration', 'jobly_integration_settings_page' );
 }
 add_action( 'admin_menu', 'jobly_integration_admin_menu' );
+
+/**
+ * "Nastavitve" link next to Deactivate on the Plugins screen.
+ *
+ * @param string[] $links Existing action links.
+ * @return string[]
+ */
+function jobly_integration_action_links( $links ) {
+	array_unshift( $links, '<a href="' . esc_url( admin_url( 'admin.php?page=jobly-integration' ) ) . '">' . esc_html__( 'Nastavitve', 'jobly-integration' ) . '</a>' );
+	return $links;
+}
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'jobly_integration_action_links' );
 
 function jobly_integration_register_setting() {
 	register_setting(
@@ -153,7 +166,7 @@ function jobly_integration_settings_page() {
 	$name = JOBLY_INTEGRATION_OPTION;
 	?>
 	<div class="wrap">
-		<h1>Jobly.si</h1>
+		<h1>Jobly.si HRM</h1>
 		<p><?php esc_html_e( 'Prijavni obrazec in seznam odprtih mest prikaže Jobly. Prijave, privolitve in zaščita pred neželeno pošto ostanejo na Jobly — WordPress podatkov kandidatov ne vidi.', 'jobly-integration' ); ?></p>
 		<form method="post" action="options.php">
 			<?php settings_fields( 'jobly_integration' ); ?>

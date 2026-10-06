@@ -1,4 +1,4 @@
-=== Jobly.si — prijavni obrazec ===
+=== Jobly.si HRM ===
 Contributors: joblyhub
 Tags: jobs, careers, job board, application form, zaposlitev
 Requires at least: 6.0
@@ -32,10 +32,10 @@ Vtičnik naloži vsebino s storitve Jobly.si (https://jobly.si) v okvirju (ifram
 == Installation ==
 
 1. Naloži mapo `jobly-integration` v `/wp-content/plugins/` in vtičnik vklopi.
-2. Nastavitve → Jobly.si: vpiši slug podjetja (zadnji del naslova jobly.si/companies/…).
+2. Jobly HRM (stranski meni): vpiši slug podjetja (zadnji del naslova jobly.si/companies/…).
 3. Na stran dodaj kratko kodo `[jobly]`.
 
 == Changelog ==
 
 = 0.1.0 =
-* Kratka koda `[jobly]` in stran z nastavitvami.
+* Kratka koda `[jobly]` in stran z nastavitvami (meni Jobly HRM).

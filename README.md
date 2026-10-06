@@ -69,7 +69,7 @@ Every API request carries two credentials: the company key `Authorization: Beare
 
 `GET /api/v1/jobs`, `GET /api/v1/applications`, `POST /api/v1/jobs` with `Authorization: Bearer jbl_…`. The API has no update/show/filter endpoints, so editing is a link to Jobly, and job/application detail comes from the list responses (filtered locally; up to 5 pages of 25).
 
-`define( 'JOBLY_API_BASE', 'http://host:port' );` in `wp-config.php` overrides the server-side API base (local testing); the browser-facing embed base stays the "Naslov Jobly" setting.
+`define( 'JOBLY_API_BASE', 'http://host:port' );` in `wp-config.php` overrides the server-side API base (local testing only; https, or http on `WP_ENVIRONMENT_TYPE` local/development). Without it the plugin talks to `https://jobly.si` and the address cannot be changed in wp-admin.
 
 ## Development
 
@@ -81,6 +81,6 @@ php -l <file>
 
 Plugin Check: `wp plugin install plugin-check --activate && wp plugin check jobly-integration`. Translations template: `wp i18n make-pot jobly-integration jobly-integration/languages/jobly-integration.pot`. CI (`.github/workflows/ci.yml`) runs `php -l` and phpcs on PHP 7.4 and 8.3.
 
-Release: push a tag `v0.3.0`; `.github/workflows/release.yml` checks it against the plugin header, builds `jobly-integration.zip` (plugin folder only, no dev files) and attaches it to the GitHub release.
+Release: push a tag `v0.3.1`; `.github/workflows/release.yml` checks it against the plugin header, builds `jobly-integration.zip` (plugin folder only, no dev files) and attaches it to the GitHub release.
 
 License: GPL-2.0-or-later.

@@ -22,14 +22,14 @@ function jobly_integration_connect( $key, array $changes ) {
 		if ( 0 !== strpos( $key, 'jbl_' ) ) {
 			$code = 'bad_key';
 		} else {
-			jobly_integration_update_settings( $changes ); // So the check below uses the new base.
 			$result = jobly_integration_verify_key( $key );
 			if ( 'ok' === $result ) {
 				$changes              = array_merge( $changes, jobly_integration_company_changes( jobly_integration_company( $key ) ) );
 				$changes['api_key']   = $key;
 				$changes['connected'] = 1;
 				$changes['demo']      = 0; // Connected: demo off (still toggleable).
-				$code                 = 'verified';
+				update_option( JOBLY_INTEGRATION_KEY_HOST, (string) wp_parse_url( jobly_integration_api_base(), PHP_URL_HOST ), false ); // The key belongs to this host.
+				$code = 'verified';
 			} else {
 				$code = $result;
 			}
@@ -62,7 +62,7 @@ function jobly_integration_posted_app_token() {
  */
 function jobly_integration_app_token_field( $id ) {
 	if ( defined( 'JOBLY_APP_TOKEN' ) && JOBLY_APP_TOKEN ) {
-		echo '<p class="description">' . esc_html__( 'App-Token je določen s konstanto JOBLY_APP_TOKEN v wp-config.php.', 'jobly-integration' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'App-Token: nastavljeno v wp-config.php (konstanta JOBLY_APP_TOKEN). Vrednost se nikoli ne prikaže.', 'jobly-integration' ) . '</p>';
 		return;
 	}
 	$set = '' !== jobly_integration_settings()['app_token'];
@@ -127,10 +127,7 @@ function jobly_integration_handle_save_settings() {
 	} elseif ( 'demo' === $tab ) {
 		jobly_integration_update_settings( array( 'demo' => empty( $_POST['demo'] ) ? 0 : 1 ) );
 	} else {
-		$base    = isset( $_POST['base_url'] ) ? esc_url_raw( trim( sanitize_text_field( wp_unslash( $_POST['base_url'] ) ) ), array( 'https', 'http' ) ) : '';
-		$changes = array(
-			'base_url' => '' !== $base ? untrailingslashit( $base ) : 'https://jobly.si',
-		);
+		$changes = array(); // The Jobly address is not editable here (wp-config.php constant only).
 		if ( isset( $_POST['company'] ) && ! jobly_integration_settings()['company_api'] ) {
 			$changes['company'] = sanitize_title( wp_unslash( $_POST['company'] ) );
 		}
@@ -295,10 +292,10 @@ function jobly_integration_page_settings() {
 			</tr>
 			<?php endif; ?>
 			<tr>
-				<th scope="row"><label for="jobly-base"><?php esc_html_e( 'Naslov Jobly', 'jobly-integration' ); ?></label></th>
+				<th scope="row"><span id="jobly-base-label"><?php esc_html_e( 'Naslov Jobly', 'jobly-integration' ); ?></span></th>
 				<td>
-					<input id="jobly-base" class="regular-text" type="url" name="base_url" value="<?php echo esc_attr( $s['base_url'] ); ?>">
-					<p class="description"><?php esc_html_e( 'Pusti https://jobly.si. Drugo samo za testiranje.', 'jobly-integration' ); ?></p>
+					<code id="jobly-base"><?php echo esc_html( $s['base_url'] ); ?></code>
+					<p class="description"><?php esc_html_e( 'Naslov je določen in ga ni mogoče spremeniti v skrbniškem delu. Za lokalno testiranje ga lahko skrbnik strežnika nastavi s konstanto JOBLY_API_BASE v wp-config.php.', 'jobly-integration' ); ?></p>
 				</td>
 			</tr>
 		</table>

@@ -4,7 +4,7 @@ Tags: jobs, careers, job board, recruitment, application form
 Requires at least: 6.1
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.3.0
+Stable tag: 0.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,7 +56,7 @@ This plugin talks to Jobly.si (https://jobly.si), the service it integrates. Ter
 
 No visitor data is sent by these calls.
 
-**Browser requests.** Pages with `[jobly]` or a job page load the Jobly embed (`/embed/jobs/{slug}`, `/embed/companies/{slug}`) in an iframe, so the visitor's browser connects to jobly.si.
+**Browser requests.** Pages with `[jobly]` or a job page load the Jobly embed (`/embed/jobs/{slug}`, `/embed/companies/{slug}`) in an iframe, so the visitor's browser connects to jobly.si. In wp-admin the company logo is loaded from jobly.si.
 
 Every request also sends the integration's `App-Token` header (constant `JOBLY_APP_TOKEN` in wp-config.php or the Connection setting). Further read calls: `GET /api/v1/company` (when you save or verify the key, cached 1 hour), `GET /api/v1/jobs/{slug}` (job page and job detail, cached 5 minutes), `GET /api/v1/categories` (Add new screen, cached 1 day).
 
@@ -85,6 +85,10 @@ The Jobly address can be changed in settings (testing); the server-side base can
 9. Job list block in the editor.
 
 == Changelog ==
+
+= 0.3.1 =
+* Security hardening: Utrjena varnost izpisa podatkov z API, preverjanje naslovov, odstranitev.
+* Job screen in tabs (Overview, Applications, Embed, Form, SEO); per-page SEO (title, description, image, noindex) for jobs and the careers page.
 
 = 0.3.0 =
 * Branded admin: header, section tabs, dashboard with stats, checklist and panels, two-column job detail, copy buttons, empty states, Help tab, footer.

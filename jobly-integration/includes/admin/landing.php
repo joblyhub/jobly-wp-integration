@@ -65,7 +65,9 @@ function jobly_integration_handle_landing_save() {
 	$landing['html_raw']    = $raw ? 1 : 0;
 	$landing['html_top']    = $raw ? $text( 'html_top' ) : wp_kses_post( $text( 'html_top' ) );
 	$landing['html_bottom'] = $raw ? $text( 'html_bottom' ) : wp_kses_post( $text( 'html_bottom' ) );
-	$landing['css']         = wp_strip_all_tags( $text( 'css' ) );
+	if ( current_user_can( 'edit_css' ) ) { // Core keeps Additional CSS for edit_css (super admin on multisite); so do we.
+		$landing['css'] = wp_strip_all_tags( $text( 'css' ) );
+	}
 	if ( $raw ) {
 		$landing['js'] = $text( 'js' );
 	}
@@ -121,7 +123,7 @@ add_action( 'admin_post_jobly_integration_landing_reset', 'jobly_integration_han
  */
 function jobly_integration_landing_admin_assets( $hook ) {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- screen routing only.
-	if ( false === strpos( $hook, 'jobly-settings' ) || ! isset( $_GET['tab'] ) || 'landing' !== sanitize_key( wp_unslash( $_GET['tab'] ) ) ) {
+	if ( false === strpos( $hook, 'jobly-settings' ) || ! isset( $_GET['tab'] ) || 'landing' !== sanitize_key( wp_unslash( $_GET['tab'] ) ) || 'content' !== jobly_integration_landing_view() ) {
 		return;
 	}
 	wp_enqueue_media();
@@ -144,9 +146,71 @@ function jobly_integration_landing_admin_assets( $hook ) {
 add_action( 'admin_enqueue_scripts', 'jobly_integration_landing_admin_assets' );
 
 /**
- * The tab.
+ * Media Library on the screens with an image picker that are not the landing content: job SEO tab, landing SEO tab.
+ *
+ * @param string $hook Admin page hook.
+ */
+function jobly_integration_seo_admin_assets( $hook ) {
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- screen routing only.
+	$tab  = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+	$show = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
+	// phpcs:enable
+	$job_seo     = false !== strpos( $hook, 'jobly-jobs' ) && 'show' === $show && 'seo' === $tab;
+	$settings_ok = false !== strpos( $hook, 'jobly-settings' ) && ( 'seo' === $tab || ( 'landing' === $tab && 'seo' === jobly_integration_landing_view() ) );
+	if ( $job_seo || $settings_ok ) {
+		wp_enqueue_media();
+	}
+}
+add_action( 'admin_enqueue_scripts', 'jobly_integration_seo_admin_assets' );
+
+/**
+ * Sub-tab of Karierna stran: content (sections) or seo.
+ *
+ * @return string content|seo
+ */
+function jobly_integration_landing_view() {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- tab routing only, whitelisted.
+	$view = isset( $_GET['view'] ) ? sanitize_key( wp_unslash( $_GET['view'] ) ) : 'content';
+	return 'seo' === $view ? 'seo' : 'content';
+}
+
+/**
+ * The tab: Vsebina | SEO.
  */
 function jobly_integration_landing_tab() {
+	$view = jobly_integration_landing_view();
+	echo '<nav class="jobly-subtabs" aria-label="' . esc_attr__( 'Karierna stran', 'jobly-integration' ) . '">';
+	foreach ( array(
+		'content' => __( 'Vsebina', 'jobly-integration' ),
+		'seo'     => __( 'SEO', 'jobly-integration' ),
+	) as $id => $label ) {
+		printf(
+			'<a href="%s" class="jobly-subtabs__item%s">%s</a>',
+			esc_url(
+				jobly_integration_admin_url(
+					'jobly-settings',
+					array(
+						'tab'  => 'landing',
+						'view' => $id,
+					)
+				)
+			),
+			$id === $view ? ' is-active' : '',
+			esc_html( $label )
+		);
+	}
+	echo '</nav>';
+	if ( 'seo' === $view ) {
+		jobly_integration_landing_seo_panel();
+		return;
+	}
+	jobly_integration_landing_content_tab();
+}
+
+/**
+ * The content sections of the landing builder.
+ */
+function jobly_integration_landing_content_tab() {
 	$landing  = jobly_integration_landing();
 	$s        = jobly_integration_settings();
 	$sections = jobly_integration_landing_sections();
@@ -211,12 +275,7 @@ function jobly_integration_landing_tab() {
 			<tr><th scope="row"><label for="jl-hero-title"><?php esc_html_e( 'Naslov', 'jobly-integration' ); ?></label></th><td><input id="jl-hero-title" class="regular-text" name="landing[hero_title]" value="<?php echo esc_attr( $landing['hero_title'] ); ?>"></td></tr>
 			<tr><th scope="row"><label for="jl-hero-sub"><?php esc_html_e( 'Podnaslov', 'jobly-integration' ); ?></label></th><td><textarea id="jl-hero-sub" rows="3" name="landing[hero_subtitle]"><?php echo esc_textarea( $landing['hero_subtitle'] ); ?></textarea></td></tr>
 			<tr><th scope="row"><?php esc_html_e( 'Slika', 'jobly-integration' ); ?></th><td>
-				<div class="jobly-media" data-jobly-media>
-					<input type="hidden" name="landing[hero_image]" value="<?php echo esc_attr( (string) $landing['hero_image'] ); ?>">
-					<div class="jobly-media__preview"><?php echo $landing['hero_image'] ? wp_get_attachment_image( (int) $landing['hero_image'], 'medium' ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core escapes attachment markup. ?></div>
-					<button type="button" class="button" data-jobly-media-pick data-title="<?php esc_attr_e( 'Izberi sliko', 'jobly-integration' ); ?>"><?php esc_html_e( 'Izberi iz knjižnice', 'jobly-integration' ); ?></button>
-					<button type="button" class="button-link" data-jobly-media-clear><?php esc_html_e( 'Odstrani', 'jobly-integration' ); ?></button>
-				</div>
+				<?php jobly_integration_media_field( 'landing[hero_image]', (int) $landing['hero_image'] ); ?>
 			</td></tr>
 			<tr><th scope="row"><label for="jl-hero-cta"><?php esc_html_e( 'Besedilo gumba', 'jobly-integration' ); ?></label></th><td><input id="jl-hero-cta" class="regular-text" name="landing[hero_cta]" value="<?php echo esc_attr( $landing['hero_cta'] ); ?>" placeholder="<?php esc_attr_e( 'Poglej odprta mesta', 'jobly-integration' ); ?>"><p class="description"><?php esc_html_e( 'Gumb se pomakne na seznam oglasov.', 'jobly-integration' ); ?></p></td></tr>
 		</table>
@@ -247,7 +306,7 @@ function jobly_integration_landing_tab() {
 				'icon'  => 'sparkles',
 				'title' => '',
 				'text'  => '',
-			); // phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine 
+			);
 			?>
 			<div class="jobly-benefitrow">
 				<select name="landing[benefits][<?php echo esc_attr( (string) $i ); ?>][icon]" aria-label="<?php esc_attr_e( 'Ikona', 'jobly-integration' ); ?>">
@@ -266,7 +325,7 @@ function jobly_integration_landing_tab() {
 		<p class="description"><?php esc_html_e( 'Izpiše se samo na karierni strani, nikoli v skrbniškem delu. HTML se filtrira, razen če imate pravico unfiltered_html; JavaScript lahko shrani samo uporabnik s to pravico.', 'jobly-integration' ); ?></p>
 		<div class="jobly-field"><label for="jobly-code-html-top"><?php esc_html_e( 'HTML na vrhu (samo sestavljena stran)', 'jobly-integration' ); ?></label><textarea id="jobly-code-html-top" rows="5" name="landing[html_top]"><?php echo esc_textarea( $landing['html_top'] ); ?></textarea></div>
 		<div class="jobly-field"><label for="jobly-code-html-bottom"><?php esc_html_e( 'HTML na dnu (samo sestavljena stran)', 'jobly-integration' ); ?></label><textarea id="jobly-code-html-bottom" rows="5" name="landing[html_bottom]"><?php echo esc_textarea( $landing['html_bottom'] ); ?></textarea></div>
-		<div class="jobly-field"><label for="jobly-code-css"><?php esc_html_e( 'CSS (karierna stran in strani oglasov)', 'jobly-integration' ); ?></label><textarea id="jobly-code-css" rows="8" name="landing[css]"><?php echo esc_textarea( $landing['css'] ); ?></textarea></div>
+		<div class="jobly-field"><label for="jobly-code-css"><?php esc_html_e( 'CSS (karierna stran in strani oglasov)', 'jobly-integration' ); ?></label><textarea id="jobly-code-css" rows="8" name="landing[css]" <?php disabled( ! current_user_can( 'edit_css' ) ); ?>><?php echo esc_textarea( $landing['css'] ); ?></textarea></div>
 		<div class="jobly-field"><label for="jobly-code-js"><?php esc_html_e( 'JavaScript (karierna stran)', 'jobly-integration' ); ?></label>
 			<textarea id="jobly-code-js" rows="6" name="landing[js]" <?php disabled( ! $can_js ); ?>><?php echo esc_textarea( $landing['js'] ); ?></textarea>
 			<?php if ( ! $can_js ) : ?>

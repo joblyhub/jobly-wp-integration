@@ -5,13 +5,15 @@ on:
     tags: ['v*']
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   zip:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # attach the zip to the release
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: Check the tag matches the plugin version
         run: |
           v="${GITHUB_REF_NAME#v}"
@@ -19,7 +21,7 @@ jobs:
       - name: Build jobly-integration.zip
         run: zip -r jobly-integration.zip jobly-integration -x '*.DS_Store' '*/.git*' '*/node_modules/*' '*/vendor/*' '*.map'
       - name: Attach to the release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
           files: jobly-integration.zip
           generate_release_notes: true

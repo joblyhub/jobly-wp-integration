@@ -28,13 +28,14 @@ function jobly_integration_embed_html( $job = '', $company = '', array $opts = a
 			'url'    => '',
 		)
 	);
-	$base = untrailingslashit( esc_url_raw( $s['base_url'] ) );
+	$base = untrailingslashit( $s['base_url'] );
 	$url  = '' !== $job
 		? $base . '/embed/jobs/' . rawurlencode( $job )
 		: $base . '/embed/companies/' . rawurlencode( $company );
-	// Prefer the embed address Jobly gives us over the one built here.
-	if ( is_string( $opts['url'] ) && preg_match( '#^https?://#i', $opts['url'] ) ) {
-		$url = esc_url_raw( $opts['url'] );
+	// Prefer the embed address Jobly gives us, but only when it is on the Jobly host; else the one built here.
+	$given = jobly_integration_trusted_url( $opts['url'] );
+	if ( '' !== $given ) {
+		$url = $given;
 	}
 
 	$query = array();
@@ -54,7 +55,7 @@ function jobly_integration_embed_html( $job = '', $company = '', array $opts = a
 	}
 
 	return sprintf(
-		'<iframe class="jobly-embed" src="%s" width="100%%" height="%d" style="border:0;width:100%%" loading="lazy" title="%s"></iframe>',
+		'<iframe class="jobly-embed" src="%s" width="100%%" height="%d" style="border:0;width:100%%" loading="lazy" sandbox="allow-forms allow-scripts allow-same-origin allow-popups" referrerpolicy="strict-origin-when-cross-origin" title="%s"></iframe>',
 		esc_url( $url ),
 		max( 300, min( 3000, absint( $opts['height'] ) ) ),
 		esc_attr( $opts['title'] )
@@ -235,6 +236,21 @@ function jobly_integration_query_vars( $vars ) {
 add_filter( 'query_vars', 'jobly_integration_query_vars' );
 
 /**
+ * Our query vars only count when the request matched one of our rewrite rules, so
+ * /?jobly_job=x or /any-page/?jobly_index=1 cannot turn another URL into a careers page.
+ *
+ * @param WP $wp The request.
+ */
+function jobly_integration_guard_query_vars( $wp ) {
+	$rule = (string) $wp->matched_rule;
+	if ( 0 === strpos( $rule, '^' . preg_quote( jobly_integration_base_path(), '#' ) ) || '^jobly-sitemap\\.xml$' === $rule ) {
+		return;
+	}
+	unset( $wp->query_vars['jobly_index'], $wp->query_vars['jobly_job'], $wp->query_vars['jobly_sitemap'] );
+}
+add_action( 'parse_request', 'jobly_integration_guard_query_vars' );
+
+/**
  * The job (row from the API) of the current virtual page, or null.
  *
  * @return array|null
@@ -267,15 +283,18 @@ function jobly_integration_virtual_page( $posts, $query ) {
 	if ( ! $query->is_main_query() ) {
 		return $posts;
 	}
-	$is_index = (bool) $query->get( 'jobly_index' );
-	$is_job   = '' !== (string) $query->get( 'jobly_job' );
+	$is_index    = (bool) $query->get( 'jobly_index' );
+	$is_job      = '' !== (string) $query->get( 'jobly_job' );
+	$unavailable = false;
 	if ( ! $is_index && ! $is_job ) {
 		return $posts;
 	}
 
 	if ( $is_job ) {
 		$job = jobly_integration_current_job();
-		if ( ! $job ) {
+		if ( ! $job && jobly_integration_is_unavailable() ) {
+			$unavailable = true;
+		} elseif ( ! $job ) {
 			$closed = jobly_integration_closed_job();
 			if ( $closed ) {
 				$action = jobly_integration_seo_settings()['closed_action'];
@@ -288,7 +307,7 @@ function jobly_integration_virtual_page( $posts, $query ) {
 				}
 			}
 		}
-		if ( ! $job ) {
+		if ( ! $job && ! $unavailable ) {
 			if ( ! empty( $closed ) ) {
 				$query->set_404();
 				status_header( 410 );
@@ -300,26 +319,35 @@ function jobly_integration_virtual_page( $posts, $query ) {
 			nocache_headers();
 			return array();
 		}
-		$title = (string) $job['title'];
 		jobly_integration_enqueue_frontend();
-		$content = jobly_integration_render_template(
-			'single-job.php',
-			array(
-				'job'  => $job,
-				'demo' => jobly_integration_is_demo(),
-			)
-		);
+		if ( $unavailable ) {
+			$title   = __( 'Oglasi trenutno niso na voljo', 'jobly-integration' );
+			$content = jobly_integration_render_template( 'parts/unavailable.php' );
+		} else {
+			$title   = (string) $job['title'];
+			$content = jobly_integration_neutralise(
+				jobly_integration_render_template(
+					'single-job.php',
+					array(
+						'job'  => $job,
+						'demo' => jobly_integration_is_demo(),
+					)
+				)
+			);
+		}
 	} else {
 		$title   = jobly_integration_index_title();
 		$content = jobly_integration_render_landing();
 	}
 
+	// The HTML never enters post_content: the_content (blocks, shortcodes) would run it. A token is swapped back in last.
 	$post = new WP_Post(
 		(object) array(
 			'ID'             => 0,
-			'post_title'     => $title,
-			'post_name'      => $is_job ? (string) $job['slug'] : jobly_integration_base_path(),
-			'post_content'   => $content,
+			'post_title'     => jobly_integration_neutralise( esc_html( $title ) ),
+			'post_name'      => $is_job && ! $unavailable ? (string) $job['slug'] : jobly_integration_base_path(),
+			'post_content'   => JOBLY_INTEGRATION_VIRTUAL_TOKEN,
+			'post_excerpt'   => '',
 			'post_status'    => 'publish',
 			'post_type'      => 'page',
 			'comment_status' => 'closed',
@@ -336,9 +364,57 @@ function jobly_integration_virtual_page( $posts, $query ) {
 	$query->is_archive  = false;
 	$query->is_404      = false;
 	status_header( 200 );
+	jobly_integration_virtual_html( $content, $unavailable || ( $is_index && jobly_integration_is_unavailable() ) );
 	return array( $post );
 }
 add_filter( 'the_posts', 'jobly_integration_virtual_page', 10, 2 );
+
+const JOBLY_INTEGRATION_VIRTUAL_TOKEN = '<!--jobly-integration-virtual-->';
+
+/**
+ * The virtual page being served: its HTML (read by the content filter) and whether Jobly was down.
+ *
+ * @param string|null $html        HTML to keep, or null to read.
+ * @param bool        $unavailable Jobly could not be reached.
+ * @return array{html: string, down: bool}
+ */
+function jobly_integration_virtual_html( $html = null, $unavailable = false ) {
+	static $page = array(
+		'html' => '',
+		'down' => false,
+	);
+	if ( null !== $html ) {
+		$page = array(
+			'html' => $html,
+			'down' => $unavailable,
+		);
+	}
+	return $page;
+}
+
+/**
+ * 503 + Retry-After while Jobly is down (core's 404 handling runs before this and would otherwise reset the status).
+ */
+function jobly_integration_virtual_status() {
+	if ( jobly_integration_virtual_html()['down'] ) {
+		status_header( 503 );
+		header( 'Retry-After: 60' );
+		nocache_headers();
+	}
+}
+add_action( 'template_redirect', 'jobly_integration_virtual_status', 1 );
+
+/**
+ * Last filter on the_content: put the page back for the virtual post only. Because it runs after
+ * do_blocks and do_shortcode, nothing in our HTML (API data included) is ever parsed as a block or shortcode.
+ *
+ * @param string $content Post content.
+ * @return string
+ */
+function jobly_integration_virtual_content( $content ) {
+	return false === strpos( $content, JOBLY_INTEGRATION_VIRTUAL_TOKEN ) ? $content : str_replace( JOBLY_INTEGRATION_VIRTUAL_TOKEN, jobly_integration_virtual_html()['html'], $content );
+}
+add_filter( 'the_content', 'jobly_integration_virtual_content', PHP_INT_MAX );
 
 /**
  * The request is one of our virtual pages (list or job).

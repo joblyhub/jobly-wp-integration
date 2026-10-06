@@ -17,4 +17,4 @@ $jobly_integration_html = jobly_integration_render_list(
 	)
 );
 ?>
-<div <?php echo wp_kses_data( get_block_wrapper_attributes( array( 'class' => 'jobly-block' ) ) ); ?>><?php echo $jobly_integration_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the templates. ?></div>
+<div <?php echo wp_kses_data( get_block_wrapper_attributes( array( 'class' => 'jobly-block' ) ) ); ?>><?php echo $jobly_integration_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plugin templates escape every value; brackets are encoded in render_list(), so no shortcode or block can run. ?></div>

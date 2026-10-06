@@ -139,9 +139,9 @@ function jobly_integration_landing_slot( $key ) {
 		return;
 	}
 	if ( $landing['html_raw'] ) {
-		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- saved by a user with the unfiltered_html capability.
+		echo do_shortcode( $html ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- admin-written, saved by a user with the unfiltered_html capability.
 	} else {
-		echo wp_kses_post( $html );
+		echo do_shortcode( wp_kses_post( $html ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses'd at save and again here; shortcodes run only in this admin-written slot, never in API data.
 	}
 }
 

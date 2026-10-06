@@ -16,7 +16,7 @@ function jobly_integration_page_applications() {
 	}
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only routing.
 	if ( isset( $_GET['action'], $_GET['application'] ) && 'show' === $_GET['action'] ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only routing, same as above; the id is only looked up in the company's own list.
 		jobly_integration_application_show( sanitize_text_field( wp_unslash( $_GET['application'] ) ) );
 		return;
 	}

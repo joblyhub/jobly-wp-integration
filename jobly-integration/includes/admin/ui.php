@@ -190,6 +190,23 @@ function jobly_integration_copy_field( $label, $value, $multi = false ) {
 }
 
 /**
+ * Media Library image field (hidden input + preview + pick/clear buttons, see admin.js).
+ *
+ * @param string $name Input name.
+ * @param int    $id   Attachment ID or 0.
+ */
+function jobly_integration_media_field( $name, $id ) {
+	?>
+	<div class="jobly-media" data-jobly-media>
+		<input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( (string) $id ); ?>">
+		<div class="jobly-media__preview"><?php echo $id ? wp_get_attachment_image( (int) $id, 'medium' ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core builds and escapes the attachment <img>. ?></div>
+		<button type="button" class="button" data-jobly-media-pick data-title="<?php esc_attr_e( 'Izberi sliko', 'jobly-integration' ); ?>"><?php esc_html_e( 'Izberi iz knjižnice', 'jobly-integration' ); ?></button>
+		<button type="button" class="button-link" data-jobly-media-clear><?php esc_html_e( 'Odstrani', 'jobly-integration' ); ?></button>
+	</div>
+	<?php
+}
+
+/**
  * Branded header: logo, status, links, section tabs, title.
  *
  * @param string $title      Screen title.
@@ -298,3 +315,17 @@ function jobly_integration_help_tabs() {
 		'<p><strong>' . esc_html__( 'Več', 'jobly-integration' ) . '</strong></p><p><a href="' . esc_url( JOBLY_INTEGRATION_DOCS_URL ) . '" target="_blank" rel="noopener">' . esc_html__( 'Dokumentacija', 'jobly-integration' ) . '</a></p><p><a href="' . esc_url( JOBLY_INTEGRATION_SUPPORT_URL ) . '" target="_blank" rel="noopener">' . esc_html__( 'Podpora', 'jobly-integration' ) . '</a></p>'
 	);
 }
+
+/**
+ * Suggested privacy-policy text (Nastavitve → Zasebnost → Pravilnik o zasebnosti).
+ */
+function jobly_integration_privacy_policy() {
+	if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+		return;
+	}
+	$text  = '<h3>' . esc_html__( 'Jobly.si HRM (karierna stran)', 'jobly-integration' ) . '</h3>';
+	$text .= '<p>' . esc_html__( 'Na naši karierni strani so delovna mesta prikazana iz sistema Jobly.si, prijavni obrazec pa je vgrajen kot okvir (iframe), ki se naloži s strežnika Jobly.si. Ko odprete stran z oglasom ali obrazcem, vaš brskalnik vzpostavi povezavo z Jobly.si, ki prejme vaš IP naslov in naslov strani, s katere prihajate.', 'jobly-integration' ) . '</p>';
+	$text .= '<p>' . esc_html__( 'Podatke, ki jih vpišete v prijavni obrazec (ime, e-naslov, telefon, sporočilo, življenjepis), prejme in obdeluje Jobly.si v skladu z lastnimi pogoji in pravilnikom o zasebnosti (https://jobly.si/privacy); nam jih posreduje kot del postopka zaposlovanja. Ta spletna stran podatkov kandidatov ne shranjuje in ne predpomni; skrbniki jih lahko vidijo v skrbniškem delu le za čas ogleda.', 'jobly-integration' ) . '</p>';
+	wp_add_privacy_policy_content( 'Jobly.si HRM', wp_kses_post( wpautop( $text, false ) ) );
+}
+add_action( 'admin_init', 'jobly_integration_privacy_policy' );

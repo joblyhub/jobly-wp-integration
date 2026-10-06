@@ -1,6 +1,6 @@
 <?php
 /**
- * Nastavitve → SEO tab, per-job SEO box with Google and social previews.
+ * Nastavitve → SEO tab (global defaults), per-job and landing SEO tabs with Google and social previews.
  *
  * @package jobly-integration
  */
@@ -42,7 +42,33 @@ function jobly_integration_seo_preview( $title, $desc, $url, $image, $job, $uid 
 }
 
 /**
- * Save the SEO tab.
+ * Store one of the SEO options (autoload off).
+ *
+ * @param string $option Option name.
+ * @param array  $value  Value.
+ */
+function jobly_integration_seo_store( $option, array $value ) {
+	if ( false === get_option( $option ) ) {
+		add_option( $option, $value, '', false );
+	} else {
+		update_option( $option, $value, false );
+	}
+}
+
+/**
+ * An image id from the form, only when it is an image attachment.
+ *
+ * @param string $field POST field.
+ * @return int
+ */
+function jobly_integration_posted_image( $field ) {
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- callers verify the nonce.
+	$id = isset( $_POST[ $field ] ) ? absint( $_POST[ $field ] ) : 0;
+	return ( $id && wp_attachment_is_image( $id ) ) ? $id : 0;
+}
+
+/**
+ * Save the SEO tab (global defaults and templates).
  */
 function jobly_integration_handle_seo_save() {
 	jobly_integration_require_cap();
@@ -61,19 +87,14 @@ function jobly_integration_handle_seo_save() {
 		$seo[ $flag ] = empty( $_POST[ $flag ] ) ? 0 : 1;
 	}
 	foreach ( array( 'og_image', 'og_image_landing' ) as $img ) {
-		$id          = isset( $_POST[ $img ] ) ? absint( $_POST[ $img ] ) : 0;
-		$seo[ $img ] = ( $id && wp_attachment_is_image( $id ) ) ? $id : 0;
+		$seo[ $img ] = jobly_integration_posted_image( $img );
 	}
 	$canonical            = $str( 'canonical' );
 	$seo['canonical']     = 'jobly' === $canonical ? 'jobly' : 'site';
 	$closed               = $str( 'closed_action' );
 	$seo['closed_action'] = in_array( $closed, array( 'noindex', 'gone', 'redirect' ), true ) ? $closed : 'gone';
 
-	if ( false === get_option( JOBLY_INTEGRATION_SEO_OPTION ) ) {
-		add_option( JOBLY_INTEGRATION_SEO_OPTION, $seo, '', false );
-	} else {
-		update_option( JOBLY_INTEGRATION_SEO_OPTION, $seo, false );
-	}
+	jobly_integration_seo_store( JOBLY_INTEGRATION_SEO_OPTION, $seo );
 	jobly_integration_redirect(
 		'jobly-settings',
 		array(
@@ -83,6 +104,17 @@ function jobly_integration_handle_seo_save() {
 	);
 }
 add_action( 'admin_post_jobly_integration_seo_save', 'jobly_integration_handle_seo_save' );
+
+/**
+ * The text of an override from the posted form.
+ *
+ * @param string $field POST field.
+ * @return string
+ */
+function jobly_integration_posted_text( $field ) {
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- callers verify the nonce.
+	return isset( $_POST[ $field ] ) && is_string( $_POST[ $field ] ) ? sanitize_text_field( wp_unslash( $_POST[ $field ] ) ) : '';
+}
 
 /**
  * Save the SEO override of one job.
@@ -96,25 +128,23 @@ function jobly_integration_handle_seo_job_save() {
 	}
 	$all   = jobly_integration_seo_job_overrides();
 	$entry = array(
-		'title'       => isset( $_POST['seo_title'] ) ? sanitize_text_field( wp_unslash( $_POST['seo_title'] ) ) : '',
-		'description' => isset( $_POST['seo_description'] ) ? sanitize_text_field( wp_unslash( $_POST['seo_description'] ) ) : '',
+		'title'       => jobly_integration_posted_text( 'seo_title' ),
+		'description' => jobly_integration_posted_text( 'seo_description' ),
+		'image'       => jobly_integration_posted_image( 'seo_image' ),
 		'noindex'     => empty( $_POST['seo_noindex'] ) ? 0 : 1,
 	);
-	if ( '' === $entry['title'] && '' === $entry['description'] && ! $entry['noindex'] ) {
+	if ( '' === $entry['title'] && '' === $entry['description'] && ! $entry['image'] && ! $entry['noindex'] ) {
 		unset( $all[ $slug ] );
 	} else {
 		$all[ $slug ] = $entry;
 	}
-	if ( false === get_option( JOBLY_INTEGRATION_SEO_JOBS_OPTION ) ) {
-		add_option( JOBLY_INTEGRATION_SEO_JOBS_OPTION, $all, '', false );
-	} else {
-		update_option( JOBLY_INTEGRATION_SEO_JOBS_OPTION, $all, false );
-	}
+	jobly_integration_seo_store( JOBLY_INTEGRATION_SEO_JOBS_OPTION, $all );
 	jobly_integration_redirect(
 		'jobly-jobs',
 		array(
 			'action'    => 'show',
 			'job'       => $slug,
+			'tab'       => 'seo',
 			'jobly_msg' => 'saved',
 		)
 	);
@@ -122,32 +152,112 @@ function jobly_integration_handle_seo_job_save() {
 add_action( 'admin_post_jobly_integration_seo_job_save', 'jobly_integration_handle_seo_job_save' );
 
 /**
- * SEO box on the job screen (side column).
+ * Save the SEO override of the careers landing page.
+ */
+function jobly_integration_handle_seo_landing_save() {
+	jobly_integration_require_cap();
+	check_admin_referer( 'jobly_integration_seo_landing' );
+	$seo                    = jobly_integration_seo_settings();
+	$seo['landing_title']   = jobly_integration_posted_text( 'seo_title' );
+	$seo['landing_desc']    = jobly_integration_posted_text( 'seo_description' );
+	$seo['landing_image']   = jobly_integration_posted_image( 'seo_image' );
+	$seo['landing_noindex'] = empty( $_POST['seo_noindex'] ) ? 0 : 1;
+	jobly_integration_seo_store( JOBLY_INTEGRATION_SEO_OPTION, $seo );
+	jobly_integration_redirect(
+		'jobly-settings',
+		array(
+			'tab'       => 'landing',
+			'view'      => 'seo',
+			'jobly_msg' => 'saved',
+		)
+	);
+}
+add_action( 'admin_post_jobly_integration_seo_landing_save', 'jobly_integration_handle_seo_landing_save' );
+
+/**
+ * Form of a per-page SEO override: title, description, social image, noindex, Google and social previews.
+ *
+ * @param array $c scope (job|landing), action, nonce, hidden (name => value), over, tpl_title, tpl_desc, url, job.
+ */
+function jobly_integration_seo_override_form( array $c ) {
+	$over  = $c['over'];
+	$image = ! empty( $over['image'] ) ? wp_get_attachment_image_url( (int) $over['image'], 'large' ) : '';
+	$scope = $c['scope'];
+	?>
+	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-jobly-seo-form="<?php echo esc_attr( $scope ); ?>">
+		<input type="hidden" name="action" value="<?php echo esc_attr( $c['action'] ); ?>">
+		<?php
+		foreach ( $c['hidden'] as $name => $value ) {
+			echo '<input type="hidden" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '">';
+		}
+		wp_nonce_field( $c['nonce'] );
+		?>
+		<div class="jobly-field"><label for="jseo-title"><?php esc_html_e( 'SEO naslov', 'jobly-integration' ); ?></label><input id="jseo-title" name="seo_title" value="<?php echo esc_attr( $over['title'] ?? '' ); ?>" placeholder="<?php echo esc_attr( $c['tpl_title'] ); ?>" data-serp-input="title" data-serp-for="<?php echo esc_attr( $scope ); ?>"></div>
+		<div class="jobly-field"><label for="jseo-desc"><?php esc_html_e( 'Meta opis', 'jobly-integration' ); ?></label><textarea id="jseo-desc" name="seo_description" rows="3" placeholder="<?php echo esc_attr( $c['tpl_desc'] ); ?>" data-serp-input="desc" data-serp-for="<?php echo esc_attr( $scope ); ?>"><?php echo esc_textarea( $over['description'] ?? '' ); ?></textarea><p class="description"><?php esc_html_e( 'Prazno = predloga iz Nastavitve → SEO.', 'jobly-integration' ); ?></p></div>
+		<div class="jobly-field"><span class="jobly-label"><?php esc_html_e( 'Slika za družbena omrežja (OG)', 'jobly-integration' ); ?></span>
+			<?php jobly_integration_media_field( 'seo_image', (int) ( $over['image'] ?? 0 ) ); ?>
+		</div>
+		<p><label><input type="checkbox" name="seo_noindex" value="1" <?php checked( 1, (int) ( $over['noindex'] ?? 0 ) ); ?>> <?php esc_html_e( 'Ne indeksiraj (noindex)', 'jobly-integration' ); ?></label></p>
+		<p class="description"><?php esc_html_e( 'Velja tudi, ko je aktiven Yoast SEO ali Rank Math.', 'jobly-integration' ); ?></p>
+		<?php
+		jobly_integration_seo_preview( ! empty( $over['title'] ) ? $over['title'] : $c['tpl_title'], ! empty( $over['description'] ) ? $over['description'] : $c['tpl_desc'], $c['url'], $image ? (string) $image : jobly_integration_seo_image( 'landing' === $scope ), $c['job'], $scope );
+		submit_button( __( 'Shrani SEO', 'jobly-integration' ), 'primary', 'submit', false );
+		?>
+	</form>
+	<?php
+}
+
+/**
+ * SEO tab of the job screen.
  *
  * @param array $job Job (with detail).
  */
 function jobly_integration_seo_job_box( array $job ) {
 	$slug = (string) $job['slug'];
-	$over = jobly_integration_seo_job_overrides()[ $slug ] ?? array();
 	$seo  = jobly_integration_seo_settings();
-	$desc = ! empty( $over['description'] ) ? $over['description'] : ( '' !== trim( $seo['desc_job'] ) ? $seo['desc_job'] : jobly_integration_seo_excerpt( (string) ( $job['description'] ?? '' ) ) );
-	?>
-	<section class="jobly-panel">
-		<header class="jobly-panel__head"><h2><?php esc_html_e( 'SEO', 'jobly-integration' ); ?></h2></header>
-		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-jobly-seo-form="job">
-			<input type="hidden" name="action" value="jobly_integration_seo_job_save">
-			<input type="hidden" name="slug" value="<?php echo esc_attr( $slug ); ?>">
-			<?php wp_nonce_field( 'jobly_integration_seo_job' ); ?>
-			<div class="jobly-field"><label for="jseo-title"><?php esc_html_e( 'SEO naslov', 'jobly-integration' ); ?></label><input id="jseo-title" name="seo_title" value="<?php echo esc_attr( $over['title'] ?? '' ); ?>" placeholder="<?php echo esc_attr( $seo['title_job'] ); ?>" data-serp-input="title"></div>
-			<div class="jobly-field"><label for="jseo-desc"><?php esc_html_e( 'Meta opis', 'jobly-integration' ); ?></label><textarea id="jseo-desc" name="seo_description" rows="3" data-serp-input="desc"><?php echo esc_textarea( $over['description'] ?? '' ); ?></textarea></div>
-			<p><label><input type="checkbox" name="seo_noindex" value="1" <?php checked( 1, (int) ( $over['noindex'] ?? 0 ) ); ?>> <?php esc_html_e( 'Ne indeksiraj (noindex)', 'jobly-integration' ); ?></label></p>
-			<?php
-			jobly_integration_seo_preview( ! empty( $over['title'] ) ? $over['title'] : $seo['title_job'], $desc, jobly_integration_job_canonical( $job ), jobly_integration_seo_image( false ), $job, 'job' );
-			submit_button( __( 'Shrani SEO', 'jobly-integration' ), 'secondary', 'submit', false );
-			?>
-		</form>
-	</section>
-	<?php
+	$desc = '' !== trim( $seo['desc_job'] ) ? $seo['desc_job'] : jobly_integration_seo_excerpt( (string) ( $job['description'] ?? '' ) );
+	echo '<section class="jobly-panel"><header class="jobly-panel__head"><h2>' . esc_html__( 'SEO', 'jobly-integration' ) . '</h2></header>';
+	jobly_integration_seo_override_form(
+		array(
+			'scope'     => 'job',
+			'action'    => 'jobly_integration_seo_job_save',
+			'nonce'     => 'jobly_integration_seo_job',
+			'hidden'    => array( 'slug' => $slug ),
+			'over'      => jobly_integration_seo_job_overrides()[ $slug ] ?? array(),
+			'tpl_title' => $seo['title_job'],
+			'tpl_desc'  => $desc,
+			'url'       => jobly_integration_job_canonical( $job ),
+			'job'       => $job,
+		)
+	);
+	echo '</section>';
+}
+
+/**
+ * SEO sub-tab of Karierna stran: this page's own title, description, image and noindex.
+ */
+function jobly_integration_landing_seo_panel() {
+	$seo = jobly_integration_seo_settings();
+	echo '<section class="jobly-panel"><h2>' . esc_html__( 'SEO karierne strani', 'jobly-integration' ) . '</h2>';
+	jobly_integration_seo_override_form(
+		array(
+			'scope'     => 'landing',
+			'action'    => 'jobly_integration_seo_landing_save',
+			'nonce'     => 'jobly_integration_seo_landing',
+			'hidden'    => array(),
+			'over'      => array(
+				'title'       => $seo['landing_title'],
+				'description' => $seo['landing_desc'],
+				'image'       => $seo['landing_image'],
+				'noindex'     => $seo['landing_noindex'],
+			),
+			'tpl_title' => $seo['title_landing'],
+			'tpl_desc'  => $seo['desc_landing'],
+			'url'       => jobly_integration_careers_url(),
+			'job'       => null,
+		)
+	);
+	echo '</section>';
 }
 
 /**
@@ -173,6 +283,7 @@ function jobly_integration_seo_tab() {
 	if ( jobly_integration_is_demo() ) {
 		echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'Demo način: strani so vedno noindex in brez strukturiranih podatkov o oglasih.', 'jobly-integration' ) . '</p></div>';
 	}
+	echo '<div class="notice notice-info inline"><p>' . esc_html__( 'Tu so samo splošne privzete vrednosti in predloge. Naslov, opis, sliko in noindex posamezne strani nastavite na njej: pri delovnem mestu v zavihku SEO, za karierno stran v Karierna stran → SEO. Nastavitev strani prevlada nad predlogo.', 'jobly-integration' ) . '</p></div>';
 	?>
 	<section class="jobly-panel">
 		<h2><?php esc_html_e( 'Naslovi in opisi', 'jobly-integration' ); ?></h2>
@@ -197,14 +308,15 @@ function jobly_integration_seo_tab() {
 		<h2><?php esc_html_e( 'Družbena omrežja', 'jobly-integration' ); ?></h2>
 		<p><label><input type="checkbox" name="og" value="1" <?php checked( 1, (int) $seo['og'] ); ?>> <?php esc_html_e( 'Open Graph oznake (Facebook, LinkedIn …)', 'jobly-integration' ); ?></label></p>
 		<p><label><input type="checkbox" name="twitter" value="1" <?php checked( 1, (int) $seo['twitter'] ); ?>> <?php esc_html_e( 'Twitter/X Card', 'jobly-integration' ); ?></label></p>
-		<?php foreach ( array( 'og_image_landing' => __( 'Slika karierne strani', 'jobly-integration' ), 'og_image' => __( 'Privzeta slika (oglasi)', 'jobly-integration' ) ) as $field => $label ) : // phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound ?>
+		<?php
+		$jobly_integration_images = array(
+			'og_image_landing' => __( 'Slika karierne strani', 'jobly-integration' ),
+			'og_image'         => __( 'Privzeta slika (oglasi)', 'jobly-integration' ),
+		);
+		foreach ( $jobly_integration_images as $field => $label ) :
+			?>
 			<div class="jobly-field"><span class="jobly-label"><?php echo esc_html( $label ); ?></span>
-				<div class="jobly-media" data-jobly-media>
-					<input type="hidden" name="<?php echo esc_attr( $field ); ?>" value="<?php echo esc_attr( (string) $seo[ $field ] ); ?>">
-					<div class="jobly-media__preview"><?php echo $seo[ $field ] ? wp_get_attachment_image( (int) $seo[ $field ], 'medium' ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core escapes attachment markup. ?></div>
-					<button type="button" class="button" data-jobly-media-pick data-title="<?php esc_attr_e( 'Izberi sliko', 'jobly-integration' ); ?>"><?php esc_html_e( 'Izberi iz knjižnice', 'jobly-integration' ); ?></button>
-					<button type="button" class="button-link" data-jobly-media-clear><?php esc_html_e( 'Odstrani', 'jobly-integration' ); ?></button>
-				</div>
+				<?php jobly_integration_media_field( $field, (int) $seo[ $field ] ); ?>
 			</div>
 		<?php endforeach; ?>
 		<p class="description"><?php esc_html_e( 'Brez izbire: logotip podjetja z Jobly, nato ikona spletnega mesta.', 'jobly-integration' ); ?></p>

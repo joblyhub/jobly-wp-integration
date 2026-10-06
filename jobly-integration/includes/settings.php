@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 function jobly_integration_settings() {
 	$saved = get_option( JOBLY_INTEGRATION_OPTION, array() );
 
-	return wp_parse_args(
+	$settings             = wp_parse_args(
 		is_array( $saved ) ? $saved : array(),
 		array(
 			'base_url'      => 'https://jobly.si',
@@ -41,6 +41,11 @@ function jobly_integration_settings() {
 			'app_token'     => '',
 		)
 	);
+	$settings['base_url'] = jobly_integration_safe_base( (string) $settings['base_url'] );
+	foreach ( array( 'company_logo', 'company_url', 'careers_embed' ) as $key ) {
+		$settings[ $key ] = jobly_integration_trusted_url( $settings[ $key ], $settings['base_url'] ); // Also for values stored by older versions.
+	}
+	return $settings;
 }
 
 /**
@@ -116,10 +121,10 @@ function jobly_integration_company_changes( array $company ) {
 	return array(
 		'company_api'   => 1,
 		'company'       => sanitize_title( (string) $company['slug'] ),
-		'company_name'  => sanitize_text_field( (string) ( $company['name'] ?? '' ) ),
-		'company_logo'  => esc_url_raw( (string) ( $company['logoUrl'] ?? '' ) ),
-		'company_url'   => esc_url_raw( (string) ( $company['profileUrl'] ?? '' ) ),
-		'careers_embed' => esc_url_raw( (string) ( $company['careersEmbedUrl'] ?? '' ) ),
+		'company_name'  => jobly_integration_text( $company['name'] ?? '' ),
+		'company_logo'  => jobly_integration_trusted_url( $company['logoUrl'] ?? '' ),
+		'company_url'   => jobly_integration_trusted_url( $company['profileUrl'] ?? '' ),
+		'careers_embed' => jobly_integration_trusted_url( $company['careersEmbedUrl'] ?? '' ),
 	);
 }
 
@@ -150,6 +155,9 @@ function jobly_integration_app_token() {
  * @return string
  */
 function jobly_integration_masked_app_token() {
+	if ( defined( 'JOBLY_APP_TOKEN' ) && JOBLY_APP_TOKEN ) {
+		return ''; // The wp-config.php constant is network-level: never shown, not even masked, to site admins.
+	}
 	$token = jobly_integration_app_token();
 	return '' === $token ? '' : 'jba_…' . substr( $token, -4 );
 }

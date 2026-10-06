@@ -318,6 +318,11 @@ function jobly_integration_render_list( array $args = array() ) {
 	$args['layout'] = 'grid' === $args['layout'] ? 'grid' : 'list';
 	$args['action'] = '' !== $args['action'] ? $args['action'] : jobly_integration_careers_url();
 
+	if ( jobly_integration_is_unavailable() ) {
+		jobly_integration_enqueue_frontend();
+		return jobly_integration_render_template( 'parts/unavailable.php' ); // No further calls while Jobly is down.
+	}
+
 	$req   = ( $args['filters'] || $args['paginate'] ) ? jobly_integration_request_filters() : array();
 	$query = jobly_integration_query_jobs(
 		array(
@@ -331,25 +336,28 @@ function jobly_integration_render_list( array $args = array() ) {
 	);
 
 	jobly_integration_enqueue_frontend();
-	return jobly_integration_render_template(
-		'archive-jobs.php',
-		array(
-			'query'   => $query,
-			'list'    => $args,
-			'request' => $req,
-			'facets'  => jobly_integration_facets( $query['all'] ),
-			'demo'    => jobly_integration_is_demo(),
+	// Brackets encoded: a shortcode or block written into a job title can never run, wherever this HTML ends up.
+	return jobly_integration_neutralise(
+		jobly_integration_render_template(
+			'archive-jobs.php',
+			array(
+				'query'   => $query,
+				'list'    => $args,
+				'request' => $req,
+				'facets'  => jobly_integration_facets( $query['all'] ),
+				'demo'    => jobly_integration_is_demo(),
+			)
 		)
 	);
 }
 
 /**
- * Text from Jobly as safe HTML: markup is kept (filtered), plain text gets paragraphs.
+ * Text from Jobly as safe HTML: narrow allowlist (see jobly_integration_clean_html), plain text gets paragraphs.
  *
  * @param string $text Description from the API.
  * @return string Escaped HTML.
  */
 function jobly_integration_rich_text( $text ) {
-	$text = (string) $text;
-	return wp_kses_post( wp_strip_all_tags( $text ) !== $text ? $text : wpautop( esc_html( $text ) ) );
+	$text = jobly_integration_clean_html( (string) $text );
+	return wp_strip_all_tags( $text ) !== $text ? $text : wpautop( esc_html( $text ) );
 }

@@ -11,14 +11,12 @@ defined( 'ABSPATH' ) || exit;
  * Redirect once after activation (skippable, never on bulk activation).
  */
 function jobly_integration_wizard_redirect() {
-	if ( ! get_transient( 'jobly_integration_wizard' ) ) {
-		return;
+	$for = (int) get_transient( 'jobly_integration_wizard' );
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- core adds this flag on bulk activation; read only.
+	if ( ! $for || wp_doing_ajax() || is_network_admin() || isset( $_GET['activate-multi'] ) || get_current_user_id() !== $for || ! current_user_can( 'manage_options' ) ) {
+		return; // Only the user who activated the plugin consumes the redirect.
 	}
 	delete_transient( 'jobly_integration_wizard' );
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- core flag set on bulk activation.
-	if ( wp_doing_ajax() || is_network_admin() || isset( $_GET['activate-multi'] ) || ! current_user_can( 'manage_options' ) ) {
-		return;
-	}
 	jobly_integration_redirect( 'jobly-setup' );
 }
 add_action( 'admin_init', 'jobly_integration_wizard_redirect' );
@@ -74,9 +72,8 @@ function jobly_integration_handle_wizard() {
 		if ( isset( $_POST['use_demo'] ) ) {
 			jobly_integration_update_settings( array( 'demo' => 1 ) );
 		} else {
-			$base = isset( $_POST['base_url'] ) ? esc_url_raw( trim( sanitize_text_field( wp_unslash( $_POST['base_url'] ) ) ), array( 'https', 'http' ) ) : '';
-			$key  = isset( $_POST['api_key'] ) ? sanitize_text_field( wp_unslash( $_POST['api_key'] ) ) : '';
-			$tok  = jobly_integration_posted_app_token();
+			$key = isset( $_POST['api_key'] ) ? sanitize_text_field( wp_unslash( $_POST['api_key'] ) ) : '';
+			$tok = jobly_integration_posted_app_token();
 			if ( $tok ) {
 				jobly_integration_update_settings( $tok );
 			}
@@ -86,7 +83,6 @@ function jobly_integration_handle_wizard() {
 				$code = '' === $key ? 'no_key' : jobly_integration_connect(
 					$key,
 					array(
-						'base_url'     => '' !== $base ? untrailingslashit( $base ) : jobly_integration_settings()['base_url'],
 						'company'      => isset( $_POST['company'] ) ? sanitize_title( wp_unslash( $_POST['company'] ) ) : '',
 						'company_name' => isset( $_POST['company_name'] ) ? sanitize_text_field( wp_unslash( $_POST['company_name'] ) ) : '',
 					)
@@ -211,7 +207,6 @@ function jobly_integration_page_wizard() {
 				<label for="jw-apptoken"><?php esc_html_e( 'App-Token', 'jobly-integration' ); ?></label>
 				<?php jobly_integration_app_token_field( 'jw-apptoken' ); ?>
 			</div>
-			<input type="hidden" name="base_url" value="<?php echo esc_attr( $s['base_url'] ); ?>">
 			<div class="jobly-wizard__actions">
 				<button type="submit" class="button button-primary button-hero"><?php esc_html_e( 'Poveži in nadaljuj', 'jobly-integration' ); ?></button>
 				<button type="submit" name="use_demo" value="1" class="button button-hero"><?php esc_html_e( 'Nadaljuj z demo podatki', 'jobly-integration' ); ?></button>

@@ -45,7 +45,7 @@ do_action( 'jobly_integration_before_single_job', $jobly_integration_job );
 	<div class="jobly-job__grid">
 		<div class="jobly-job__main">
 			<?php if ( ! empty( $jobly_integration_job['description'] ) && is_string( $jobly_integration_job['description'] ) ) : ?>
-				<div class="jobly-job__text"><?php echo jobly_integration_rich_text( $jobly_integration_job['description'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- filtered with wp_kses_post(). ?></div>
+				<div class="jobly-job__text"><?php echo jobly_integration_rich_text( $jobly_integration_job['description'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- jobly_integration_rich_text() returns narrow-allowlist wp_kses output. ?></div>
 			<?php endif; ?>
 			<?php
 			foreach ( array(

@@ -36,14 +36,18 @@ function jobly_integration_seo_settings() {
 			'breadcrumb'       => 1,
 			'organization'     => 1,
 			'itemlist'         => 1,
+			'landing_title'    => '',
+			'landing_desc'     => '',
+			'landing_image'    => 0,
+			'landing_noindex'  => 0,
 		)
 	);
 }
 
 /**
- * Per-job overrides keyed by job slug: title, description, noindex.
+ * Per-job overrides keyed by job slug: title, description, image (attachment id), noindex.
  *
- * @return array<string,array{title: string, description: string, noindex: int}>
+ * @return array<string,array{title: string, description: string, image: int, noindex: int}>
  */
 function jobly_integration_seo_job_overrides() {
 	$saved = get_option( JOBLY_INTEGRATION_SEO_JOBS_OPTION, array() );
@@ -126,20 +130,22 @@ function jobly_integration_seo_excerpt( $text ) {
  */
 function jobly_integration_job_canonical( array $job ) {
 	if ( 'jobly' === jobly_integration_seo_settings()['canonical'] && ! jobly_integration_is_demo() ) {
+		// $job['url'] already passed the Jobly-host check when the row was cleaned.
 		return ! empty( $job['url'] ) ? (string) $job['url'] : untrailingslashit( jobly_integration_settings()['base_url'] ) . '/jobs/' . rawurlencode( (string) $job['slug'] );
 	}
 	return jobly_integration_job_url( (string) $job['slug'] );
 }
 
 /**
- * Image for Open Graph: chosen image, company logo, site icon.
+ * Image for Open Graph: the page's own image, the default image, company logo, site icon.
  *
- * @param bool $landing Landing page (own image first).
+ * @param bool $landing Landing page (its own default first).
+ * @param int  $own     Attachment id chosen for this very page, or 0.
  * @return string URL or ''.
  */
-function jobly_integration_seo_image( $landing ) {
+function jobly_integration_seo_image( $landing, $own = 0 ) {
 	$seo = jobly_integration_seo_settings();
-	$ids = $landing ? array( $seo['og_image_landing'], $seo['og_image'] ) : array( $seo['og_image'] );
+	$ids = $landing ? array( $own, $seo['og_image_landing'], $seo['og_image'] ) : array( $own, $seo['og_image'] );
 	foreach ( $ids as $id ) {
 		$url = $id ? wp_get_attachment_image_url( (int) $id, 'large' ) : false;
 		if ( $url ) {
@@ -199,12 +205,17 @@ function jobly_integration_seo_context() {
 		}
 		$canonical = jobly_integration_job_canonical( $job );
 		$type      = 'job';
+		$own_image = (int) ( $over['image'] ?? 0 );
 	} else {
 		$vars      = jobly_integration_seo_vars( null );
-		$title     = jobly_integration_seo_fill( $seo['title_landing'], $vars );
-		$desc      = jobly_integration_seo_fill( $seo['desc_landing'], $vars );
+		$title     = jobly_integration_seo_fill( '' !== $seo['landing_title'] ? $seo['landing_title'] : $seo['title_landing'], $vars );
+		$desc      = jobly_integration_seo_fill( '' !== $seo['landing_desc'] ? $seo['landing_desc'] : $seo['desc_landing'], $vars );
 		$canonical = jobly_integration_careers_url();
 		$type      = 'landing';
+		$own_image = (int) $seo['landing_image'];
+		if ( $seo['landing_noindex'] ) {
+			$robots['noindex'] = true;
+		}
 		if ( $filtered && $seo['noindex_filtered'] ) {
 			$robots['noindex'] = true;
 			$robots['follow']  = true;
@@ -220,7 +231,8 @@ function jobly_integration_seo_context() {
 		'description' => $desc,
 		'canonical'   => $canonical,
 		'robots'      => $robots,
-		'image'       => jobly_integration_seo_image( 'landing' === $type ),
+		'image'       => jobly_integration_seo_image( 'landing' === $type, $own_image ),
+		'own_image'   => $own_image > 0 ? jobly_integration_seo_image( 'landing' === $type, $own_image ) : '',
 		'job'         => $job,
 	);
 	return $ctx;
@@ -314,7 +326,7 @@ function jobly_integration_seo_graph( array $ctx, $external ) {
  */
 function jobly_integration_seo_document_title( $title ) {
 	$ctx = jobly_integration_seo_context();
-	return $ctx ? $ctx['title'] : $title;
+	return $ctx ? esc_html( $ctx['title'] ) : $title; // Core prints a short-circuited title as is, so escape it here.
 }
 
 /**
@@ -430,6 +442,31 @@ function jobly_integration_seo_boot() {
 		$v = $get( $key );
 		return null === $v ? $fallback : $v;
 	};
+	// The page's own social image beats the SEO plugin's; without one the plugin keeps its own.
+	$image  = static function ( $fallback ) use ( $get ) {
+		$own = $get( 'own_image' );
+		return $own ? $own : $fallback;
+	};
+	$images = array(
+		'yoast'    => array( 'wpseo_opengraph_image', 'wpseo_twitter_image' ),
+		'rankmath' => array( 'rank_math/opengraph/facebook/image', 'rank_math/opengraph/twitter/image' ),
+		'seopress' => array( 'seopress_social_og_img' ),
+	);
+	foreach ( $images[ $plugin ] ?? array() as $hook ) {
+		add_filter( $hook, $image );
+	}
+	if ( 'yoast' === $plugin ) {
+		// Yoast prints og:image only for images it knows; hand it ours.
+		add_action(
+			'wpseo_add_opengraph_images',
+			static function ( $container ) use ( $get ) {
+				$own = $get( 'own_image' );
+				if ( $own && is_object( $container ) && method_exists( $container, 'add_image_by_url' ) ) {
+					$container->add_image_by_url( $own );
+				}
+			}
+		);
+	}
 	if ( 'yoast' === $plugin ) {
 		add_filter(
 			'wpseo_title',

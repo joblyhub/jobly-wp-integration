@@ -36,7 +36,7 @@ $jobly_integration_landing = $args['landing'];
 				<?php endif; ?>
 			</section>
 		<?php elseif ( 'intro' === $jobly_integration_section && '' !== trim( (string) $jobly_integration_landing['intro_html'] ) ) : ?>
-			<section class="jobly-intro"><?php echo wp_kses_post( wpautop( $jobly_integration_landing['intro_html'] ) ); ?></section>
+			<section class="jobly-intro"><?php echo wp_kses_post( do_shortcode( wpautop( $jobly_integration_landing['intro_html'] ) ) ); ?></section>
 		<?php elseif ( 'benefits' === $jobly_integration_section && $jobly_integration_landing['benefits'] ) : ?>
 			<section class="jobly-benefits">
 				<?php if ( '' !== trim( (string) $jobly_integration_landing['benefits_title'] ) ) : ?>
@@ -57,7 +57,7 @@ $jobly_integration_landing = $args['landing'];
 		<?php elseif ( 'jobs' === $jobly_integration_section ) : ?>
 			<section id="jobly-jobs" class="jobly-landing__jobs">
 				<?php
-				echo jobly_integration_render_list( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the templates.
+				echo jobly_integration_render_list( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plugin templates escape every value; brackets are encoded in render_list().
 					array(
 						'filters'  => (bool) $jobly_integration_landing['filters'],
 						'paginate' => true,

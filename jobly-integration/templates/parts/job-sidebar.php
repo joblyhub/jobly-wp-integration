@@ -36,5 +36,7 @@ $jobly_integration_rows   = array_filter(
 			<div><dt><?php echo esc_html( $jobly_integration_label ); ?></dt><dd><?php echo esc_html( $jobly_integration_value ); ?></dd></div>
 		<?php endforeach; ?>
 	</dl>
+	<?php if ( 'active' === ( $jobly_integration_job['status'] ?? 'active' ) ) : ?>
 	<a class="jobly-btn jobly-btn--block" href="#jobly-apply"><?php esc_html_e( 'Prijavi se', 'jobly-integration' ); ?> <?php jobly_integration_icon( 'arrow-right', '', 16 ); ?></a>
+	<?php endif; ?>
 </div>

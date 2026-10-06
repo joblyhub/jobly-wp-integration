@@ -103,7 +103,9 @@ function jobly_integration_page_overview() {
 		array( 'inbox', $apps_ok ? $new : '—', __( 'Nove prijave (7 dni)', 'jobly-integration' ), 'green' ),
 		array( 'users', $apps_ok ? count( $apps['items'] ) : '—', __( 'Prijave skupaj', 'jobly-integration' ), 'violet' ),
 	);
-	?>
+	// Real statistics when Jobly has them; otherwise the three simple cards and a note.
+	if ( ! jobly_integration_render_stats() ) :
+		?>
 	<div class="jobly-stats">
 		<?php foreach ( $stats as $stat ) : ?>
 			<div class="jobly-stat">
@@ -112,6 +114,8 @@ function jobly_integration_page_overview() {
 			</div>
 		<?php endforeach; ?>
 	</div>
+	<p class="description jobly-statsnote"><?php esc_html_e( 'Statistika ogledov in konverzije ni na voljo: ta različica Jobly je ne vrača prek API-ja.', 'jobly-integration' ); ?></p>
+	<?php endif; ?>
 	<?php
 	$list = jobly_integration_checklist( $open );
 	$done = count( array_filter( array_column( $list, 'done' ) ) );

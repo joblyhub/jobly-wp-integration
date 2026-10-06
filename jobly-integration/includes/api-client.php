@@ -374,3 +374,40 @@ function jobly_integration_format_date( $iso ) {
 	$ts = $iso ? strtotime( $iso ) : false;
 	return $ts ? wp_date( get_option( 'date_format' ), $ts ) : '—';
 }
+
+/**
+ * Aggregate statistics for a period (GET /api/v1/stats), cached for 5 minutes. No personal data.
+ * Demo mode returns an invented, believable curve.
+ *
+ * @param string $from Start date, Y-m-d.
+ * @param string $to   End date, Y-m-d.
+ * @return array{code: int, data: array} code 404 = older Jobly without statistics.
+ */
+function jobly_integration_stats( $from, $to ) {
+	if ( jobly_integration_is_demo() ) {
+		return array(
+			'code' => 200,
+			'data' => jobly_integration_demo_stats( $from, $to ),
+		);
+	}
+	if ( '' === jobly_integration_settings()['api_key'] ) {
+		return array(
+			'code' => 401,
+			'data' => array(),
+		);
+	}
+	$ckey  = 'jobly_integration_stats_' . md5( $from . $to );
+	$cache = get_transient( $ckey );
+	if ( is_array( $cache ) ) {
+		return $cache;
+	}
+	$res    = jobly_integration_api_request( 'GET', '/api/v1/stats?' . http_build_query( array( 'from' => $from, 'to' => $to ) ) ); // phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing -- compact query.
+	$result = array(
+		'code' => $res['code'],
+		'data' => is_array( $res['data']['data'] ?? null ) ? $res['data']['data'] : array(),
+	);
+	if ( 200 === $res['code'] || 404 === $res['code'] ) {
+		set_transient( $ckey, $result, 5 * MINUTE_IN_SECONDS );
+	}
+	return $result;
+}

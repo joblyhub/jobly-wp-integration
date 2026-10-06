@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-06T14:59:49+00:00\n"
+"POT-Creation-Date: 2026-10-06T15:13:00+00:00\n"
 "PO-Revision-Date: 2026-10-06 12:00+0000\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "Language: en_US\n"
@@ -48,12 +48,15 @@ msgstr "Jobly: choose a job or enter the company in the settings."
 #: includes/admin/applications.php:25
 #: includes/admin/jobs.php:144
 #: includes/admin/menu.php:19
+#: includes/admin/stats.php:145
+#: includes/admin/stats.php:226
+#: includes/admin/stats.php:268
 #: includes/admin/ui.php:206
 msgid "Prijave"
 msgstr "Applications"
 
 #: includes/admin/applications.php:38
-#: includes/admin/overview.php:130
+#: includes/admin/overview.php:134
 msgid "Še ni prijav"
 msgstr "No applications yet"
 
@@ -70,7 +73,7 @@ msgid "Prijava"
 msgstr "Application"
 
 #: includes/admin/applications.php:58
-#: includes/admin/overview.php:123
+#: includes/admin/overview.php:127
 msgid "Vse prijave"
 msgstr "All applications"
 
@@ -81,8 +84,8 @@ msgid "Zapisa ni mogoče najti."
 msgstr "Record not found."
 
 #: includes/admin/applications.php:84
-#: includes/admin/jobs.php:206
-#: includes/demo.php:187
+#: includes/admin/jobs.php:208
+#: includes/demo.php:276
 msgid "E-naslov"
 msgstr "Email"
 
@@ -123,6 +126,7 @@ msgstr "Status"
 
 #: includes/admin/class-applications-table.php:54
 #: includes/admin/jobs.php:159
+#: includes/admin/stats.php:145
 msgid "Datum"
 msgstr "Date"
 
@@ -195,7 +199,7 @@ msgstr "No results for the selected filters."
 #: includes/admin/job-new.php:82
 #: includes/admin/jobs.php:45
 #: includes/admin/overview.php:58
-#: includes/admin/overview.php:178
+#: includes/admin/overview.php:182
 msgid "Dodaj delovno mesto"
 msgstr "Add job"
 
@@ -262,19 +266,19 @@ msgstr "Maximum salary"
 
 #: includes/admin/job-new.php:192
 #: includes/admin/jobs.php:126
-#: templates/single-job.php:48
+#: templates/single-job.php:52
 msgid "Naloge"
 msgstr "Responsibilities"
 
 #: includes/admin/job-new.php:193
 #: includes/admin/jobs.php:127
-#: templates/single-job.php:49
+#: templates/single-job.php:53
 msgid "Zahteve"
 msgstr "Requirements"
 
 #: includes/admin/job-new.php:194
 #: includes/admin/jobs.php:128
-#: templates/single-job.php:50
+#: templates/single-job.php:54
 msgid "Ugodnosti"
 msgstr "Benefits"
 
@@ -292,7 +296,7 @@ msgstr "Publish on Jobly"
 
 #: includes/admin/jobs.php:32
 #: includes/admin/menu.php:17
-#: includes/admin/overview.php:172
+#: includes/admin/overview.php:176
 #: includes/admin/ui.php:205
 msgid "Delovna mesta"
 msgstr "Jobs"
@@ -304,7 +308,7 @@ msgid "Dodaj novo"
 msgstr "Add new"
 
 #: includes/admin/jobs.php:45
-#: includes/admin/overview.php:178
+#: includes/admin/overview.php:182
 msgid "Še ni delovnih mest"
 msgstr "No jobs yet"
 
@@ -325,7 +329,7 @@ msgid "Išči delovna mesta"
 msgstr "Search jobs"
 
 #: includes/admin/jobs.php:71
-#: includes/admin/overview.php:173
+#: includes/admin/overview.php:177
 #: templates/archive-jobs.php:50
 #: templates/single-job.php:28
 msgid "Vsa delovna mesta"
@@ -360,7 +364,7 @@ msgid "Za to mesto še ni prijav"
 msgstr "No applications for this job yet"
 
 #: includes/admin/jobs.php:157
-#: includes/admin/overview.php:130
+#: includes/admin/overview.php:134
 msgid "Ko kandidat odda prijavo, se prikaže tukaj."
 msgstr "When a candidate applies, it shows up here."
 
@@ -384,32 +388,195 @@ msgstr "Embed code (iframe)"
 msgid "V urejevalniku blokov pa uporabite blok »Jobly – prijavni obrazec«."
 msgstr "In the block editor, use the “Jobly – application form” block."
 
-#: includes/admin/jobs.php:201
+#: includes/admin/jobs.php:203
 #: assets/blocks.js:78
 msgid "Obrazec"
 msgstr "Form"
 
-#: includes/admin/jobs.php:205
-#: includes/demo.php:186
+#: includes/admin/jobs.php:207
+#: includes/demo.php:275
 msgid "Ime in priimek"
 msgstr "Full name"
 
-#: includes/admin/jobs.php:207
+#: includes/admin/jobs.php:209
 msgid "Telefon (neobvezno)"
 msgstr "Phone (optional)"
 
-#: includes/admin/jobs.php:208
-#: includes/demo.php:188
+#: includes/admin/jobs.php:210
+#: includes/demo.php:277
 msgid "Nekaj vrstic o sebi"
 msgstr "A few lines about yourself"
 
-#: includes/admin/jobs.php:209
+#: includes/admin/jobs.php:211
 msgid "Privolitev za obdelavo podatkov"
 msgstr "Consent to data processing"
 
-#: includes/admin/jobs.php:217
+#: includes/admin/jobs.php:219
 msgid "Vprašanja po meri: kmalu, urejanje na Jobly."
 msgstr "Custom questions: coming soon, edit on Jobly."
+
+#: includes/admin/landing.php:162
+msgid "Vrsta karierne strani"
+msgstr "Careers page type"
+
+#: includes/admin/landing.php:165
+msgid "Sestavljena stran (sekcije)"
+msgstr "Built page (sections)"
+
+#. translators: %s: careers URL.
+#: includes/admin/landing.php:166
+#, php-format
+msgid "Plugin sestavi stran na %s iz sekcij spodaj."
+msgstr "The plugin builds the page at %s from the sections below."
+
+#: includes/admin/landing.php:170
+msgid "Moja stran"
+msgstr "My page"
+
+#: includes/admin/landing.php:171
+msgid "Uporabi obstoječo WordPress stran: njena vsebina (bloki) je landing; vanjo vstavite blok »Jobly – seznam delovnih mest«. Oglasi dobijo naslove pod to stranjo."
+msgstr "Use an existing WordPress page: its content (blocks) is the landing; insert the “Jobly – job list” block into it. Jobs get addresses below this page."
+
+#: includes/admin/landing.php:177
+msgid "— izberi stran —"
+msgstr "— choose a page —"
+
+#: includes/admin/landing.php:187
+msgid "Sekcije (sestavljena stran)"
+msgstr "Sections (built page)"
+
+#: includes/admin/landing.php:189
+#: includes/admin/stats.php:221
+msgid "Prikaži"
+msgstr "Show"
+
+#: includes/admin/landing.php:189
+msgid "Sekcija"
+msgstr "Section"
+
+#: includes/admin/landing.php:189
+#: includes/admin/landing.php:200
+msgid "Vrstni red"
+msgstr "Order"
+
+#: includes/admin/landing.php:205
+msgid "Iskanje in filtri nad seznamom oglasov"
+msgstr "Search and filters above the job list"
+
+#: includes/admin/landing.php:209
+msgid "Hero"
+msgstr "Hero"
+
+#: includes/admin/landing.php:211
+#: includes/admin/landing.php:258
+msgid "Naslov"
+msgstr "Title"
+
+#: includes/admin/landing.php:212
+msgid "Podnaslov"
+msgstr "Subtitle"
+
+#: includes/admin/landing.php:213
+msgid "Slika"
+msgstr "Image"
+
+#: includes/admin/landing.php:217
+#: includes/admin/seo.php:205
+msgid "Izberi sliko"
+msgstr "Choose an image"
+
+#: includes/admin/landing.php:217
+#: includes/admin/seo.php:205
+msgid "Izberi iz knjižnice"
+msgstr "Choose from library"
+
+#: includes/admin/landing.php:218
+#: includes/admin/seo.php:206
+msgid "Odstrani"
+msgstr "Remove"
+
+#: includes/admin/landing.php:221
+msgid "Besedilo gumba"
+msgstr "Button text"
+
+#: includes/admin/landing.php:221
+msgid "Poglej odprta mesta"
+msgstr "View open jobs"
+
+#: includes/admin/landing.php:221
+msgid "Gumb se pomakne na seznam oglasov."
+msgstr "The button scrolls to the job list."
+
+#: includes/admin/landing.php:226
+#: includes/landing.php:20
+msgid "Uvodno besedilo"
+msgstr "Intro text"
+
+#: includes/admin/landing.php:241
+#: includes/landing.php:21
+msgid "Zakaj delati pri nas"
+msgstr "Why work with us"
+
+#: includes/admin/landing.php:242
+msgid "Naslov sekcije"
+msgstr "Section title"
+
+#: includes/admin/landing.php:243
+msgid "Do šest prednosti; prazne vrstice se preskočijo."
+msgstr "Up to six benefits; empty rows are skipped."
+
+#: includes/admin/landing.php:253
+msgid "Ikona"
+msgstr "Icon"
+
+#: includes/admin/landing.php:259
+msgid "Besedilo"
+msgstr "Text"
+
+#: includes/admin/landing.php:265
+msgid "Koda po meri"
+msgstr "Custom code"
+
+#: includes/admin/landing.php:266
+msgid "Izpiše se samo na karierni strani, nikoli v skrbniškem delu. HTML se filtrira, razen če imate pravico unfiltered_html; JavaScript lahko shrani samo uporabnik s to pravico."
+msgstr "Output only on the careers page, never in wp-admin. HTML is filtered unless you have the unfiltered_html capability; only a user with that capability can save JavaScript."
+
+#: includes/admin/landing.php:267
+msgid "HTML na vrhu (samo sestavljena stran)"
+msgstr "HTML at the top (built page only)"
+
+#: includes/admin/landing.php:268
+msgid "HTML na dnu (samo sestavljena stran)"
+msgstr "HTML at the bottom (built page only)"
+
+#: includes/admin/landing.php:269
+msgid "CSS (karierna stran in strani oglasov)"
+msgstr "CSS (careers page and job pages)"
+
+#: includes/admin/landing.php:270
+msgid "JavaScript (karierna stran)"
+msgstr "JavaScript (careers page)"
+
+#: includes/admin/landing.php:273
+msgid "Polje je onemogočeno: nimate pravice unfiltered_html (na večmestnih namestitvah jo ima samo super skrbnik)."
+msgstr "The field is disabled: you do not have the unfiltered_html capability (on multisite only a super admin has it)."
+
+#: includes/admin/landing.php:279
+#: includes/admin/seo.php:238
+msgid "Shrani"
+msgstr "Save"
+
+#: includes/admin/landing.php:280
+msgid "Predogled"
+msgstr "Preview"
+
+#: includes/admin/landing.php:281
+msgid "Ponastavim karierno stran na privzeto?"
+msgstr "Reset the careers page to the default?"
+
+#: includes/admin/landing.php:281
+msgid "Ponastavi na privzeto"
+msgstr "Reset to default"
 
 #: includes/admin/menu.php:16
 #: includes/admin/overview.php:58
@@ -419,8 +586,8 @@ msgstr "Overview"
 
 #: includes/admin/menu.php:20
 #: includes/admin/menu.php:95
-#: includes/admin/settings.php:257
-#: includes/admin/settings.php:258
+#: includes/admin/settings.php:254
+#: includes/admin/settings.php:255
 #: includes/admin/ui.php:208
 msgid "Nastavitve"
 msgstr "Settings"
@@ -511,7 +678,7 @@ msgid "Zaženi čarovnika"
 msgstr "Run the wizard"
 
 #: includes/admin/menu.php:192
-#: includes/admin/settings.php:314
+#: includes/admin/settings.php:311
 msgid "Preveri povezavo"
 msgstr "Check connection"
 
@@ -548,8 +715,8 @@ msgid "Dodaj oglas"
 msgstr "Add job"
 
 #: includes/admin/overview.php:43
-#: includes/admin/settings.php:251
-#: includes/admin/settings.php:369
+#: includes/admin/settings.php:248
+#: includes/admin/settings.php:353
 msgid "Google for Jobs"
 msgstr "Google for Jobs"
 
@@ -562,7 +729,7 @@ msgid "Odpri"
 msgstr "Open"
 
 #: includes/admin/overview.php:64
-#: includes/admin/settings.php:405
+#: includes/admin/settings.php:389
 msgid "Demo način"
 msgstr "Demo mode"
 
@@ -579,6 +746,7 @@ msgid "Profil na Jobly"
 msgstr "Profile on Jobly"
 
 #: includes/admin/overview.php:102
+#: includes/admin/stats.php:229
 msgid "Odprta mesta"
 msgstr "Open jobs"
 
@@ -590,29 +758,190 @@ msgstr "New applications (7 days)"
 msgid "Prijave skupaj"
 msgstr "Total applications"
 
-#: includes/admin/overview.php:122
+#: includes/admin/overview.php:117
+msgid "Statistika ogledov in konverzije ni na voljo: ta različica Jobly je ne vrača prek API-ja."
+msgstr "Views and conversion statistics are not available: this version of Jobly does not return them via the API."
+
+#: includes/admin/overview.php:126
 msgid "Zadnje prijave"
 msgstr "Latest applications"
 
-#: includes/admin/overview.php:153
+#: includes/admin/overview.php:157
 msgid "Začetek dela"
 msgstr "Getting started"
 
 #. translators: 1: done steps, 2: all steps.
-#: includes/admin/overview.php:154
+#: includes/admin/overview.php:158
 #, php-format
 msgid "%1$d od %2$d"
 msgstr "%1$d of %2$d"
 
-#: includes/admin/overview.php:178
+#: includes/admin/overview.php:182
 msgid "Objavite prvi oglas in prikazal se bo na karierni strani."
 msgstr "Publish your first job and it will appear on the careers page."
 
 #. translators: %d: number of applications.
-#: includes/admin/overview.php:195
+#: includes/admin/overview.php:199
 #, php-format
 msgid "Prijav: %d"
 msgstr "Applications: %d"
+
+#: includes/admin/seo.php:25
+msgid "Predogled v Googlu"
+msgstr "Google preview"
+
+#: includes/admin/seo.php:31
+msgid "Predogled na družbenih omrežjih"
+msgstr "Social preview"
+
+#: includes/admin/seo.php:136
+#: includes/admin/settings.php:247
+msgid "SEO"
+msgstr "SEO"
+
+#: includes/admin/seo.php:141
+msgid "SEO naslov"
+msgstr "SEO title"
+
+#: includes/admin/seo.php:142
+msgid "Meta opis"
+msgstr "Meta description"
+
+#: includes/admin/seo.php:143
+msgid "Ne indeksiraj (noindex)"
+msgstr "Do not index (noindex)"
+
+#: includes/admin/seo.php:146
+msgid "Shrani SEO"
+msgstr "Save SEO"
+
+#. translators: %s: SEO plugin name.
+#: includes/admin/seo.php:171
+#, php-format
+msgid "Zaznan je %s: naslovi, opisi, kanonični naslov, robots in strukturirani podatki se podajo temu vtičniku, naših oznak ni (brez podvajanja)."
+msgstr "%s detected: titles, descriptions, canonical, robots and structured data are handed to that plugin and we print no tags of our own (no duplicates)."
+
+#: includes/admin/seo.php:174
+msgid "Demo način: strani so vedno noindex in brez strukturiranih podatkov o oglasih."
+msgstr "Demo mode: pages are always noindex and have no job structured data."
+
+#: includes/admin/seo.php:178
+msgid "Naslovi in opisi"
+msgstr "Titles and descriptions"
+
+#: includes/admin/seo.php:179
+msgid "Spremenljivke:"
+msgstr "Variables:"
+
+#: includes/admin/seo.php:180
+msgid "Naslov: karierna stran"
+msgstr "Title: careers page"
+
+#: includes/admin/seo.php:181
+msgid "Opis: karierna stran"
+msgstr "Description: careers page"
+
+#: includes/admin/seo.php:183
+msgid "Naslov: stran oglasa"
+msgstr "Title: job page"
+
+#: includes/admin/seo.php:184
+msgid "Opis: stran oglasa"
+msgstr "Description: job page"
+
+#: includes/admin/seo.php:184
+msgid "Prazno = prvih 155 znakov opisa oglasa."
+msgstr "Empty = the first 155 characters of the job description."
+
+#: includes/admin/seo.php:197
+msgid "Družbena omrežja"
+msgstr "Social networks"
+
+#: includes/admin/seo.php:198
+msgid "Open Graph oznake (Facebook, LinkedIn …)"
+msgstr "Open Graph tags (Facebook, LinkedIn …)"
+
+#: includes/admin/seo.php:199
+msgid "Twitter/X Card"
+msgstr "Twitter/X Card"
+
+#: includes/admin/seo.php:200
+msgid "Slika karierne strani"
+msgstr "Careers page image"
+
+#: includes/admin/seo.php:200
+msgid "Privzeta slika (oglasi)"
+msgstr "Default image (jobs)"
+
+#: includes/admin/seo.php:210
+msgid "Brez izbire: logotip podjetja z Jobly, nato ikona spletnega mesta."
+msgstr "Without a choice: the company logo from Jobly, then the site icon."
+
+#: includes/admin/seo.php:214
+msgid "Indeksiranje"
+msgstr "Indexing"
+
+#: includes/admin/seo.php:215
+msgid "Kanonični naslov oglasa"
+msgstr "Job canonical URL"
+
+#: includes/admin/seo.php:216
+msgid "To spletno mesto (privzeto)"
+msgstr "This site (default)"
+
+#: includes/admin/seo.php:217
+msgid "Stran oglasa na Jobly (če želite, da se uvršča Jobly)"
+msgstr "The job page on Jobly (if you want Jobly to rank)"
+
+#: includes/admin/seo.php:219
+msgid "Zaprt ali potekel oglas"
+msgstr "Closed or expired job"
+
+#: includes/admin/seo.php:221
+msgid "410 Gone (priporočeno)"
+msgstr "410 Gone (recommended)"
+
+#: includes/admin/seo.php:222
+msgid "Prikaži stran z noindex"
+msgstr "Show the page with noindex"
+
+#: includes/admin/seo.php:223
+msgid "Preusmeri na karierno stran (301)"
+msgstr "Redirect to the careers page (301)"
+
+#: includes/admin/seo.php:226
+msgid "noindex za filtrirane in strani seznama (kanonični naslov kaže na čisto karierno stran)"
+msgstr "noindex for filtered and paginated lists (canonical points to the clean careers page)"
+
+#: includes/admin/seo.php:227
+msgid "noindex za celotno karierno sekcijo"
+msgstr "noindex for the whole careers section"
+
+#: includes/admin/seo.php:231
+msgid "Strukturirani podatki"
+msgstr "Structured data"
+
+#: includes/admin/seo.php:232
+msgid "JobPosting (Google for Jobs) vklopite v zavihku Google for Jobs. Tu so dodatni zapisi."
+msgstr "Enable JobPosting (Google for Jobs) on the Google for Jobs tab. These are additional records."
+
+#: includes/admin/seo.php:233
+msgid "BreadcrumbList na straneh oglasov"
+msgstr "BreadcrumbList on job pages"
+
+#: includes/admin/seo.php:234
+msgid "Organization na karierni strani"
+msgstr "Organization on the careers page"
+
+#: includes/admin/seo.php:235
+msgid "ItemList oglasov na karierni strani"
+msgstr "ItemList of jobs on the careers page"
+
+#. translators: %s: sitemap URL.
+#: includes/admin/seo.php:236
+#, php-format
+msgid "Zemljevid oglasov: v WordPressovem zemljevidu strani; z Yoast/Rank Math tudi %s."
+msgstr "Jobs sitemap: in the WordPress sitemap; with Yoast/Rank Math also %s."
 
 #: includes/admin/settings.php:65
 msgid "App-Token je določen s konstanto JOBLY_APP_TOKEN v wp-config.php."
@@ -622,192 +951,310 @@ msgstr "The App-Token is set by the JOBLY_APP_TOKEN constant in wp-config.php."
 msgid "Odstrani shranjeni App-Token"
 msgstr "Remove the saved App-Token"
 
-#: includes/admin/settings.php:227
+#: includes/admin/settings.php:222
 #: assets/blocks.js:29
 #: assets/blocks.js:43
 msgid "Seznam"
 msgstr "List"
 
-#: includes/admin/settings.php:228
+#: includes/admin/settings.php:223
 #: assets/blocks.js:44
 msgid "Mreža"
 msgstr "Grid"
 
-#: includes/admin/settings.php:249
+#: includes/admin/settings.php:244
 msgid "Povezava"
 msgstr "Connection"
 
-#: includes/admin/settings.php:250
+#: includes/admin/settings.php:245
 msgid "Prikaz"
 msgstr "Display"
 
-#: includes/admin/settings.php:252
+#: includes/admin/settings.php:246
+#: includes/admin/wizard.php:161
+msgid "Karierna stran"
+msgstr "Careers page"
+
+#: includes/admin/settings.php:249
 msgid "Demo"
 msgstr "Demo"
 
-#: includes/admin/settings.php:267
+#: includes/admin/settings.php:264
 msgid "Povezava z Jobly"
 msgstr "Connection to Jobly"
 
-#: includes/admin/settings.php:270
+#: includes/admin/settings.php:267
 #: includes/admin/wizard.php:207
 msgid "API ključ"
 msgstr "API key"
 
-#: includes/admin/settings.php:273
+#: includes/admin/settings.php:270
 msgid "Ključ ustvarite v Jobly → Integracije → API žetoni."
 msgstr "Create the key in Jobly → Integrations → API tokens."
 
-#: includes/admin/settings.php:273
+#: includes/admin/settings.php:270
 #: includes/admin/wizard.php:202
 msgid "Pridobi ključ"
 msgstr "Get a key"
 
-#: includes/admin/settings.php:273
+#: includes/admin/settings.php:270
 msgid "Shranjen ključ se nikoli ne prikaže; za zamenjavo vpiši novega."
 msgstr "A saved key is never shown; enter a new one to replace it."
 
-#: includes/admin/settings.php:275
+#: includes/admin/settings.php:272
 msgid "Odstrani shranjeni ključ"
 msgstr "Remove the saved key"
 
-#: includes/admin/settings.php:280
+#: includes/admin/settings.php:277
 #: includes/admin/wizard.php:211
 msgid "App-Token"
 msgstr "App-Token"
 
-#: includes/admin/settings.php:283
+#: includes/admin/settings.php:280
 msgid "Žeton aplikacije (jba_…), ki ga izda Jobly. Skupaj s ključem podjetja ga Jobly zahteva pri vsaki zahtevi. Nikoli se ne prikaže."
 msgstr "App token (jba_…) issued by Jobly. Jobly requires it together with the company key on every request. It is never shown."
 
-#: includes/admin/settings.php:288
+#: includes/admin/settings.php:285
 #: templates/parts/job-sidebar.php:20
 msgid "Podjetje"
 msgstr "Company"
 
-#: includes/admin/settings.php:289
+#: includes/admin/settings.php:286
 msgid "Podjetje se prebere iz API ključa."
 msgstr "The company is read from the API key."
 
-#: includes/admin/settings.php:293
+#: includes/admin/settings.php:290
 msgid "Podjetje (slug)"
 msgstr "Company (slug)"
 
-#: includes/admin/settings.php:296
+#: includes/admin/settings.php:293
 msgid "Ta različica Jobly ne vrača podjetja prek API-ja, zato ga vpiši ročno (zadnji del naslova profila na jobly.si/companies/…)."
 msgstr "This version of Jobly does not return the company via the API, so enter it manually (the last part of the profile address on jobly.si/companies/…)."
 
-#: includes/admin/settings.php:301
+#: includes/admin/settings.php:298
 msgid "Naslov Jobly"
 msgstr "Jobly address"
 
-#: includes/admin/settings.php:304
+#: includes/admin/settings.php:301
 msgid "Pusti https://jobly.si. Drugo samo za testiranje."
 msgstr "Leave https://jobly.si. Anything else is for testing only."
 
-#: includes/admin/settings.php:309
+#: includes/admin/settings.php:306
 msgid "Shrani in preveri"
 msgstr "Save and verify"
 
-#: includes/admin/settings.php:319
+#: includes/admin/settings.php:316
 msgid "Karierna stran in videz"
 msgstr "Careers page and appearance"
 
-#: includes/admin/settings.php:322
-msgid "Stran s seznamom"
-msgstr "List page"
-
-#: includes/admin/settings.php:330
-msgid "Samodejna stran (spodnji naslov)"
-msgstr "Automatic page (address below)"
-
-#: includes/admin/settings.php:335
-msgid "Izberi svojo WordPress stran z blokom ali kodo [jobly_jobs]; oglasi dobijo naslove pod njo. Brez izbire plugin sam ustvari stran na naslovu spodaj."
-msgstr "Pick your own WordPress page with the block or the [jobly_jobs] shortcode; jobs get addresses below it. Without a choice the plugin serves a page at the address below."
-
-#: includes/admin/settings.php:339
+#: includes/admin/settings.php:319
 #: includes/admin/wizard.php:233
 msgid "Osnova povezav"
 msgstr "Link base"
 
-#: includes/admin/settings.php:342
+#: includes/admin/settings.php:322
 msgid "Seznam odprtih mest in podstrani oglasov so pod tem naslovom."
 msgstr "The list of open jobs and the job pages live under this address."
 
-#: includes/admin/settings.php:346
+#: includes/admin/settings.php:326
 #: includes/admin/wizard.php:267
 msgid "Barva poudarka"
 msgstr "Accent colour"
 
-#: includes/admin/settings.php:350
+#: includes/admin/settings.php:330
 #: includes/admin/wizard.php:270
 msgid "Videz seznama"
 msgstr "List layout"
 
-#: includes/admin/settings.php:354
+#: includes/admin/settings.php:334
 msgid "Oglasov na stran"
 msgstr "Jobs per page"
 
-#: includes/admin/settings.php:358
+#: includes/admin/settings.php:338
 msgid "Višina okvirja (px)"
 msgstr "Frame height (px)"
 
-#: includes/admin/settings.php:363
+#: includes/admin/settings.php:343
+#: includes/admin/settings.php:381
 #: includes/admin/settings.php:397
-#: includes/admin/settings.php:413
 msgid "Shrani spremembe"
 msgstr "Save changes"
 
-#: includes/admin/settings.php:370
+#: includes/admin/settings.php:354
 msgid "Na vsaki podstrani oglasa se doda strukturirani zapis JobPosting. Vsebuje samo podatke, ki jih vrne Jobly (naziv, datum objave, vrsta zaposlitve, kraj, plača, če je navedena)."
 msgstr "A JobPosting structured data block is added to every job page. It contains only data returned by Jobly (title, date posted, employment type, location, salary if present)."
 
-#: includes/admin/settings.php:373
+#: includes/admin/settings.php:357
 msgid "Strukturirani zapis"
 msgstr "Structured data"
 
-#: includes/admin/settings.php:374
+#: includes/admin/settings.php:358
 msgid "Dodaj JobPosting (JSON-LD) na strani oglasov"
 msgstr "Add JobPosting (JSON-LD) to job pages"
 
-#: includes/admin/settings.php:377
+#: includes/admin/settings.php:361
 msgid "Zemljevid strani"
 msgstr "Sitemap"
 
-#: includes/admin/settings.php:379
+#: includes/admin/settings.php:363
 msgid "Dodaj oglase v WordPress zemljevid strani"
 msgstr "Add the jobs to the WordPress sitemap"
 
-#: includes/admin/settings.php:386
+#: includes/admin/settings.php:370
 msgid "Ime podjetja"
 msgstr "Company name"
 
-#: includes/admin/settings.php:389
+#: includes/admin/settings.php:373
 msgid "Prikazano na karticah oglasov in v zapisu (hiringOrganization). Prazno = ime spletnega mesta."
 msgstr "Shown on job cards and in the structured data (hiringOrganization). Empty = site name."
 
-#: includes/admin/settings.php:394
+#: includes/admin/settings.php:378
 msgid "V demo načinu se zapis in zemljevid ne izpišeta (strani so noindex)."
 msgstr "In demo mode the structured data and sitemap are not output (pages are noindex)."
 
-#: includes/admin/settings.php:402
+#: includes/admin/settings.php:386
 msgid "Demo podatki"
 msgstr "Demo data"
 
-#: includes/admin/settings.php:407
+#: includes/admin/settings.php:391
 msgid "Prikaži izmišljen primer (Primer d.o.o.) namesto podatkov z Jobly"
 msgstr "Show an invented example (Primer d.o.o.) instead of Jobly data"
 
-#: includes/admin/settings.php:408
+#: includes/admin/settings.php:392
 msgid "Za gradnjo in predstavitev strani; vtičnik v tem načinu ne pokliče Jobly. Izklopi se samodejno, ko shraniš veljaven ključ."
 msgstr "For building and presenting the site; the plugin does not call Jobly in this mode. Turns off automatically when you save a valid key."
 
-#: includes/admin/settings.php:415
+#: includes/admin/settings.php:399
 msgid "Zaženi čarovnika za nastavitev znova"
 msgstr "Run the setup wizard again"
 
+#: includes/admin/stats.php:54
+msgid "Jobly te vrednosti ne beleži."
+msgstr "Jobly does not track this value."
+
+#: includes/admin/stats.php:54
+msgid "Ni podatka: Jobly te vrednosti ne beleži."
+msgstr "No data: Jobly does not track this value."
+
+#: includes/admin/stats.php:111
+msgid "Ogledi oglasov in prijave po dnevih"
+msgstr "Job views and applications per day"
+
+#. translators: 1: first date, 2: last date, 3: max daily views, 4: max daily applications.
+#: includes/admin/stats.php:115
+#, php-format
+msgid "Dnevni ogledi (do %3$d) in prijave (do %4$d) od %1$s do %2$s. Podatki so v tabeli pod grafom."
+msgstr "Daily views (up to %3$d) and applications (up to %4$d) from %1$s to %2$s. The data is in the table below the chart."
+
+#: includes/admin/stats.php:144
+msgid "Ogledi (prijavljeni iskalci, leva os)"
+msgstr "Views (logged-in job seekers, left axis)"
+
+#: includes/admin/stats.php:144
+msgid "Prijave (desna os)"
+msgstr "Applications (right axis)"
+
+#: includes/admin/stats.php:145
+msgid "Podatki grafa po dnevih"
+msgstr "Chart data per day"
+
+#: includes/admin/stats.php:145
+#: includes/admin/stats.php:267
+msgid "Ogledi"
+msgstr "Views"
+
+#: includes/admin/stats.php:161
+msgid "Vgrajen obrazec"
+msgstr "Embedded form"
+
+#: includes/admin/stats.php:162
+msgid "Prijava brez računa"
+msgstr "Guest application"
+
+#: includes/admin/stats.php:163
+msgid "Drugo"
+msgstr "Other"
+
+#: includes/admin/stats.php:164
+msgid "Neznano"
+msgstr "Unknown"
+
+#: includes/admin/stats.php:178
+#: includes/admin/stats.php:264
+msgid "Ni podatkov za izbrano obdobje."
+msgstr "No data for the selected period."
+
+#: includes/admin/stats.php:210
+msgid "7 dni"
+msgstr "7 days"
+
+#: includes/admin/stats.php:211
+msgid "30 dni"
+msgstr "30 days"
+
+#: includes/admin/stats.php:212
+msgid "90 dni"
+msgstr "90 days"
+
+#: includes/admin/stats.php:215
+msgid "Statistika"
+msgstr "Statistics"
+
+#: includes/admin/stats.php:215
+msgid "Obdobje"
+msgstr "Period"
+
+#: includes/admin/stats.php:219
+msgid "Po meri"
+msgstr "Custom"
+
+#: includes/admin/stats.php:221
+msgid "Od"
+msgstr "From"
+
+#: includes/admin/stats.php:221
+msgid "Do"
+msgstr "To"
+
+#: includes/admin/stats.php:223
+msgid "Ogledi neprijavljenih obiskovalcev se še ne štejejo."
+msgstr "Views by visitors who are not logged in are not counted yet."
+
+#: includes/admin/stats.php:225
+msgid "Ogledi (prijavljeni iskalci)"
+msgstr "Views (logged-in job seekers)"
+
+#: includes/admin/stats.php:227
+msgid "Zaposlitve"
+msgstr "Hires"
+
+#: includes/admin/stats.php:228
+#: includes/admin/stats.php:269
+msgid "Konverzija"
+msgstr "Conversion"
+
+#: includes/admin/stats.php:243
+msgid "Za izbrano obdobje ni dnevnih podatkov."
+msgstr "No daily data for the selected period."
+
+#: includes/admin/stats.php:262
+msgid "Uspešnost oglasov"
+msgstr "Job performance"
+
+#: includes/admin/stats.php:266
+msgid "Oglas"
+msgstr "Job"
+
+#: includes/admin/stats.php:293
+msgid "Viri prijav"
+msgstr "Application sources"
+
+#: includes/admin/stats.php:294
+msgid "Faze kandidatov"
+msgstr "Candidate stages"
+
 #: includes/admin/ui.php:71
-#: includes/demo.php:170
+#: includes/demo.php:259
 #: templates/archive-jobs.php:30
 msgid "Demo · izmišljeni podatki"
 msgstr "Demo · invented data"
@@ -872,14 +1319,10 @@ msgstr "More"
 
 #: includes/admin/wizard.php:52
 #: includes/admin/wizard.php:239
-#: includes/frontend.php:292
-#: includes/frontend.php:357
+#: includes/landing.php:177
+#: includes/seo-meta.php:261
 msgid "Kariera"
 msgstr "Careers"
-
-#: includes/admin/wizard.php:161
-msgid "Karierna stran"
-msgstr "Careers page"
 
 #: includes/admin/wizard.php:162
 #: includes/admin/wizard.php:261
@@ -1158,31 +1601,39 @@ msgstr "Hot meal"
 msgid "Izobraževalni budget"
 msgstr "Education budget"
 
-#: includes/demo.php:118
+#: includes/demo.php:207
 msgid "To je izmišljeno motivacijsko pismo za predogled."
 msgstr "This is an invented cover letter for the preview."
 
-#: includes/demo.php:171
+#: includes/demo.php:260
 msgid "Odprta delovna mesta"
 msgstr "Open jobs"
 
-#: includes/demo.php:189
+#: includes/demo.php:278
 msgid "Oddaj prijavo"
 msgstr "Submit application"
 
-#: includes/demo.php:190
+#: includes/demo.php:279
 msgid "Predogled. Ko v Jobly HRM povežete podjetje in izklopite demo, se tu prikažejo vaša odprta mesta."
 msgstr "Preview. Once you connect a company in Jobly HRM and turn demo off, your open jobs show up here."
 
 #: includes/frontend.php:27
 #: includes/frontend.php:89
-#: templates/single-job.php:65
+#: templates/single-job.php:70
 msgid "Prijava na delo"
 msgstr "Apply for this job"
 
 #: includes/frontend.php:106
 msgid "Jobly: v nastavitvah vpiši podjetje ali v kratki kodi podaj job=\"…\"."
 msgstr "Jobly: enter the company in the settings or give job=\"…\" in the shortcode."
+
+#: includes/landing.php:19
+msgid "Hero (naslov, podnaslov, slika, gumb)"
+msgstr "Hero (title, subtitle, image, button)"
+
+#: includes/landing.php:22
+msgid "Seznam oglasov"
+msgstr "Job list"
 
 #. translators: %d: number of open positions (singular form).
 #: includes/templates.php:191
@@ -1291,7 +1742,7 @@ msgstr "Salary range"
 msgid "Povzetek"
 msgstr "Summary"
 
-#: templates/parts/job-sidebar.php:39
+#: templates/parts/job-sidebar.php:40
 msgid "Prijavi se"
 msgstr "Apply now"
 
@@ -1311,7 +1762,11 @@ msgstr "Next"
 msgid "Drobtinice"
 msgstr "Breadcrumbs"
 
-#: templates/single-job.php:86
+#: templates/single-job.php:32
+msgid "To delovno mesto ni več odprto."
+msgstr "This job is no longer open."
+
+#: templates/single-job.php:92
 msgid "Povzetek oglasa"
 msgstr "Job summary"
 

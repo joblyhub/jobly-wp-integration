@@ -54,6 +54,8 @@ function jobly_integration_icon_paths() {
 		'filter'        => '<path d="M4 4h16v2.172a2 2 0 0 1-.586 1.414L15 12v7l-6 2v-8.5L4.52 7.572A2 2 0 0 1 4 6.172z"/>',
 		'lifebuoy'      => '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M15 15l3.35 3.35"/><path d="M9 15l-3.35 3.35"/><path d="M5.65 5.65L9 9"/><path d="M18.35 5.65L15 9"/>',
 		'shield-check'  => '<path d="M11.46 20.846A12 12 0 0 1 4 6a12 12 0 0 0 8-3a12 12 0 0 0 8 3a12 12 0 0 1-.09 7.06"/><path d="M15 19l2 2l4-4"/>',
+		'eye'           => '<path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0-4 0"/><path d="M21 12c-2.4 4-5.4 6-9 6c-3.6 0-6.6-2-9-6c2.4-4 5.4-6 9-6c3.6 0 6.6 2 9 6"/>',
+		'percent'       => '<path d="M16 17a1 1 0 1 0 2 0a1 1 0 1 0-2 0"/><path d="M6 7a1 1 0 1 0 2 0a1 1 0 1 0-2 0"/><path d="M6 18L18 6"/>',
 		'sparkles'      => '<path d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2-2a2 2 0 0 1-2-2a2 2 0 0 1-2 2z"/><path d="M16 6a2 2 0 0 1 2 2a2 2 0 0 1 2-2a2 2 0 0 1-2-2a2 2 0 0 1-2 2z"/><path d="M9 18a6 6 0 0 1 6-6a6 6 0 0 1-6-6a6 6 0 0 1-6 6a6 6 0 0 1 6 6z"/>',
 		'point'         => '<path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/>',
 	);
@@ -100,6 +102,13 @@ function jobly_integration_svg_kses() {
 		'viewbox'             => true,
 		'xmlns'               => true,
 		'preserveaspectratio' => true,
+		'points'              => true,
+		'stroke-dasharray'    => true,
+		'text-anchor'         => true,
+		'font-size'           => true,
+		'font-family'         => true,
+		'font-weight'         => true,
+		'dominant-baseline'   => true,
 	);
 	return array(
 		'svg'            => $common,
@@ -111,7 +120,11 @@ function jobly_integration_svg_kses() {
 		'defs'           => $common,
 		'lineargradient' => $common,
 		'stop'           => $common,
+		'polyline'       => $common,
+		'line'           => $common,
+		'text'           => $common,
 		'title'          => array(),
+		'desc'           => array(),
 	);
 }
 

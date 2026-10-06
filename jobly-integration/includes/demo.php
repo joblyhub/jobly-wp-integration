@@ -97,6 +97,95 @@ function jobly_integration_demo_detail( $slug ) {
 }
 
 /**
+ * Invented statistics in the shape of GET /api/v1/stats: a weekly rhythm with slow growth.
+ *
+ * @param string $from Start date, Y-m-d.
+ * @param string $to   End date, Y-m-d.
+ * @return array
+ */
+function jobly_integration_demo_stats( $from, $to ) {
+	$start = strtotime( $from . ' 12:00:00 UTC' );
+	$end   = strtotime( $to . ' 12:00:00 UTC' );
+	$days  = max( 1, (int) round( ( $end - $start ) / DAY_IN_SECONDS ) + 1 );
+	$daily = array();
+	$views = 0;
+	$apps  = 0;
+	for ( $i = 0; $i < $days; $i++ ) {
+		$ts      = $start + $i * DAY_IN_SECONDS;
+		$weekday = (int) gmdate( 'N', $ts );
+		$wave    = 52 + 18 * sin( $i / 3.7 ) + $i * 0.6 + ( crc32( gmdate( 'Y-m-d', $ts ) ) % 17 );
+		$v       = (int) round( $wave * ( $weekday >= 6 ? 0.55 : 1 ) );
+		$a       = (int) round( $v * ( 0.05 + ( crc32( 'a' . $i ) % 4 ) / 100 ) );
+		$views  += $v;
+		$apps   += $a;
+		$daily[] = array(
+			'date'         => gmdate( 'Y-m-d', $ts ),
+			'jobViews'     => $v,
+			'applications' => $a,
+		);
+	}
+	$jobs  = array();
+	$share = array( 0.38, 0.33, 0.29 );
+	foreach ( array_slice( jobly_integration_demo_jobs(), 0, 3 ) as $k => $job ) {
+		$jv     = (int) round( $views * $share[ $k ] );
+		$ja     = (int) round( $apps * $share[ $k ] );
+		$jobs[] = array(
+			'slug'         => $job['slug'],
+			'title'        => $job['title'],
+			'jobViews'     => $jv,
+			'applications' => $ja,
+		);
+	}
+	return array(
+		'period'  => array(
+			'from' => $from,
+			'to'   => $to,
+		),
+		'totals'  => array(
+			'jobViews'       => $views,
+			'applications'   => $apps,
+			'hires'          => (int) floor( $apps / 18 ),
+			'openJobs'       => 3,
+			'conversionRate' => null,
+		),
+		'daily'   => $daily,
+		'jobs'    => $jobs,
+		'sources' => array(
+			array(
+				'source'       => 'jobly',
+				'applications' => (int) round( $apps * 0.52 ),
+			),
+			array(
+				'source'       => 'embed',
+				'applications' => (int) round( $apps * 0.31 ),
+			),
+			array(
+				'source'       => 'guest',
+				'applications' => (int) round( $apps * 0.17 ),
+			),
+		),
+		'stages'  => array(
+			array(
+				'stage' => 'new',
+				'count' => (int) round( $apps * 0.45 ),
+			),
+			array(
+				'stage' => 'reviewed',
+				'count' => (int) round( $apps * 0.3 ),
+			),
+			array(
+				'stage' => 'intro_round',
+				'count' => (int) round( $apps * 0.12 ),
+			),
+			array(
+				'stage' => 'rejected',
+				'count' => (int) round( $apps * 0.13 ),
+			),
+		),
+	);
+}
+
+/**
  * Invented applications, in the shape of GET /api/v1/applications.
  *
  * @return array[]

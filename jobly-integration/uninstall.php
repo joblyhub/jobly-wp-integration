@@ -9,6 +9,7 @@ defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
 delete_option( 'jobly_integration' );
 delete_option( 'jobly_integration_flush' );
+delete_option( 'jobly_integration_landing' );
 delete_transient( 'jobly_integration_jobs' );
 
 foreach ( get_users( array( 'fields' => 'ID' ) ) as $jobly_integration_user_id ) {

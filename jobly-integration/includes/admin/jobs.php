@@ -197,6 +197,8 @@ function jobly_integration_job_show( $slug ) {
 				<p class="description"><?php esc_html_e( 'V urejevalniku blokov pa uporabite blok »Jobly – prijavni obrazec«.', 'jobly-integration' ); ?></p>
 			</section>
 
+			<?php jobly_integration_seo_job_box( $job ); ?>
+
 			<section class="jobly-panel">
 				<header class="jobly-panel__head"><h2><?php esc_html_e( 'Obrazec', 'jobly-integration' ); ?></h2></header>
 				<ul class="jobly-checks">

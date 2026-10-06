@@ -28,11 +28,13 @@ require_once __DIR__ . '/includes/demo.php';
 require_once __DIR__ . '/includes/icons.php';
 require_once __DIR__ . '/includes/templates.php';
 require_once __DIR__ . '/includes/frontend.php';
+require_once __DIR__ . '/includes/landing.php';
+require_once __DIR__ . '/includes/seo-meta.php';
 require_once __DIR__ . '/includes/seo.php';
 require_once __DIR__ . '/includes/blocks.php';
 
 if ( is_admin() ) {
-	foreach ( array( 'ui', 'menu', 'wizard', 'overview', 'jobs', 'job-new', 'applications', 'settings' ) as $jobly_integration_screen ) {
+	foreach ( array( 'ui', 'menu', 'wizard', 'stats', 'landing', 'seo', 'overview', 'jobs', 'job-new', 'applications', 'settings' ) as $jobly_integration_screen ) {
 		require_once __DIR__ . '/includes/admin/' . $jobly_integration_screen . '.php';
 	}
 }

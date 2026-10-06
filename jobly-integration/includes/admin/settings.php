@@ -107,16 +107,11 @@ function jobly_integration_handle_save_settings() {
 	$code = 'saved';
 
 	if ( 'display' === $tab ) {
-		$old     = jobly_integration_base_path();
-		$changes = jobly_integration_posted_display();
-		$page_id = isset( $_POST['careers_page'] ) ? absint( $_POST['careers_page'] ) : 0;
-		if ( $page_id && 'page' !== get_post_type( $page_id ) ) {
-			$page_id = 0;
-		}
-		$base                    = isset( $_POST['base_path'] ) ? sanitize_title( wp_unslash( $_POST['base_path'] ) ) : '';
-		$changes['base_path']    = '' !== $base ? $base : 'kariera';
-		$changes['careers_page'] = $page_id;
-		$changes['careers_set']  = 1;
+		$old                    = jobly_integration_base_path();
+		$changes                = jobly_integration_posted_display();
+		$base                   = isset( $_POST['base_path'] ) ? sanitize_title( wp_unslash( $_POST['base_path'] ) ) : '';
+		$changes['base_path']   = '' !== $base ? $base : 'kariera';
+		$changes['careers_set'] = 1;
 		jobly_integration_update_settings( $changes );
 		if ( jobly_integration_base_path() !== $old ) {
 			update_option( 'jobly_integration_flush', 1, false );
@@ -248,6 +243,8 @@ function jobly_integration_page_settings() {
 	$tabs = array(
 		'connection' => array( __( 'Povezava', 'jobly-integration' ), 'plug' ),
 		'display'    => array( __( 'Prikaz', 'jobly-integration' ), 'palette' ),
+		'landing'    => array( __( 'Karierna stran', 'jobly-integration' ), 'layout-list' ),
+		'seo'        => array( __( 'SEO', 'jobly-integration' ), 'search' ),
 		'google'     => array( __( 'Google for Jobs', 'jobly-integration' ), 'world' ),
 		'demo'       => array( __( 'Demo', 'jobly-integration' ), 'sparkles' ),
 	);
@@ -319,23 +316,6 @@ function jobly_integration_page_settings() {
 		<h2><?php esc_html_e( 'Karierna stran in videz', 'jobly-integration' ); ?></h2>
 		<table class="form-table" role="presentation">
 			<tr>
-				<th scope="row"><label for="jobly-page"><?php esc_html_e( 'Stran s seznamom', 'jobly-integration' ); ?></label></th>
-				<td>
-					<?php
-					wp_dropdown_pages(
-						array(
-							'name'              => 'careers_page',
-							'id'                => 'jobly-page',
-							'selected'          => (int) $s['careers_page'],
-							'show_option_none'  => esc_html__( 'Samodejna stran (spodnji naslov)', 'jobly-integration' ),
-							'option_none_value' => '0',
-						)
-					);
-					?>
-					<p class="description"><?php esc_html_e( 'Izberi svojo WordPress stran z blokom ali kodo [jobly_jobs]; oglasi dobijo naslove pod njo. Brez izbire plugin sam ustvari stran na naslovu spodaj.', 'jobly-integration' ); ?></p>
-				</td>
-			</tr>
-			<tr>
 				<th scope="row"><label for="jobly-path"><?php esc_html_e( 'Osnova povezav', 'jobly-integration' ); ?></label></th>
 				<td>
 					<code><?php echo esc_html( home_url( '/' ) ); ?></code><input id="jobly-path" name="base_path" value="<?php echo esc_attr( $s['base_path'] ); ?>" class="small-text"><code>/</code>
@@ -362,6 +342,10 @@ function jobly_integration_page_settings() {
 		<?php
 		submit_button( __( 'Shrani spremembe', 'jobly-integration' ), 'primary', 'submit', false );
 		echo '</form>';
+	} elseif ( 'landing' === $tab ) {
+		jobly_integration_landing_tab();
+	} elseif ( 'seo' === $tab ) {
+		jobly_integration_seo_tab();
 	} elseif ( 'google' === $tab ) {
 		jobly_integration_form_open( 'google' );
 		$sitemap = function_exists( 'wp_sitemaps_get_server' ) ? wp_sitemaps_get_server()->index->get_index_url() : '';

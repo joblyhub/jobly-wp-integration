@@ -28,6 +28,10 @@ do_action( 'jobly_integration_before_single_job', $jobly_integration_job );
 		<a href="<?php echo esc_url( jobly_integration_careers_url() ); ?>"><?php jobly_integration_icon( 'arrow-left', '', 16 ); ?> <?php esc_html_e( 'Vsa delovna mesta', 'jobly-integration' ); ?></a>
 	</nav>
 
+	<?php if ( 'active' !== ( $jobly_integration_job['status'] ?? 'active' ) ) : ?>
+		<p class="jobly-closed"><?php jobly_integration_icon( 'alert', '', 18 ); ?> <?php esc_html_e( 'To delovno mesto ni več odprto.', 'jobly-integration' ); ?></p>
+	<?php endif; ?>
+
 	<ul class="jobly-meta jobly-meta--chips">
 		<li><?php jobly_integration_icon( 'building', '', 16 ); ?><span><?php echo esc_html( jobly_integration_company_name() ); ?></span></li>
 		<?php foreach ( $jobly_integration_meta as $jobly_integration_item ) : ?>
@@ -62,6 +66,7 @@ do_action( 'jobly_integration_before_single_job', $jobly_integration_job );
 					</ul>
 				</section>
 			<?php endforeach; ?>
+			<?php if ( 'active' === ( $jobly_integration_job['status'] ?? 'active' ) ) : ?>
 			<section id="jobly-apply" class="jobly-job__apply" aria-label="<?php esc_attr_e( 'Prijava na delo', 'jobly-integration' ); ?>">
 				<?php
 				if ( $args['demo'] ) {
@@ -82,6 +87,7 @@ do_action( 'jobly_integration_before_single_job', $jobly_integration_job );
 				}
 				?>
 			</section>
+			<?php endif; ?>
 		</div>
 		<aside class="jobly-job__side" aria-label="<?php esc_attr_e( 'Povzetek oglasa', 'jobly-integration' ); ?>">
 			<?php jobly_integration_get_template( 'parts/job-sidebar.php', $args ); ?>

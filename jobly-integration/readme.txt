@@ -24,6 +24,9 @@ Jobly.si HRM connects a WordPress site to a company account on Jobly.si (a Slove
 * **Setup wizard.** Connect, pick the careers page and appearance in three steps.
 * **Careers page.** Search, filters (location, type, remote), cards, pagination; job pages with a sticky summary.
 * **Google for Jobs.** JobPosting structured data from real API fields and a jobs sitemap, both optional.
+* **Statistics.** Views, applications, hires and conversion for 7/30/90 days or a custom range, with a chart and a job performance table (needs a Jobly with the stats endpoint).
+* **Landing builder.** Hero, intro, benefits and job list in your order, or your own page; custom HTML, CSS and JS for the careers page.
+* **SEO.** Title and description templates, Open Graph, canonical, noindex rules, per-job overrides, previews; plays with Yoast SEO, Rank Math, SEOPress and All in One SEO without duplicate tags.
 * **Blocks.** "Jobly - job list" and "Jobly - application form"; shortcodes keep working.
 * **Theme overrides.** Copy templates to `yourtheme/jobly/`.
 
@@ -57,6 +60,8 @@ No visitor data is sent by these calls.
 
 Every request also sends the integration's `App-Token` header (constant `JOBLY_APP_TOKEN` in wp-config.php or the Connection setting). Further read calls: `GET /api/v1/company` (when you save or verify the key, cached 1 hour), `GET /api/v1/jobs/{slug}` (job page and job detail, cached 5 minutes), `GET /api/v1/categories` (Add new screen, cached 1 day).
 
+`GET /api/v1/stats?from&to` - when you open Overview; aggregate counts only, cached 5 minutes.
+
 Demo mode makes none of these requests.
 
 The Jobly address can be changed in settings (testing); the server-side base can be overridden with the `JOBLY_API_BASE` constant in wp-config.php.
@@ -88,6 +93,9 @@ The Jobly address can be changed in settings (testing); the server-side base can
 * Google for Jobs: JobPosting JSON-LD and core sitemap provider (optional).
 * Blocks: job list and application form. Optional own careers page (`[jobly_jobs]`).
 * Theme overrides (`yourtheme/jobly/`), hooks, en_US translation, release workflow.
+* SEO module for the careers pages (see README) and closed-job handling (410/noindex/redirect).
+* Statistics on Overview (`GET /api/v1/stats`, cached 5 minutes, aggregate data only).
+* Careers landing builder and custom code slots (CSS/JS only on careers pages; JS needs `unfiltered_html`).
 * Company, job content and categories read via the API key; `App-Token` support.
 * Requires WordPress 6.1.
 

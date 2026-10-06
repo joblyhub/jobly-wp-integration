@@ -205,6 +205,7 @@ function jobly_integration_register_rewrites() {
 		add_rewrite_rule( '^' . $base . '/?$', 'index.php?jobly_index=1', 'top' );
 	}
 	add_rewrite_rule( '^' . $base . '/([^/]+)/?$', 'index.php?jobly_job=$matches[1]', 'top' );
+	add_rewrite_rule( '^jobly-sitemap\\.xml$', 'index.php?jobly_sitemap=1', 'top' );
 }
 add_action( 'init', 'jobly_integration_register_rewrites' );
 
@@ -228,6 +229,7 @@ add_action( 'init', 'jobly_integration_maybe_flush', 99 );
 function jobly_integration_query_vars( $vars ) {
 	$vars[] = 'jobly_index';
 	$vars[] = 'jobly_job';
+	$vars[] = 'jobly_sitemap';
 	return $vars;
 }
 add_filter( 'query_vars', 'jobly_integration_query_vars' );
@@ -274,6 +276,25 @@ function jobly_integration_virtual_page( $posts, $query ) {
 	if ( $is_job ) {
 		$job = jobly_integration_current_job();
 		if ( ! $job ) {
+			$closed = jobly_integration_closed_job();
+			if ( $closed ) {
+				$action = jobly_integration_seo_settings()['closed_action'];
+				if ( 'redirect' === $action ) {
+					wp_safe_redirect( jobly_integration_careers_url(), 301 );
+					exit;
+				}
+				if ( 'noindex' === $action ) {
+					$job = $closed;
+				}
+			}
+		}
+		if ( ! $job ) {
+			if ( ! empty( $closed ) ) {
+				$query->set_404();
+				status_header( 410 );
+				nocache_headers();
+				return array();
+			}
 			$query->set_404();
 			status_header( 404 );
 			nocache_headers();
@@ -289,13 +310,8 @@ function jobly_integration_virtual_page( $posts, $query ) {
 			)
 		);
 	} else {
-		$title   = __( 'Kariera', 'jobly-integration' );
-		$content = jobly_integration_render_list(
-			array(
-				'filters'  => true,
-				'paginate' => true,
-			)
-		);
+		$title   = jobly_integration_index_title();
+		$content = jobly_integration_render_landing();
 	}
 
 	$post = new WP_Post(
@@ -344,38 +360,16 @@ function jobly_integration_no_autop() {
 add_action( 'wp', 'jobly_integration_no_autop' );
 
 /**
- * <title> of the virtual pages.
+ * A job of this company that is no longer open (closed, draft…), for the slug in the URL.
  *
- * @param string $title Default title.
- * @return string
+ * @return array|null
  */
-function jobly_integration_document_title( $title ) {
-	if ( ! jobly_integration_is_virtual() ) {
-		return $title;
+function jobly_integration_closed_job() {
+	$slug = sanitize_title( (string) get_query_var( 'jobly_job' ) );
+	foreach ( jobly_integration_all_jobs()['items'] as $job ) {
+		if ( ( $job['slug'] ?? '' ) === $slug && 'active' !== ( $job['status'] ?? '' ) ) {
+			return jobly_integration_job_detail( $job );
+		}
 	}
-	$job  = jobly_integration_current_job();
-	$name = $job ? (string) $job['title'] : __( 'Kariera', 'jobly-integration' );
-	return $name . ' – ' . get_bloginfo( 'name' );
+	return null;
 }
-add_filter( 'pre_get_document_title', 'jobly_integration_document_title' );
-
-/**
- * Canonical link: the job's page on Jobly (real data only), else our own URL.
- */
-function jobly_integration_canonical() {
-	if ( ! jobly_integration_is_virtual() ) {
-		return;
-	}
-	remove_action( 'wp_head', 'rel_canonical' );
-	$job = jobly_integration_current_job();
-	if ( $job && ! jobly_integration_is_demo() ) {
-		$url = ! empty( $job['url'] ) ? (string) $job['url'] : untrailingslashit( jobly_integration_settings()['base_url'] ) . '/jobs/' . rawurlencode( (string) $job['slug'] );
-	} else {
-		$url = $job ? jobly_integration_job_url( (string) $job['slug'] ) : jobly_integration_careers_url();
-	}
-	echo '<link rel="canonical" href="' . esc_url( $url ) . '">' . "\n";
-	if ( jobly_integration_is_demo() ) {
-		echo '<meta name="robots" content="noindex">' . "\n";
-	}
-}
-add_action( 'wp_head', 'jobly_integration_canonical', 1 );

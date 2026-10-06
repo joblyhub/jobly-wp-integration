@@ -525,3 +525,97 @@ a.jobly-pagination__link:hover {
 	margin: 0;
 	padding-left: 1.25rem;
 }
+
+/* Landing sections */
+.jobly-landing {
+	width: 100%;
+	max-width: 72rem !important;
+	margin-right: auto !important;
+	margin-left: auto !important;
+}
+.jobly-hero {
+	display: grid;
+	grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+	gap: 2rem;
+	align-items: center;
+	margin: 0 0 2.5rem;
+	padding: 2rem;
+	border-radius: 18px;
+	background: linear-gradient(135deg, var(--jobly-accent-soft), transparent);
+}
+.jobly-hero:not(:has(.jobly-hero__media)) {
+	grid-template-columns: minmax(0, 1fr);
+}
+.jobly-hero__lead {
+	margin: 0 0 1.25rem;
+	font-size: 1.25em;
+	line-height: 1.45;
+}
+.jobly-hero__media img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: 14px;
+}
+.jobly-intro {
+	margin: 0 0 2.5rem;
+}
+.jobly-benefits {
+	margin: 0 0 2.5rem;
+}
+.jobly-benefits h2 {
+	margin: 0 0 1rem;
+}
+.jobly-benefits__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	gap: 1rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.jobly-benefits__grid li {
+	margin: 0;
+	padding: 1.25rem;
+	border: 1px solid var(--jobly-line);
+	border-radius: 14px;
+}
+.jobly-benefits__grid h3 {
+	margin: 0.6rem 0 0.25rem;
+	font-size: 1.05rem;
+}
+.jobly-benefits__grid p {
+	margin: 0;
+	color: var(--jobly-muted);
+	font-size: 0.95rem;
+}
+.jobly-benefits__icon {
+	display: inline-grid;
+	place-items: center;
+	width: 2.6rem;
+	height: 2.6rem;
+	border-radius: 12px;
+	background: var(--jobly-accent-soft);
+	color: var(--jobly-accent);
+}
+.jobly-landing__jobs {
+	scroll-margin-top: calc(var(--wp-admin--admin-bar--height, 0px) + 1rem);
+}
+@media (max-width: 760px) {
+	.jobly-hero {
+		grid-template-columns: minmax(0, 1fr);
+		padding: 1.25rem;
+	}
+}
+
+.jobly-closed {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+	margin: 0 0 1rem;
+	padding: 0.75rem 1rem;
+	border-radius: 10px;
+	background: #fef3c7;
+	color: #92400e;
+	font-weight: 600;
+}
